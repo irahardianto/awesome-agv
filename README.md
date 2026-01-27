@@ -4,9 +4,6 @@
   <p align="center">
     A rugged, high-quality configuration suite for AI Agents.
     <br />
-    <a href="#about-the-project"><strong>Explore the philosophy »</strong></a>
-    <br />
-    <br />
     <a href="#usage">View Rules & Skills</a>
     ·
     <a href="https://github.com/irahardianto/antigravity-setup/issues">Report Bug</a>
@@ -14,35 +11,6 @@
     <a href="https://github.com/irahardianto/antigravity-setup/issues">Request Feature</a>
   </p>
 </div>
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#portability">Portability & Compatibility</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
