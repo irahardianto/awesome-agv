@@ -95,84 +95,11 @@ description: When writing tests, organizing test files, implementing test double
     - `user-registration-api.e2e.test.ts`       # Full API flow: HTTP → DB
     - `user-registration-ui.e2e.test.ts`        # Full-stack: Browser → Backend → DB
 
-
-**Directory Layout Example:**
-
-#### A. Backend (Go - Feature-Based)
-```
-apps/
-  backend/
-    task/
-      task.go                      # API handlers (public interface)
-      task_test.go                 # Unit tests (mocked dependencies)
-      business.go                  # Pure business logic
-      business_test.go             # Unit tests (pure functions)
-      store.go                     # interface TaskStore
-      postgres.go                  # implements TaskStore
-      postgres_integration_test.go # Integration tests (real DB)
-      mock_store.go               # Test implementation
-    migrations/
-      001_create_tasks.up.sql
-    user/
-      user.go
-      user_test.go
-      store.go
-      postgres.go
-      postgres_integration_test.go
-e2e/
-  task_crud_api.e2e.test.go       # Full API flow
-```
-
-#### B. Frontend (Vue - Feature-Sliced)
-```
-
-apps/
-  frontend/
-    src/
-      features/
-        task/
-          index.ts                 # Public exports
-          task.service.ts          # Business logic
-          task.service.spec.ts     # Unit tests
-          task.api.ts              # interface TaskAPI
-          task.api.encore.ts       # Production implementation
-          task.api.mock.ts         # Test implementation
-          task.store.ts            # Pinia store
-          task.store.spec.ts       # Store unit tests
-        auth/
-        ...
-      components/
-        TaskInput.vue
-        TaskInput.spec.ts          # Component unit tests
-e2e/
-  task-management-flow.e2e.test.ts  # Full UI journey
-
-```
-
-#### C. Monorepo (Multi-Stack)
-```
-
-apps/
-  backend/
-    task/
-    ...
-  frontend/
-    src/features/task/
-    ...
-e2e/                             # Shared E2E suite
-  api/
-    task-crud-api.e2e.test.ts    # Backend-only E2E
-  ui/
-    checkout-flow.e2e.test.ts    # Full-stack E2E
-
-```
-
 **Key Principles:**
 - **Unit/Integration tests**: Co-located with implementation
 - **E2E tests**: Separate directory (crosses boundaries)
 - **Test doubles**: Co-located with interface (mock_store.go, taskAPI.mock.ts)
-- **Pattern consistency**: All features follow same structure
-  
+- **Pattern consistency**: All features follow same structure  
 
 ### Test Quality Standards
 
@@ -206,3 +133,4 @@ expect(mockRepo.save).toHaveBeenCalledWith(user);
 ### Related Principles
 - Architectural Patterns - Testability-First Design @architectural-pattern.md
 - Error Handling Principles @error-handling-principles.md
+- Project Structure @project-structure.md

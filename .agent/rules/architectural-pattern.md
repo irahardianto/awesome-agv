@@ -95,82 +95,30 @@ err = store.SaveOrder(ctx, order)
 
 ```
 
-#### Rule 3: Module Boundaries
-**Problem:** Cross-module coupling makes changes ripple across codebase.
-
-**Solution:** Feature-based organization with clear public interfaces:
-- One feature = one directory
-- Each module exposes a public API (exported functions/classes)
-- Internal implementation details are private
-- Cross-module calls only through public API
-
-**Directory Structure (Language-Agnostic):**
-```
-
-/task
-
-- public_api.{ext}      # Exported interface
-- business.{ext}        # Pure logic
-- store.{ext}           # I/O abstraction (interface)
-- postgres.{ext}        # I/O implementation
-- mock.{ext}            # Test implementation
-- test.{ext}            # Unit tests (mocked I/O)
-- integration.test.{ext} # Integration tests (real I/O)
-
-```
-
-**Go Example:**
-```
-
-/apps/backend/task
-
-- task.go               # API endpoints (public)
-- business.go           # Pure domain logic
-- store.go              # interface UserStore
-- postgres.go           # implements UserStore
-- task_test.go          # Unit tests with MockStore
-- task_integration_test.go # Integration with real DB
-
-```
-
-**Vue Example:**
-```
-
-/apps/frontend/src/features/task
-
-- index.ts              # Public exports
-- task.service.ts       # Business logic
-- task.api.ts           # interface TaskAPI
-- task.api.backend.ts    # implements TaskAPI
-- task.store.ts         # Pinia store (uses TaskAPI)
-- task.service.spec.ts  # Unit tests (mock API)
-
-```
-
-#### Rule 4: Dependency Direction
+#### Rule 3: Dependency Direction
 **Principle:** Dependencies point inward toward business logic.
 
 ```
 
-┌─────────────────────────────────────┐
-│  Infrastructure Layer               │
-│  (DB, HTTP, Files, External APIs)   │
-│                                     │
-│  Depends on ↓                       │
-└─────────────────────────────────────┘
+┌──────────────────────────────────────┐
+│  Infrastructure Layer                │
+│  (DB, HTTP, Files, External APIs)    │
+│                                      │
+│  Depends on ↓                        │
+└──────────────────────────────────────┘
 ↓
-┌─────────────────────────────────────┐
-│  Contracts/Interfaces Layer         │
+┌──────────────────────────────────────┐
+│  Contracts/Interfaces Layer          │
 │  (Abstract ports - no implementation)│
-│                                     │
-│  Depends on ↓                       │
-└─────────────────────────────────────┘
+│                                      │
+│  Depends on ↓                        │
+└──────────────────────────────────────┘
 ↓
-┌─────────────────────────────────────┐
-│  Business Logic Layer               │
-│  (Pure functions, domain rules)     │
-│  NO dependencies on infrastructure  │
-└─────────────────────────────────────┘
+┌──────────────────────────────────────┐
+│  Business Logic Layer                │
+│  (Pure functions, domain rules)      │
+│  NO dependencies on infrastructure   │
+└──────────────────────────────────────┘
 
 ```
 
@@ -182,75 +130,6 @@ err = store.SaveOrder(ctx, order)
 **Always:**
 - Infrastructure implements interfaces defined by business layer
 - Business logic receives dependencies via injection
-
-**Package Structure Philosophy:**
-
-- **Organize by FEATURE, not by technical layer**  
-- Each feature is a vertical slice
-- Enables modular growth, clear boundaries, and independent deployability  
-
-**Universal Rule: Context → Feature → Layer**
-
-**1. Level 1: Repository Scope (Conditional)**
-   - **Scenario A (Monorepo/Full-Stack):** Root contains `apps/` grouping distinct applications (e.g., `apps/backend`, `apps/web`).
-   - **Scenario B (Single Service):** Root **IS** the application. Do not create `apps/backend` wrapper. Start directly at Level 2.
-
-**2. Level 2: Feature Organization**
-   - **Rule:** Divide application into vertical business slices (e.g., `user/`, `order/`, `payment/`).
-   - **Anti-Pattern:** Do NOT organize by technical layer (e.g., `controllers/`, `models/`, `services/`) at the top level.
-
-#### Layout Examples
-
-**A. Standard Single Service (Backend, Microservice or MVC)**
-```
-  apps/  
-    task/                       # Feature: Task management    
-      task.go                      # API handlers (public interface)
-      task_test.go                 # Unit tests (mocked dependencies)
-      business.go                  # Pure business logic
-      business_test.go             # Unit tests (pure functions)
-      store.go                     # interface TaskStore
-      postgres.go                  # implements TaskStore
-      postgres_integration_test.go # Integration tests (real DB)
-      mock_store.go               # Test implementation
-    migrations/
-      001_create_tasks.up.sql
-    order/                      # Feature: Order management  
-      ...
-```
-
-**B. Monorepo Layout (Multi-Stack):**
-**Use this structure when managing monolithic full-stack applications with backend, frontend, mobile in a single repository.*
-*Clear Boundaries: Backend business logic is isolated from Frontend UI logic, even if they share the same repo*
-```    
-  apps/
-    backend/                        # Backend application source code  
-        task/                       # Feature: Task management  
-          task.go                   # API handlers (public interface)
-          ...   
-        order/                      # Feature: Order management  
-        ...
-    frontend/                       # Frontend application source code
-      assets/                       # Fonts, Images
-      components/                   # Shared Component (Buttons, Inputs) - Dumb UI, No Domain Logic
-        BaseButton.vue
-        BaseInput.vue
-      layouts/                      # App shells (Sidebar, Navbar wrappers)
-      utils/                        # Date formatting, validation helpers
-      features/                     # Business Features (Vertical Slices)
-        task/                       # Feature: Task management
-          TaskForm.vue              # Feature-specific components
-          TaskListItem.vue          
-          TaskFilters.vue           
-          index.ts                  # Public exports
-          task.service.ts           # Business logic
-          task.api.ts               # interface TaskAPI
-          task.api.backend.ts        # Production implementation
-          task.store.ts             # Pinia store
-        order/
-      ...
-```
-> This Feature/Domain/UI/API structure is framework-agnostic. It applies equally to React, Vue, Svelte, and Mobile (React Native/Flutter). 'UI' always refers to the framework's native component format (.tsx, .vue, .svelte, .dart).
 
 ### Pattern Discovery Protocol
 
@@ -268,7 +147,7 @@ find_symbol("Interface") OR find_symbol("Repository") OR find_symbol("Service")
 - Where are pure functions vs I/O operations?
 - What testing patterns exist?
 
-3. **Document pattern** (80%+ consistency required):
+3. **Document pattern** (>80% consistency required):
 - "Following pattern from [task, user, auth] modules"
 - "X/Y modules use interface-based stores"
 - "All tests use [MockStore, vi.mock, TestingPinia] pattern"
@@ -281,10 +160,10 @@ find_symbol("Interface") OR find_symbol("Repository") OR find_symbol("Service")
 - Mock all I/O dependencies
 - Test business logic in isolation
 - Fast (<100ms per test)
-- 85%+ coverage of business paths
+- >85% coverage of business paths
 
-**Integration Tests (must test real infrastructure):**
-- Use real database (Testcontainers, Firebase emulator)
+**Integration Tests (Testcontainers):**
+- Use real dependencies (via Testcontainers, Firebase emulator)
 - Test adapter implementations
 - Verify contracts work end-to-end
 - Cover all I/O adapters
@@ -313,10 +192,11 @@ Before marking code complete, verify:
 - [ ] Are all I/O operations behind an abstraction?
 - [ ] Is business logic pure (no side effects)?
 - [ ] Do integration tests exist for all adapters?
-- [ ] Does pattern match existing codebase (80%+ consistency)?
+- [ ] Does pattern match existing codebase (>80% consistency)?
 
 ### Related Principles
 - Core Design Principles @core-design-principles.md
 - Testing Strategy @testing-strategy.md
 - Avoid Circular Dependencies @avoid-circular-dependencies.md
 - Code Organization Principles @code-organization-principles.md
+- Project Structure @project-structure.md
