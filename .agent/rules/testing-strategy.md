@@ -95,6 +95,34 @@ description: When writing tests, organizing test files, implementing test double
     - `user-registration-api.e2e.test.ts`       # Full API flow: HTTP → DB
     - `user-registration-ui.e2e.test.ts`        # Full-stack: Browser → Backend → DB
 
+**Using Playwright MCP for UI E2E Tests:**
+
+When running E2E tests interactively (during development or verification), use Playwright MCP:
+
+```
+# Navigate to the page
+mcp_playwright_browser_navigate(url="http://localhost:5173/login")
+
+# Capture accessible state (better than screenshot for assertions)
+mcp_playwright_browser_snapshot()
+
+# Interact with elements by ref from snapshot
+mcp_playwright_browser_type(ref="<ref>", text="test@example.com")
+mcp_playwright_browser_click(ref="<ref>")
+
+# Wait for results
+mcp_playwright_browser_wait_for(text="Welcome")
+
+# Take screenshot for walkthrough documentation
+mcp_playwright_browser_take_screenshot(filename="login-success.png")
+```
+
+**E2E Test Requirements:**
+- Take screenshot at each major step
+- Save screenshots to walkthrough as proof of functionality
+- Test happy path AND at least one error path
+- Clean up test data after test (or use unique identifiers)
+
 **Key Principles:**
 - **Unit/Integration tests**: Co-located with implementation
 - **E2E tests**: Separate directory (crosses boundaries)

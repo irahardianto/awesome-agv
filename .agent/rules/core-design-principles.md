@@ -76,3 +76,11 @@ trigger: always_on
 - Code should behave in ways that users and maintainers naturally expect  
 - Avoid surprising or counterintuitive behavior  
 - Follow established conventions and patterns
+
+**User Experience vs Maintainability:**
+
+- Both user experience AND code maintainability matter
+- When they conflict, **prefer maintainable code** that can evolve
+- Poor UX from clean code can be fixed; poor code from UX pressure becomes tech debt
+- Maintainability enables future UX improvements
+- Never sacrifice code quality for short-term UX gains
