@@ -20,6 +20,13 @@ jobs:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Set version from git tag
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "Setting version to $VERSION"
+          npm version $VERSION --no-git-tag-version
+        working-directory: ./cli
+
       - name: Publish to npm with provenance
         run: npm publish --provenance --access public
         working-directory: ./cli

@@ -23,7 +23,7 @@ How the two-tier rule system is designed and why it works.
 
 AI coding agents have a fundamental problem: **context window is finite**. Loading 30 detailed rule files into every session would consume precious context and overwhelm the model with irrelevant guidance.
 
-Antigravity Setup solves this with a **two-tier rule system** inspired by how operating systems handle kernel-mode vs user-mode code — critical operations always run with full privileges, while everything else activates on demand.
+Awesome AGV solves this with a **two-tier rule system** inspired by how operating systems handle kernel-mode vs user-mode code — critical operations always run with full privileges, while everything else activates on demand.
 
 ---
 
@@ -35,20 +35,20 @@ Mandates are **non-negotiable constraints** loaded in every session. They repres
 
 ### Current Mandates
 
-| Mandate | Purpose |
-|---------|---------|
-| Rugged Software Constitution | Core philosophy — defensible, responsible, maintainable |
-| Security Mandate | Never trust input, deny by default, fail closed |
-| Code Completion Mandate | Always validate code before delivery |
-| Logging & Observability Mandate | All operations must be logged |
-| Concurrency & Threading Mandate | Don't over-use concurrency |
-| Core Design Principles | SOLID, DRY, YAGNI, KISS |
-| Architectural Pattern | I/O isolation, pure business logic |
-| Code Organization Principles | Feature-based organization |
-| Code Idioms & Conventions | Idiomatic code for target language |
-| Avoid Circular Dependencies | No module import cycles |
-| Project Structure | Feature-based layout (single source of truth) |
-| Rule Priority | Conflict resolution |
+| Mandate                         | Purpose                                                 |
+| ------------------------------- | ------------------------------------------------------- |
+| Rugged Software Constitution    | Core philosophy — defensible, responsible, maintainable |
+| Security Mandate                | Never trust input, deny by default, fail closed         |
+| Code Completion Mandate         | Always validate code before delivery                    |
+| Logging & Observability Mandate | All operations must be logged                           |
+| Concurrency & Threading Mandate | Don't over-use concurrency                              |
+| Core Design Principles          | SOLID, DRY, YAGNI, KISS                                 |
+| Architectural Pattern           | I/O isolation, pure business logic                      |
+| Code Organization Principles    | Feature-based organization                              |
+| Code Idioms & Conventions       | Idiomatic code for target language                      |
+| Avoid Circular Dependencies     | No module import cycles                                 |
+| Project Structure               | Feature-based layout (single source of truth)           |
+| Rule Priority                   | Conflict resolution                                     |
 
 ### Why These Are Always-On
 
@@ -64,26 +64,26 @@ Principles are **detailed guidance** activated only when the agent determines th
 
 ### Current Principles
 
-| Principle | Activates When |
-|-----------|---------------|
-| Security Principles | Implementing auth, validation, crypto |
-| Error Handling Principles | Working with error types, recovery |
+| Principle                          | Activates When                            |
+| ---------------------------------- | ----------------------------------------- |
+| Security Principles                | Implementing auth, validation, crypto     |
+| Error Handling Principles          | Working with error types, recovery        |
 | Concurrency & Threading Principles | Writing async, threaded, or parallel code |
-| Performance Optimization | Profiling, benchmarking, critical paths |
-| Resource & Memory Management | Files, connections, pools, cleanup |
-| Monitoring & Alerting | Health checks, metrics, circuit breakers |
-| Configuration Management | Env vars, secrets, config files |
-| API Design Principles | REST endpoints, handlers, middleware |
-| Database Design Principles | Schema, migrations, queries, transactions |
-| Data Serialization | JSON, XML, YAML, protobuf |
-| Command Execution | Shell scripts, external processes |
-| Testing Strategy | Writing tests, test organization |
-| Dependency Management | Package management, version pinning |
-| Documentation Principles | Comments, docs, READMEs |
-| Logging & Observability Principles | Implementation guide for logging |
-| Accessibility Principles | WCAG, semantic HTML, ARIA |
-| Git Workflow Principles | Commits, branches, PRs |
-| CI/CD Principles | Pipelines, Docker, GitHub Actions |
+| Performance Optimization           | Profiling, benchmarking, critical paths   |
+| Resource & Memory Management       | Files, connections, pools, cleanup        |
+| Monitoring & Alerting              | Health checks, metrics, circuit breakers  |
+| Configuration Management           | Env vars, secrets, config files           |
+| API Design Principles              | REST endpoints, handlers, middleware      |
+| Database Design Principles         | Schema, migrations, queries, transactions |
+| Data Serialization                 | JSON, XML, YAML, protobuf                 |
+| Command Execution                  | Shell scripts, external processes         |
+| Testing Strategy                   | Writing tests, test organization          |
+| Dependency Management              | Package management, version pinning       |
+| Documentation Principles           | Comments, docs, READMEs                   |
+| Logging & Observability Principles | Implementation guide for logging          |
+| Accessibility Principles           | WCAG, semantic HTML, ARIA                 |
+| Git Workflow Principles            | Commits, branches, PRs                    |
+| CI/CD Principles                   | Pipelines, Docker, GitHub Actions         |
 
 ### How Context Activation Works
 
@@ -116,13 +116,13 @@ When rules conflict, the priority system resolves them:
 
 ### Common Conflict Examples
 
-| Conflict | Winner | Reasoning |
-|----------|--------|-----------|
-| YAGNI vs Security ("skip input validation") | **Security** | Input validation is always needed |
-| KISS vs Testability ("interfaces add complexity") | **Testability** | Interfaces enable testing |
-| Performance vs YAGNI ("optimize now?") | **Measure first** | Only optimize after profiling |
-| DRY vs Clarity ("abstract into utility?") | **Clarity** | Until 3+ instances (Rule of Three) |
-| Speed vs Logging ("skip logging to ship faster") | **Logging** | Silent failures are the enemy |
+| Conflict                                          | Winner            | Reasoning                          |
+| ------------------------------------------------- | ----------------- | ---------------------------------- |
+| YAGNI vs Security ("skip input validation")       | **Security**      | Input validation is always needed  |
+| KISS vs Testability ("interfaces add complexity") | **Testability**   | Interfaces enable testing          |
+| Performance vs YAGNI ("optimize now?")            | **Measure first** | Only optimize after profiling      |
+| DRY vs Clarity ("abstract into utility?")         | **Clarity**       | Until 3+ instances (Rule of Three) |
+| Speed vs Logging ("skip logging to ship faster")  | **Logging**       | Silent failures are the enemy      |
 
 ---
 

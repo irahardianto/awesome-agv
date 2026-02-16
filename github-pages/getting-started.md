@@ -7,7 +7,7 @@ nav_order: 2
 # Getting Started
 {: .no_toc }
 
-Install and configure Antigravity Setup in minutes.
+Install and configure Awesome AGV in minutes.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -32,10 +32,10 @@ Clone this repository or copy the `.agent` folder into the root of your project:
 
 ```sh
 # Clone the repo
-git clone https://github.com/irahardianto/antigravity-setup.git
+git clone https://github.com/irahardianto/awesome-agv.git
 
 # Copy the .agent folder into your project
-cp -r antigravity-setup/.agent /path/to/your-project/
+cp -r awesome-agv/.agent /path/to/your-project/
 ```
 
 ### Option 2: Git submodule
@@ -44,8 +44,8 @@ Add as a submodule for easy updates:
 
 ```sh
 cd your-project
-git submodule add https://github.com/irahardianto/antigravity-setup.git .antigravity-setup
-ln -s .antigravity-setup/.agent .agent
+git submodule add https://github.com/irahardianto/awesome-agv.git .awesome-agv
+ln -s .awesome-agv/.agent .agent
 ```
 
 ## Configuration
@@ -86,12 +86,12 @@ After installation, test that your agent is picking up the rules:
 
 Once installed, the setup activates automatically:
 
-| Component | Activation | Effect |
-|-----------|-----------|--------|
-| **Mandates** | Always loaded | Agent always validates code, adds logging, follows security rules |
-| **Principles** | Contextual | Agent applies database rules when writing queries, CI/CD rules when editing pipelines, etc. |
-| **Skills** | On demand | Agent uses debugging protocol when stuck, guardrails before/after writing code |
-| **Workflows** | Slash commands | Use `/orchestrator` for features, `/quick-fix` for bugs, `/audit` for reviews |
+| Component      | Activation     | Effect                                                                                      |
+| -------------- | -------------- | ------------------------------------------------------------------------------------------- |
+| **Mandates**   | Always loaded  | Agent always validates code, adds logging, follows security rules                           |
+| **Principles** | Contextual     | Agent applies database rules when writing queries, CI/CD rules when editing pipelines, etc. |
+| **Skills**     | On demand      | Agent uses debugging protocol when stuck, guardrails before/after writing code              |
+| **Workflows**  | Slash commands | Use `/orchestrator` for features, `/quick-fix` for bugs, `/audit` for reviews               |
 
 ## Quick Tour
 
@@ -132,7 +132,7 @@ This produces a structured findings report graded by severity (Critical → Majo
 
 ## Next Steps
 
-- [**Rules Reference**](/antigravity-setup/rules) — Explore all 30 rules
-- [**Skills Reference**](/antigravity-setup/skills) — Learn about specialized skills
-- [**Workflows Reference**](/antigravity-setup/workflows) — Understand the development workflows
-- [**Adapting**](/antigravity-setup/adapting) — Customize for your project type
+- [**Rules Reference**](/awesome-agv/rules) — Explore all 30 rules
+- [**Skills Reference**](/awesome-agv/skills) — Learn about specialized skills
+- [**Workflows Reference**](/awesome-agv/workflows) — Understand the development workflows
+- [**Adapting**](/awesome-agv/adapting) — Customize for your project type

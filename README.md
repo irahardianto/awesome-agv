@@ -1,15 +1,15 @@
 <div align="center">
-  <img src="banner.png" alt="Antigravity Setup" width="800" />
-  <h3 align="center">Antigravity Setup</h3>
+  <img src="banner.png" alt="Awesome AGV" width="800" />
+  <h3 align="center">Awesome AGV</h3>
 
   <p align="center">
     A rugged, high-quality configuration suite for AI Agents.
     <br />
     <a href="#usage">View Rules & Skills</a>
     ·
-    <a href="https://github.com/irahardianto/antigravity-setup/issues">Report Bug</a>
+    <a href="https://github.com/irahardianto/awesome-agv/issues">Report Bug</a>
     ·
-    <a href="https://github.com/irahardianto/antigravity-setup/issues">Request Feature</a>
+    <a href="https://github.com/irahardianto/awesome-agv/issues">Request Feature</a>
     <br />
     <br />
   </p>
@@ -59,8 +59,20 @@ npx awesome-agv
 This downloads and installs the latest `.agent/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
 
 **Options:**
-```sh
-# Install into a specific directory
+
+| Flag           | Description                                    |
+| -------------- | ---------------------------------------------- |
+| `[target-dir]` | Directory to install into (default: `./`)      |
+| `--force, -f`  | Overwrite existing `.agent/` without prompting |
+| `--help, -h`   | Show help                                      |
+
+### Examples
+
+```bash
+# Install into current directory
+npx awesome-agv
+
+# Install into a specific project
 npx awesome-agv ./my-project
 
 # Overwrite existing installation without prompting
@@ -71,7 +83,7 @@ npx awesome-agv --force
 
 1.  Clone this repository or copy the `.agent` folder into the root of your project.
     ```sh
-    cp -r /path/to/antigravity-setup/.agent ./your-project-root/
+    cp -r /path/to/awesome-agv/.agent ./your-project-root/
     ```
 2.  Ensure your AI agent is configured to read from the `.agent` directory (most of well-known AI coding assistant are adhering to the `.agent` convention by default, no action needed) or manually ingest the `.agent/rules/**` as part of its system prompt.
 

@@ -23,12 +23,12 @@ All 30 rules organized by category, with trigger types and descriptions.
 
 Rules are markdown files in `.agent/rules/` that provide guidance to AI agents. Each rule has a **trigger type** in its YAML frontmatter:
 
-| Trigger | Behavior |
-|---------|----------|
-| `always_on` | Loaded in every session — non-negotiable constraints |
+| Trigger          | Behavior                                                              |
+| ---------------- | --------------------------------------------------------------------- |
+| `always_on`      | Loaded in every session — non-negotiable constraints                  |
 | `model_decision` | Activated contextually when the agent determines the rule is relevant |
 
-When rules conflict, [Rule Priority](https://github.com/irahardianto/antigravity-setup/blob/main/.agent/rules/rule-priority.md) determines the winner. Security always wins.
+When rules conflict, [Rule Priority](https://github.com/irahardianto/awesome-agv/blob/main/.agent/rules/rule-priority.md) determines the winner. Security always wins.
 
 ---
 

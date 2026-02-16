@@ -117,7 +117,7 @@ The agent breaks down a complex problem into sequential thoughts, where each tho
 
 **File:** `.agent/skills/code-review/SKILL.md`
 
-A structured protocol for inspecting code quality against the full antigravity rule set. Catches issues that linters miss: architectural violations, missing observability, business logic errors, and pattern inconsistencies.
+A structured protocol for inspecting code quality against the full awesome-agv rule set. Catches issues that linters miss: architectural violations, missing observability, business logic errors, and pattern inconsistencies.
 
 ### When to Use
 - During the `/audit` workflow (Phase 1)
@@ -126,25 +126,25 @@ A structured protocol for inspecting code quality against the full antigravity r
 
 ### Review Categories (Priority Order)
 
-| Priority | Category | Issues Found |
-|----------|----------|-------------|
-| **Critical** | Security, Data Loss, Resource Leaks | Injection, hardcoded secrets, unclosed connections |
-| **Major** | Testability, Observability, Error Handling, Architecture | Missing interfaces, no logging, empty catch blocks |
-| **Minor** | Pattern Consistency, Naming, Code Organization | Deviation from codebase patterns, unclear names |
-| **Nit** | Style, Documentation | Formatting, missing comments |
+| Priority     | Category                                                 | Issues Found                                       |
+| ------------ | -------------------------------------------------------- | -------------------------------------------------- |
+| **Critical** | Security, Data Loss, Resource Leaks                      | Injection, hardcoded secrets, unclosed connections |
+| **Major**    | Testability, Observability, Error Handling, Architecture | Missing interfaces, no logging, empty catch blocks |
+| **Minor**    | Pattern Consistency, Naming, Code Organization           | Deviation from codebase patterns, unclear names    |
+| **Nit**      | Style, Documentation                                     | Formatting, missing comments                       |
 
 ### Severity Tags
 
-| Tag | Category |
-|-----|----------|
-| `[SEC]` | Security |
-| `[DATA]` | Data integrity |
-| `[RES]` | Resource leak |
-| `[TEST]` | Testability |
-| `[OBS]` | Observability |
-| `[ERR]` | Error handling |
-| `[ARCH]` | Architecture |
-| `[PAT]` | Pattern consistency |
+| Tag      | Category            |
+| -------- | ------------------- |
+| `[SEC]`  | Security            |
+| `[DATA]` | Data integrity      |
+| `[RES]`  | Resource leak       |
+| `[TEST]` | Testability         |
+| `[OBS]`  | Observability       |
+| `[ERR]`  | Error handling      |
+| `[ARCH]` | Architecture        |
+| `[PAT]`  | Pattern consistency |
 
 ### Output
 Produces a structured findings document saved to `docs/audits/review-findings-{feature}-{date}.md`.

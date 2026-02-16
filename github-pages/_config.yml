@@ -1,9 +1,9 @@
-title: Antigravity Setup
+title: Awesome AGV
 description: A rugged, high-quality configuration suite for AI Agents.
 remote_theme: just-the-docs/just-the-docs
 
 url: "https://irahardianto.github.io"
-baseurl: "/antigravity-setup"
+baseurl: "/awesome-agv"
 
 # Enable search
 search_enabled: true
@@ -11,7 +11,7 @@ search.heading_level: 3
 
 # Aux links (GitHub repo link in the header)
 aux_links:
-  "View on GitHub": "https://github.com/irahardianto/antigravity-setup"
+  "View on GitHub": "https://github.com/irahardianto/awesome-agv"
 aux_links_new_tab: true
 
 # Footer

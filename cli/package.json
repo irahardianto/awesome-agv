@@ -1,7 +1,7 @@
 {
   "name": "awesome-agv",
   "version": "1.0.0",
-  "description": "1-click installer for Antigravity Setup — a rugged, high-quality configuration suite for AI Agents.",
+  "description": "1-click installer for Awesome AGV — a rugged, high-quality configuration suite for AI Agents.",
   "bin": {
     "awesome-agv": "./bin/awesome-agv.js"
   },
@@ -16,20 +16,20 @@
     "rules",
     "skills",
     "workflows",
-    "antigravity",
+    "awesome-agv",
     "cli"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/irahardianto/antigravity-setup.git"
+    "url": "https://github.com/irahardianto/awesome-agv.git"
   },
-  "homepage": "https://github.com/irahardianto/antigravity-setup",
+  "homepage": "https://github.com/irahardianto/awesome-agv",
   "bugs": {
-    "url": "https://github.com/irahardianto/antigravity-setup/issues"
+    "url": "https://github.com/irahardianto/awesome-agv/issues"
   },
   "license": "MIT",
   "author": "irahardianto",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   }
 }

@@ -7,7 +7,7 @@ nav_order: 7
 # Best Practices
 {: .no_toc }
 
-Tips for getting the most out of Antigravity Setup.
+Tips for getting the most out of Awesome AGV.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -25,11 +25,11 @@ Tips for getting the most out of Antigravity Setup.
 
 Each conversation should have a single, focused purpose:
 
-| Task | Conversation |
-|------|-------------|
-| Building a feature | New conversation with `/orchestrator` |
-| Fixing a bug | New conversation with `/quick-fix` |
-| Reviewing code | New conversation with `/audit` |
+| Task                  | Conversation                                      |
+| --------------------- | ------------------------------------------------- |
+| Building a feature    | New conversation with `/orchestrator`             |
+| Fixing a bug          | New conversation with `/quick-fix`                |
+| Reviewing code        | New conversation with `/audit`                    |
 | Fixing audit findings | New conversation with `/quick-fix` or `/refactor` |
 
 **Why?** Fresh conversations avoid confirmation bias. An agent reviewing code it just wrote will be less effective than one seeing it for the first time.
@@ -91,10 +91,10 @@ Rules are plain markdown files. To customize:
 
 Choose the right trigger for custom rules:
 
-| Trigger | Use When |
-|---------|----------|
-| `always_on` | The rule should NEVER be violated regardless of context |
-| `model_decision` | The rule only matters for certain types of work |
+| Trigger          | Use When                                                |
+| ---------------- | ------------------------------------------------------- |
+| `always_on`      | The rule should NEVER be violated regardless of context |
+| `model_decision` | The rule only matters for certain types of work         |
 
 **Example:** A "never use `eval()`" rule should be `always_on`. A "use GraphQL pagination" rule should be `model_decision` with a description mentioning GraphQL.
 
@@ -115,14 +115,14 @@ The current rule set is language-agnostic. To add language-specific guidance:
 
 Skills are not auto-activated — they're procedural guides that the agent follows when certain conditions are met:
 
-| Situation | Skill |
-|-----------|-------|
-| Debugging a non-obvious failure | Debugging Protocol |
+| Situation                          | Skill                     |
+| ---------------------------------- | ------------------------- |
+| Debugging a non-obvious failure    | Debugging Protocol        |
 | Making a significant design choice | Sequential Thinking + ADR |
-| Writing code (pre/post checklists) | Guardrails |
-| Reviewing existing code | Code Review |
-| Building web UIs | Frontend Design |
-| Building mobile UIs | Mobile Design |
+| Writing code (pre/post checklists) | Guardrails                |
+| Reviewing existing code            | Code Review               |
+| Building web UIs                   | Frontend Design           |
+| Building mobile UIs                | Mobile Design             |
 
 ### Combining Skills with Workflows
 
@@ -148,12 +148,12 @@ Every code task follows: Generate → Validate → Remediate → Verify → Deli
 
 ### Coverage Targets
 
-| Layer | Target |
-|-------|--------|
-| Domain logic (business rules) | >85% |
-| Handlers / Controllers | >70% |
-| Integration (adapters) | Tested with Testcontainers |
-| E2E (critical flows) | At least 1 per feature |
+| Layer                         | Target                     |
+| ----------------------------- | -------------------------- |
+| Domain logic (business rules) | >85%                       |
+| Handlers / Controllers        | >70%                       |
+| Integration (adapters)        | Tested with Testcontainers |
+| E2E (critical flows)          | At least 1 per feature     |
 
 ### Testing Hierarchy
 

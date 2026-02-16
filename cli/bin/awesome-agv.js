@@ -38,7 +38,7 @@ const icons = {
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const REPO_OWNER = 'irahardianto';
-const REPO_NAME = 'antigravity-setup';
+const REPO_NAME = 'awesome-agv';
 const BRANCH = 'main';
 const TARBALL_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${BRANCH}.tar.gz`;
 const AGENT_DIR = '.agent';
@@ -68,7 +68,7 @@ function parseArgs(argv) {
 // ── Help Text ──────────────────────────────────────────────────────────────────
 function printHelp() {
   console.log(`
-${color.bold}awesome-agv${color.reset} — Install the Antigravity AI Agent configuration suite
+${color.bold}awesome-agv${color.reset} — Install the Awesome AGV AI Agent configuration suite
 
 ${color.bold}USAGE${color.reset}
   npx awesome-agv [target-dir] [options]
@@ -155,8 +155,8 @@ function downloadToFile(url, destPath, maxRedirects = 5) {
 
 // ── Extract .agent directory from tarball ──────────────────────────────────────
 function extractAgentDir(tarballPath, targetDir) {
-  // The tarball from GitHub has a root directory like: antigravity-setup-main/
-  // We need to extract antigravity-setup-main/.agent/ → targetDir/.agent/
+  // The tarball from GitHub has a root directory like: awesome-agv-main/
+  // We need to extract awesome-agv-main/.agent/ → targetDir/.agent/
   const stripPrefix = `${REPO_NAME}-${BRANCH}/${AGENT_DIR}`;
 
   const agentTargetDir = path.join(targetDir, AGENT_DIR);
@@ -240,10 +240,12 @@ function countFiles(dirPath) {
 
 // ── Print Banner ───────────────────────────────────────────────────────────────
 function printBanner() {
+  // Load version from package.json
+  const { version } = require('../package.json');
   console.log(`
 ${color.bold}${color.cyan}  ╔══════════════════════════════════════════╗
-  ║         ${color.magenta}awesome-agv${color.cyan}  ${color.dim}v1.0.0${color.cyan}${color.bold}            ║
-  ║   ${color.reset}${color.dim}Antigravity AI Agent Configuration${color.cyan}${color.bold}    ║
+  ║         ${color.magenta}awesome-agv${color.cyan}  ${color.dim}v${version}${color.cyan}${color.bold}            ║
+  ║   ${color.reset}${color.dim}Awesome AGV AI Agent Configuration${color.cyan}${color.bold}    ║
   ╚══════════════════════════════════════════╝${color.reset}
 `);
 }
