@@ -23,7 +23,7 @@ Create a new debugging document using the provided template. This serves as the 
 
 **Template location:** `assets/debugging-session-template.md`
 
-**Save to:** `docs/debugging/{issue-name}-{YYYY-MM-DD}.md`
+**Save to:** `docs/debugging/{issue-name}-{YYYY-MM-DD}-{HHmm}.md`
 
 1. Create `docs/debugging/` if it doesn't exist
 2. Copy the template and fill in the issue details

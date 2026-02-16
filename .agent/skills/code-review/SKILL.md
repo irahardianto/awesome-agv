@@ -83,7 +83,7 @@ List of rules referenced during this review.
 
 When invoked via the `/audit` workflow, you **MUST** persist the findings to the repo:
 
-**Path:** `docs/audits/review-findings-{feature}-{YYYY-MM-DD}.md`
+**Path:** `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 
 1. Create `docs/audits/` if it doesn't exist
 2. Write the findings document to that path
@@ -93,16 +93,16 @@ When invoked as a standalone review (not via `/audit`), saving to `docs/audits/`
 
 ### 6. Severity Tags
 
-| Tag | Category | Rule Source |
-|-----|----------|-------------|
-| `[SEC]` | Security | `security-principles.md` |
-| `[DATA]` | Data integrity | `error-handling-principles.md` |
-| `[RES]` | Resource leak | `resources-and-memory-management-principles.md` |
-| `[TEST]` | Testability | `architectural-pattern.md`, `testing-strategy.md` |
-| `[OBS]` | Observability | `logging-and-observability-mandate.md` |
-| `[ERR]` | Error handling | `error-handling-principles.md` |
-| `[ARCH]` | Architecture | `architectural-pattern.md`, `project-structure.md` |
-| `[PAT]` | Pattern consistency | `code-organization-principles.md` |
+| Tag      | Category            | Rule Source                                        |
+| -------- | ------------------- | -------------------------------------------------- |
+| `[SEC]`  | Security            | `security-principles.md`                           |
+| `[DATA]` | Data integrity      | `error-handling-principles.md`                     |
+| `[RES]`  | Resource leak       | `resources-and-memory-management-principles.md`    |
+| `[TEST]` | Testability         | `architectural-pattern.md`, `testing-strategy.md`  |
+| `[OBS]`  | Observability       | `logging-and-observability-mandate.md`             |
+| `[ERR]`  | Error handling      | `error-handling-principles.md`                     |
+| `[ARCH]` | Architecture        | `architectural-pattern.md`, `project-structure.md` |
+| `[PAT]`  | Pattern consistency | `code-organization-principles.md`                  |
 
 ## Rule Compliance
 This skill enforces all rules in `.agent/rules/`. Key references:

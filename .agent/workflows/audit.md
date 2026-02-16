@@ -74,7 +74,7 @@ Run the full validation suite (same as `/4-verify`):
 
 ### Phase 3: Findings Report
 
-**Output location:** `docs/audits/review-findings-{feature}-{YYYY-MM-DD}.md`
+**Output location:** `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 
 You MUST save the report to the repo (not just as a conversation artifact) so it can be:
 - Referenced from other conversations/agents
@@ -83,7 +83,7 @@ You MUST save the report to the repo (not just as a conversation artifact) so it
 
 **Steps:**
 1. Create the `docs/audits/` directory if it doesn't exist
-2. Write the findings report to `docs/audits/review-findings-{feature}-{YYYY-MM-DD}.md`
+2. Write the findings report to `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 3. Use the template below
 
 ```markdown
@@ -117,17 +117,17 @@ Style, naming, or minor improvements.
 ## Feedback Loop
 After the audit produces findings, choose the right workflow based on finding type:
 
-| Finding Type | Example | Workflow |
-|-------------|---------|----------|
-| **Nit / minor** (naming, formatting, missing comment) | "Rename `x` to `userCount`" | Fix in this conversation directly |
-| **Small isolated fix** (missing log, error handling, validation) | "Add input validation on handler" | `/quick-fix` in a new conversation |
-| **Structural change** (wrong abstraction, missing interface, pattern inconsistency) | "Storage not behind interface" | `/refactor` in a new conversation |
-| **Missing capability** (new endpoint, feature, auth check) | "No auth middleware on admin routes" | `/orchestrator` in a new conversation |
+| Finding Type                                                                        | Example                              | Workflow                              |
+| ----------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------- |
+| **Nit / minor** (naming, formatting, missing comment)                               | "Rename `x` to `userCount`"          | Fix in this conversation directly     |
+| **Small isolated fix** (missing log, error handling, validation)                    | "Add input validation on handler"    | `/quick-fix` in a new conversation    |
+| **Structural change** (wrong abstraction, missing interface, pattern inconsistency) | "Storage not behind interface"       | `/refactor` in a new conversation     |
+| **Missing capability** (new endpoint, feature, auth check)                          | "No auth middleware on admin routes" | `/orchestrator` in a new conversation |
 
 ### Using Findings in Other Contexts
 When starting a fix workflow in a new conversation, reference the persisted report:
 
-> "Fix the critical issues in `docs/audits/review-findings-gatekeeper-2026-02-16.md`"
+> "Fix the critical issues in `docs/audits/review-findings-gatekeeper-2026-02-16-1430.md`"
 
 The agent in the new context can read the file directly from the repo — no need to copy-paste findings.
 

@@ -242,11 +242,39 @@ function countFiles(dirPath) {
 function printBanner() {
   // Load version from package.json
   const { version } = require('../package.json');
+
+  const boxWidth = 44; // inner width between ║ and ║
+  const border = '═'.repeat(boxWidth);
+
+  const titleText = `awesome-agv  v${version}`;
+  const subtitleText = 'Awesome AGV AI Agent Configuration';
+
+  // Center-pad a visible string inside the box
+  function padCenter(text, width) {
+    const pad = width - text.length;
+    const left = Math.floor(pad / 2);
+    const right = pad - left;
+    return ' '.repeat(left) + text + ' '.repeat(right);
+  }
+
+  const titlePadded = padCenter(titleText, boxWidth);
+  const subtitlePadded = padCenter(subtitleText, boxWidth);
+
+  // Build colored title: split at the version part for coloring
+  const titleColored = titlePadded.replace(
+    titleText,
+    `${color.magenta}awesome-agv${color.cyan}${color.bold}  ${color.dim}v${version}${color.cyan}${color.bold}`
+  );
+  const subtitleColored = subtitlePadded.replace(
+    subtitleText,
+    `${color.reset}${color.dim}${subtitleText}${color.cyan}${color.bold}`
+  );
+
   console.log(`
-${color.bold}${color.cyan}  ╔══════════════════════════════════════════╗
-  ║         ${color.magenta}awesome-agv${color.cyan}  ${color.dim}v${version}${color.cyan}${color.bold}            ║
-  ║   ${color.reset}${color.dim}Awesome AGV AI Agent Configuration${color.cyan}${color.bold}    ║
-  ╚══════════════════════════════════════════╝${color.reset}
+${color.bold}${color.cyan}  ╔${border}╗
+  ║${titleColored}║
+  ║${subtitleColored}║
+  ╚${border}╝${color.reset}
 `);
 }
 
@@ -279,6 +307,11 @@ ${color.green}${color.bold}  Installation complete! ${icons.rocket}${color.reset
 
   ${icons.arrow} ${color.dim}Your AI agent will automatically pick up the${color.reset}
     ${color.dim}${AGENT_DIR}/ directory. No additional configuration needed.${color.reset}
+
+  💡 ${color.bold}Quick start${color.reset} — open a chat with your agent and try:
+     ${color.cyan}/orchestrator${color.reset}   ${color.dim}Build a feature end-to-end${color.reset}
+     ${color.cyan}/audit${color.reset}          ${color.dim}Review code quality${color.reset}
+     ${color.cyan}/quick-fix${color.reset}      ${color.dim}Fix a bug fast${color.reset}
 
   ${icons.shield}  ${color.dim}Learn more: ${color.cyan}https://github.com/${REPO_OWNER}/${REPO_NAME}${color.reset}
 `);

@@ -27,6 +27,9 @@ jobs:
           npm version $VERSION --no-git-tag-version
         working-directory: ./cli
 
+      - name: Copy README for npm package
+        run: cp README.md cli/README.md
+
       - name: Publish to npm with provenance
         run: npm publish --provenance --access public
         working-directory: ./cli
