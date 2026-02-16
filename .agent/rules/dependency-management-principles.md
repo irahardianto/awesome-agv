@@ -46,3 +46,16 @@ description: When managing project dependencies, configuring package files, or o
 **Sorting:** Alphabetical within groups
 
 **Cleanup:** Remove unused imports (use linter/formatter)
+
+### Dependency Management Checklist
+
+- [ ] Are production dependencies pinned to exact versions?
+- [ ] Is the lock file committed to version control?
+- [ ] Can each dependency be justified (not implementable in <50 lines)?
+- [ ] Are all dependencies actively maintained and on latest stable versions?
+- [ ] Are imports organized by group (stdlib → external → internal)?
+- [ ] Are unused imports removed?
+
+### Related Principles
+- Security Mandate @security-mandate.md
+- Security Principles @security-principles.md

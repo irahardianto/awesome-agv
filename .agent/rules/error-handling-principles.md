@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: When implementing logging, working with loggers, or setting up observability for operations (API handlers, database queries, background jobs, external API calls)
+description: When implementing error handling, working with error types, or designing error recovery strategies (validation errors, business rule violations, infrastructure failures, resource cleanup)
 ---
 
 ## Error Handling Principles

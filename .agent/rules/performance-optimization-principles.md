@@ -83,3 +83,18 @@ description: When working on performance optimization, profiling, benchmarking, 
 
 - Reuse expensive resources (database connections, HTTP connections)  
 - See "Resource and Memory Management Principles"
+
+### Performance Optimization Checklist
+
+- [ ] Is there a measured performance problem (not a guess)?
+- [ ] Have you profiled to find the actual bottleneck?
+- [ ] Are appropriate data structures chosen for the access pattern?
+- [ ] Are expensive operations cached with proper invalidation?
+- [ ] Are batch operations used instead of N+1 queries?
+- [ ] Are I/O operations non-blocking where appropriate?
+- [ ] Have you measured improvement after optimization?
+
+### Related Principles
+- Resource and Memory Management Principles @resources-and-memory-management-principles.md
+- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
+- Concurrency and Threading Principles @concurrency-and-threading-principles.md

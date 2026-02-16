@@ -7,6 +7,9 @@ description: Git commit with conventional format
 ## Purpose
 Commit completed work with proper conventional commit format.
 
+> **Note:** For detailed conventions (branch naming, commit types, PR size, merge strategy), 
+> see `git-workflow-principles.md` in `.agent/rules/`.
+
 ## Prerequisites
 - All verification checks pass
 - Code is ready for review/merge
@@ -24,51 +27,28 @@ git diff --staged
 # Stage all changes
 git add .
 
-# Or stage selectively
+# Or stage selectively (adjust path per project-structure.md)
 git add apps/backend/internal/features/task/
 ```
 
 ### 3. Commit with Conventional Format
 
-**Format:**
+Follow the format from `git-workflow-principles.md`:
+
+```bash
+git commit -m "<type>(<scope>): <description>"
 ```
-<type>(<scope>): <description>
-
-[optional body]
-
-[optional footer]
-```
-
-**Types:**
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation only
-- `style`: Formatting, semicolons, etc.
-- `refactor`: Code change (no new feature/fix)
-- `test`: Adding tests
-- `chore`: Maintenance
 
 **Examples:**
 ```bash
 git commit -m "feat(task): add CRUD API endpoints"
-git commit -m "feat(auth): implement JWT authentication"
-git commit -m "fix(task): correct status validation"
-git commit -m "test(task): add unit tests for service layer"
+git commit -m "fix(auth): correct token expiry validation"
+git commit -m "refactor(storage): extract interface for storage layer"
+git commit -m "test(task): add integration tests for storage adapter"
 ```
 
 ### 4. Update task.md
 Mark completed items as `[x]` in the task checklist.
-
-## Commit Scope Guidelines
-
-| Feature Area | Scope |
-|--------------|-------|
-| Task management | `task` |
-| User/Auth | `auth` |
-| Lists | `list` |
-| API layer | `api` |
-| Database | `db` |
-| Frontend | `ui` |
 
 ## Completion Criteria
 - [ ] Changes committed with proper format

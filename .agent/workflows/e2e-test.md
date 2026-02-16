@@ -7,6 +7,9 @@ description: End-to-end testing with Playwright MCP
 ## Purpose
 Validate complete user journeys through the full system using Playwright MCP.
 
+> **Note:** Paths below follow the project structure defined in `project-structure.md`.
+> Adjust paths to match the actual project layout.
+
 ## When to Use
 - After completing an epic/milestone
 - Before release/deploy
@@ -67,13 +70,18 @@ mcp_playwright_browser_wait_for(text="Welcome")
 
 **Take screenshot for documentation:**
 ```
-mcp_playwright_browser_take_screenshot(filename="login-success.png")
+mcp_playwright_browser_take_screenshot(filename="docs/e2e-screenshots/{feature}-{description}.png")
 ```
 
 ### 4. Document Results
-- Save screenshots to walkthrough
-- Note any failures or issues
-- Update test files if needed
+
+**Screenshot location:** `docs/e2e-screenshots/{feature}-{description}.png`
+
+1. Create `docs/e2e-screenshots/` if it doesn't exist
+2. Save all screenshots there with descriptive names (e.g., `auth-login-success.png`, `task-create-form.png`)
+3. Embed screenshots in the walkthrough artifact using `![description](file:///path/to/screenshot.png)`
+4. Note any failures or issues
+5. Update test files if needed
 
 ## E2E Test Structure
 

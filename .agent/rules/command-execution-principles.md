@@ -40,6 +40,15 @@ description: When executing external commands, shell scripts, or system processe
 - Set timeouts for long-running commands  
 - Handle "command not found" gracefully
 
+### Command Execution Checklist
+
+- [ ] Is user input sanitized/validated before use in commands?
+- [ ] Are arguments passed as lists (not shell string concatenation)?
+- [ ] Are commands running with minimum necessary permissions?
+- [ ] Are exit codes checked and errors handled?
+- [ ] Are timeouts set for long-running commands?
+- [ ] Is stderr captured and logged?
+
 ### Related Principles
 - Security Mandate @security-mandate.md
 - Security Principles @security-principles.md

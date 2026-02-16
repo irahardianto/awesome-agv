@@ -20,6 +20,9 @@ trigger: always_on
 - Cross-module calls only through public API
 
 **Directory Structure (Language-Agnostic):**
+
+> Paths below are illustrative examples following `project-structure.md` — the single source of truth for project layout.
+
 ```
 /task
 

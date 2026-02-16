@@ -98,7 +98,19 @@ The power of the setup comes from its extensive collection of rules covering eve
 - [ ] Create a CLI tool for easier installation (`npx install-antigravity`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+## Project Adaptation Guide
+
+This setup supports different project structures:
+
+| Project Type | Adaptation |
+|-------------|------------|
+| **Monorepo** (default) | Use as-is |
+| **Single backend** | Remove frontend rules/workflows, keep backend paths |
+| **Single frontend** | Remove backend rules/workflows, keep frontend paths |
+| **Microservices** | Adapt `project-structure.md` per service, add service mesh rules |
+| **Mobile (Flutter/RN)** | Adapt frontend rules, add mobile-specific accessibility/testing |
+
+**To adapt:** Edit `project-structure.md` and `4-verify.md` to match your project layout.
 
 <!-- CONTRIBUTING -->
 ## Contributing

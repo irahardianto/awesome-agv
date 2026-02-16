@@ -64,7 +64,7 @@ qurio_read_page(url="https://go.dev/doc/go1.25")
 ```
 
 ### 7. Document Findings
-Create `.agent/research_logs/{feature_name}.md` with:
+Create `docs/research_logs/{feature_name}.md` with:
 - Key patterns discovered
 - Code examples from documentation
 - API signatures and options
@@ -73,17 +73,28 @@ Create `.agent/research_logs/{feature_name}.md` with:
 #### Research Log Naming
 Each feature should have its own research log:
 ```
-.agent/research_logs/
+docs/research_logs/
 ├── epic1_auth.md           # Epic 1: Authentication
 ├── epic2_task.md           # Epic 2: Task CRUD
 ├── epic3_lists.md          # Epic 3: Lists
 └── {feature_name}.md       # Pattern: one log per feature
 ```
 
-### 8. Fallback to Web Search
+### 8. Document Architecture Decisions
+If any decision involves:
+- Choosing between 2+ viable approaches
+- Introducing a new dependency or pattern
+- Changing existing architecture
+
+Then create an ADR using the **ADR Skill** at `docs/decisions/NNNN-short-title.md`.
+
+**Skills to consider:**
+- **Sequential Thinking** — for complex design decisions with multiple trade-offs
+
+### 9. Fallback to Web Search
 If Qurio yields no results, use web search.
 
-### 9. State Training Data Usage
+### 10. State Training Data Usage
 If relying on training data, explicitly state:
 > "I am relying on my training data for this solution as external verification was unavailable."
 
@@ -97,9 +108,10 @@ If Qurio and web search yield no results:
 ## Completion Criteria
 - [ ] Request analyzed and scope defined
 - [ ] `task.md` created with atomic tasks
-- [ ] Research log created at `.agent/research_logs/{feature_name}.md`
+- [ ] Research log created at `docs/research_logs/{feature_name}.md`
 - [ ] All major technologies researched
 - [ ] Code examples documented
+- [ ] Architecture decisions documented as ADRs (if applicable)
 
 ## Next Phase
 Proceed to **Phase 2: Implement** (`/2-implement`)

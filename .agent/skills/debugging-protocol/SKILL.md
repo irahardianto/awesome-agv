@@ -21,7 +21,13 @@ To run a structured debugging session, follow these steps:
 ### 1. Initialize the Session
 Create a new debugging document using the provided template. This serves as the "source of truth" for the investigation.
 
-Template location: `assets/debugging-session-template.md`
+**Template location:** `assets/debugging-session-template.md`
+
+**Save to:** `docs/debugging/{issue-name}-{YYYY-MM-DD}.md`
+
+1. Create `docs/debugging/` if it doesn't exist
+2. Copy the template and fill in the issue details
+3. This makes the session accessible from other conversations and agents (e.g., when handing off to a `/quick-fix` or `/orchestrator` workflow)
 
 ### 2. Define the Problem
 Clearly articulate the **System Context** and **Problem Statement**.
@@ -59,3 +65,9 @@ Synthesize the findings into a **Root Cause Analysis**.
 *   **Isolate Variables**: Change one thing at a time.
 *   **Validate Assumptions**: Verify configuration and versions first (e.g., "Task 1: Validate Current Schema").
 *   **Preserve Evidence**: Keep the specific trace IDs, log timestamps, or reproduction scripts.
+
+## Rule Compliance
+When debugging, verify against:
+- Error Handling Principles @error-handling-principles.md (proper error propagation)
+- Logging and Observability Principles @logging-and-observability-principles.md (structured logging for diagnostics)
+- Testing Strategy @testing-strategy.md (regression test for the fix)

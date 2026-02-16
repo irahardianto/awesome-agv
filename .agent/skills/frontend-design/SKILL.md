@@ -36,6 +36,15 @@ NEVER use generic AI-generated aesthetics like overused font families (Inter, Ro
 
 Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different fonts, different aesthetics. NEVER converge on common choices (Space Grotesk, for example) across generations.
 
+9. All implementations must also pass through the agent's standard rule checks — this skill enhances visual output, but does not override engineering rules.
+
+## Rule Compliance
+Before implementing, verify against:
+- Project Structure @project-structure.md (component organization)
+- Testing Strategy @testing-strategy.md (component tests)
+- Security Principles @security-principles.md (XSS prevention)
+- Accessibility Principles @accessibility-principles.md (WCAG compliance)
+
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
 Remember: You are capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.

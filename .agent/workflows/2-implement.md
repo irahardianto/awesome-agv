@@ -9,7 +9,7 @@ Write production code following Test-Driven Development (TDD).
 
 ## Prerequisites
 - Phase 1 (Research) completed
-- Research log exists at `.agent/research_logs/{feature_name}.md`
+- Research log exists at `docs/research_logs/{feature_name}.md`
 - Mark task as `[/]` in task.md
 
 ## Steps
@@ -61,6 +61,8 @@ Improve the code while keeping tests green:
 - **Follow predefined agent rules** (read applicable `.agent/rules/*.md`)
 - **Handle errors** per Error Handling Principles
 - **Add logging** per Logging and Observability Mandate
+- If the refactoring is complex, activate the **Sequential Thinking** skill
+- If debugging a failing test, activate the **Debugging Protocol** skill
 - Ensure tests still pass
 
 ### 5. Repeat
