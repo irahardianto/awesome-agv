@@ -39,6 +39,8 @@ For example, the principles of the [Rugged Software Constitution](.agent/rules/r
 *   🔄 **10 Workflows** — end-to-end development processes from research to ship.
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
 
+> **💡 Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only what you need, modify anything, or build your own workflows. It's a toolkit, not a framework.
+
 <!-- GETTING STARTED -->
 ## Getting Started
 

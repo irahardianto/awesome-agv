@@ -147,7 +147,7 @@ A structured protocol for inspecting code quality against the full awesome-agv r
 | `[PAT]`  | Pattern consistency |
 
 ### Output
-Produces a structured findings document saved to `docs/audits/review-findings-{feature}-{date}.md`.
+Produces a structured findings document saved to `docs/audits/review-findings-{feature}-{date}-{HHmm}.md`.
 
 ---
 

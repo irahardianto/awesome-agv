@@ -27,13 +27,13 @@ Each workflow is invoked as a **slash command** (e.g., `/orchestrator`, `/quick-
 
 ### Choosing the Right Workflow
 
-| Situation | Workflow |
-|-----------|----------|
-| Building a new feature | `/orchestrator` |
-| Fixing a known bug (<50 lines) | `/quick-fix` |
-| Restructuring code | `/refactor` |
-| Reviewing code quality | `/audit` |
-| Running a single phase | `/1-research`, `/2-implement`, etc. |
+| Situation                      | Workflow                            |
+| ------------------------------ | ----------------------------------- |
+| Building a new feature         | `/orchestrator`                     |
+| Fixing a known bug (<50 lines) | `/quick-fix`                        |
+| Restructuring code             | `/refactor`                         |
+| Reviewing code quality         | `/audit`                            |
+| Running a single phase         | `/1-research`, `/2-implement`, etc. |
 
 ---
 
@@ -51,14 +51,14 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 ### Phases
 
-| Phase | Gate | Output |
-|-------|------|--------|
-| Research | Research log created | `task.md` + `docs/research_logs/*.md` |
-| Implement | Unit tests pass | Production code + unit tests |
-| Integrate | Integration tests pass | Integration tests (Testcontainers) |
-| E2E (conditional) | E2E tests pass + screenshots | E2E tests + screenshots |
-| Verify | All linters pass | Coverage report |
-| Ship | Committed | Git commit |
+| Phase             | Gate                         | Output                                |
+| ----------------- | ---------------------------- | ------------------------------------- |
+| Research          | Research log created         | `task.md` + `docs/research_logs/*.md` |
+| Implement         | Unit tests pass              | Production code + unit tests          |
+| Integrate         | Integration tests pass       | Integration tests (Testcontainers)    |
+| E2E (conditional) | E2E tests pass + screenshots | E2E tests + screenshots               |
+| Verify            | All linters pass             | Coverage report                       |
+| Ship              | Committed                    | Git commit                            |
 
 ### Key Rules
 - **FORBIDDEN from skipping phases** — each phase must complete before the next starts
@@ -214,16 +214,16 @@ Commit completed work with proper conventional commit format.
 ```
 
 ### Types
-| Type | Purpose |
-|------|---------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
+| Type       | Purpose                          |
+| ---------- | -------------------------------- |
+| `feat`     | New feature                      |
+| `fix`      | Bug fix                          |
+| `docs`     | Documentation only               |
 | `refactor` | Code change (no new feature/fix) |
-| `test` | Adding or updating tests |
-| `chore` | Maintenance, dependencies |
-| `perf` | Performance improvement |
-| `ci` | CI/CD configuration changes |
+| `test`     | Adding or updating tests         |
+| `chore`    | Maintenance, dependencies        |
+| `perf`     | Performance improvement          |
+| `ci`       | CI/CD configuration changes      |
 
 ---
 
@@ -290,16 +290,16 @@ Inspect existing code quality without writing new features. Produces structured 
 
 1. **Code Review** — invoke the Code Review Skill against specified files
 2. **Automated Verification** — full lint/test/build validation
-3. **Findings Report** — saved to `docs/audits/review-findings-{feature}-{date}.md`
+3. **Findings Report** — saved to `docs/audits/review-findings-{feature}-{date}-{HHmm}.md`
 
 ### Findings Triage
 
-| Finding Type | Example | Follow-Up |
-|-------------|---------|-----------|
-| Nit / minor | "Rename `x` to `userCount`" | Fix directly |
-| Small isolated fix | "Add input validation" | `/quick-fix` in new conversation |
-| Structural change | "Storage not behind interface" | `/refactor` in new conversation |
-| Missing capability | "No auth on admin routes" | `/orchestrator` in new conversation |
+| Finding Type       | Example                        | Follow-Up                           |
+| ------------------ | ------------------------------ | ----------------------------------- |
+| Nit / minor        | "Rename `x` to `userCount`"    | Fix directly                        |
+| Small isolated fix | "Add input validation"         | `/quick-fix` in new conversation    |
+| Structural change  | "Storage not behind interface" | `/refactor` in new conversation     |
+| Missing capability | "No auth on admin routes"      | `/orchestrator` in new conversation |
 
 ### Best Practice
 Run audits in a **fresh conversation** (not the one that wrote the code) to avoid confirmation bias.

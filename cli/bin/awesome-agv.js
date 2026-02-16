@@ -312,6 +312,7 @@ ${color.green}${color.bold}  Installation complete! ${icons.rocket}${color.reset
      ${color.cyan}/orchestrator${color.reset}   ${color.dim}Build a feature end-to-end${color.reset}
      ${color.cyan}/audit${color.reset}          ${color.dim}Review code quality${color.reset}
      ${color.cyan}/quick-fix${color.reset}      ${color.dim}Fix a bug fast${color.reset}
+     ${color.dim}Rules and skills are modular — use with or without workflows.${color.reset}
 
   ${icons.shield}  ${color.dim}Learn more: ${color.cyan}https://github.com/${REPO_OWNER}/${REPO_NAME}${color.reset}
 `);

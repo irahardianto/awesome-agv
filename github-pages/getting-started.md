@@ -93,6 +93,9 @@ Once installed, the setup activates automatically:
 | **Skills**     | On demand      | Agent uses debugging protocol when stuck, guardrails before/after writing code              |
 | **Workflows**  | Slash commands | Use `/orchestrator` for features, `/quick-fix` for bugs, `/audit` for reviews               |
 
+{: .note }
+> **Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only the rules you want, build your own workflows, or skip workflows entirely. The setup is a toolkit, not a framework.
+
 ## Quick Tour
 
 ### Try the Feature Workflow

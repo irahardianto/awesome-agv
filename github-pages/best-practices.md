@@ -38,7 +38,7 @@ Each conversation should have a single, focused purpose:
 
 When starting a fix workflow from audit findings, reference the persisted report:
 
-> "Fix the critical issues in `docs/audits/review-findings-auth-2026-02-15.md`"
+> "Fix the critical issues in `docs/audits/review-findings-auth-2026-02-15-1430.md`"
 
 The agent can read the file directly — no need to copy-paste findings.
 
