@@ -16,9 +16,9 @@
 </div>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## About Awesome AGV
 
-**The setup** provides a comprehensive sets of standards and practices designed to elevate the capabilities of AI coding agents. It provides a suite of strict rules distilled from software engineering best practices that ensure generated code is secure, defensible, and maintainable. It also provides specialized skills that will help throughout software development.
+**Awesome AGV** provides a comprehensive sets of standards and practices designed to elevate the capabilities of AI coding agents. It provides a suite of strict rules distilled from software engineering best practices that ensure generated code is secure, defensible, and maintainable. It also provides specialized skills that will help throughout software development.
 
 Instead of just generating code that works, the rules and skills ensures agents generate code that **survives**.
 
@@ -227,7 +227,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 - [ ] Add more language-specific security rules (Python, Go, Rust).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
-- [ ] Publish comprehensive documentation site (GitHub Pages).
+- [x] Publish comprehensive documentation site (GitHub Pages).
 
 ## Project Adaptation Guide
 
