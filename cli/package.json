@@ -1,0 +1,35 @@
+{
+  "name": "awesome-agv",
+  "version": "1.0.0",
+  "description": "1-click installer for Antigravity Setup — a rugged, high-quality configuration suite for AI Agents.",
+  "bin": {
+    "awesome-agv": "./bin/awesome-agv.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "coding-assistant",
+    "configuration",
+    "rules",
+    "skills",
+    "workflows",
+    "antigravity",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/irahardianto/antigravity-setup.git"
+  },
+  "homepage": "https://github.com/irahardianto/antigravity-setup",
+  "bugs": {
+    "url": "https://github.com/irahardianto/antigravity-setup/issues"
+  },
+  "license": "MIT",
+  "author": "irahardianto",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
