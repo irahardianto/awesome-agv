@@ -31,6 +31,13 @@ You can drop this configuration into the context or custom rule settings of:
 
 For example, the principles of the [Rugged Software Constitution](.agent/rules/rugged-software-constitution.md) which is based on [Rugged Software Manifesto](https://ruggedsoftware.org/) are universal and will improve the output of any LLM-based coding assistant.
 
+### Key Features
+
+*   📏 **30 Rules** — covering security, reliability, architecture, maintainability, and DevOps.
+*   🛠️ **7 Skills** — specialized capabilities for debugging, design, code review, and more.
+*   🔄 **10 Workflows** — end-to-end development processes from research to ship.
+*   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -47,12 +54,23 @@ To equip your AI agent with these superpowers, follow these steps.
     ```sh
     cp -r /path/to/antigravity-setup/.agent ./your-project-root/
     ```
-2.  Ensure your AI agent is configured to read from the `.agent` directory (most of well-known AI coding assistant are adhering to the `.agent` convention by default) or manually ingest the `.agent/rules/**` as part of its system prompt.
+2.  Ensure your AI agent is configured to read from the `.agent` directory (most of well-known AI coding assistant are adhering to the `.agent` convention by default, no action needed) or manually ingest the `.agent/rules/**` as part of its system prompt.
 
 <!-- USAGE -->
 ## Usage
 
 Once installed, the rules and skills in this repository become active for your agent.
+
+### Rule Architecture
+
+The setup uses a **two-tier rule system** to minimize noise while maximizing coverage:
+
+| Type           | Trigger          | Purpose                                                                                                                      |
+| -------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Mandates**   | `always_on`      | Non-negotiable constraints loaded in every session (security, logging, code completion).                                     |
+| **Principles** | `model_decision` | Contextual guidance activated only when working on relevant areas (e.g., database rules activate only when writing queries). |
+
+Conflicts between rules are resolved by [Rule Priority](.agent/rules/rule-priority.md) — security always wins.
 
 ### Comprehensive Rule Suite
 
@@ -66,15 +84,21 @@ The power of the setup comes from its extensive collection of rules covering eve
 #### ⚡ Reliability & Performance
 *   **[Error Handling Principles](.agent/rules/error-handling-principles.md)**: Techniques for robust error management.
 *   **[Concurrency & Threading](.agent/rules/concurrency-and-threading-principles.md)**: Safe parallel execution and deadlock prevention.
+*   **[Concurrency & Threading Mandate](.agent/rules/concurrency-and-threading-mandate.md)**: When to use (and not use) concurrency.
 *   **[Performance Optimization](.agent/rules/performance-optimization-principles.md)**: Writing efficient and scalable code.
 *   **[Resource Management](.agent/rules/resources-and-memory-management-principles.md)**: Handling memory and system resources responsibly.
+*   **[Monitoring & Alerting](.agent/rules/monitoring-and-alerting-principles.md)**: Health checks, metrics, and graceful degradation.
+*   **[Configuration Management](.agent/rules/configuration-management-principles.md)**: Environment variables, secrets, and config hierarchy.
 
 #### 🏗️ Architecture & Design
 *   **[Core Design Principles](.agent/rules/core-design-principles.md)**: Fundamental software design rules (SOLID, DRY, etc.).
 *   **[API Design Principles](.agent/rules/api-design-principles.md)**: Creating clean, intuitive, and versionable APIs.
-*   **[Architectural Pattern](.agent/rules/architectural-pattern.md)**: Guidelines for structuring applications.
+*   **[Architectural Pattern](.agent/rules/architectural-pattern.md)**: Testability-first design with I/O isolation.
+*   **[Project Structure](.agent/rules/project-structure.md)**: Feature-based organization (the single source of truth for layout).
+*   **[Database Design](.agent/rules/database-design-principles.md)**: Schema design, migrations, and query safety.
 *   **[Data Serialization](.agent/rules/data-serialization-and-interchange-principles.md)**: Safe data handling and formats.
 *   **[Command Execution](.agent/rules/command-execution-principles.md)**: Principles for running system commands securely.
+*   **[Avoid Circular Dependencies](.agent/rules/avoid-circular-dependencies.md)**: Preventing module import cycles.
 
 #### 🧩 Maintainability & Quality
 *   **[Code Organization](.agent/rules/code-organization-principles.md)**: Structuring projects for readability.
@@ -83,32 +107,106 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Dependency Management](.agent/rules/dependency-management-principles.md)**: Managing external libraries safely.
 *   **[Documentation Principles](.agent/rules/documentation-principles.md)**: Writing clear and helpful documentation.
 *   **[Logging & Observability](.agent/rules/logging-and-observability-principles.md)**: Ensuring system visibility.
+*   **[Logging & Observability Mandate](.agent/rules/logging-and-observability-mandate.md)**: All operations must be logged — no exceptions.
+*   **[Accessibility Principles](.agent/rules/accessibility-principles.md)**: WCAG 2.1 AA compliance for UIs.
+*   **[Git Workflow](.agent/rules/git-workflow-principles.md)**: Conventional commits, branch naming, and PR hygiene.
+
+#### 🔄 DevOps & Operations
+*   **[CI/CD Principles](.agent/rules/ci-cd-principles.md)**: Pipeline design, Docker, and GitHub Actions.
+*   **[Code Completion Mandate](.agent/rules/code-completion-mandate.md)**: Automated quality checks before every delivery.
+*   **[Rule Priority](.agent/rules/rule-priority.md)**: Conflict resolution when rules contradict each other.
 
 ### Specialized Skills
 
 *   **[Debugging Protocol](.agent/skills/debugging-protocol/SKILL.md)**: Systematic approach to solving errors.
-*   **[Frontend Design](.agent/skills/frontend-design/SKILL.md`)**: Guidelines for creating visually appealing UIs, based on [Antrophic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
+*   **[Frontend Design](.agent/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
+*   **[Mobile Design](.agent/skills/mobile-design/SKILL.md)**: Production-grade mobile interfaces for Flutter and React Native.
 *   **[Sequential Thinking](.agent/skills/sequential-thinking/SKILL.md)**: A tool for breaking down complex problems, an adaptation from [Sequential Thinking MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
+*   **[Code Review](.agent/skills/code-review/SKILL.md)**: Structured code review protocol against the full rule set.
+*   **[Guardrails](.agent/skills/guardrails/SKILL.md)**: Pre-flight checklist and post-implementation self-review.
+*   **[ADR (Architecture Decision Records)](.agent/skills/adr/SKILL.md)**: Document significant architectural decisions with context and trade-offs.
+
+### Development Workflows
+
+The setup includes opinionated, end-to-end workflows that chain rules and skills into structured development processes.
+
+#### 🏭 Feature Workflow (`/orchestrator`)
+
+The primary workflow for building features. Phases execute sequentially — **no skipping**.
+
+```
+Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → Ship
+```
+
+| Phase        | Workflow                                          | Purpose                                                                                                                 |
+| ------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1. Research  | [`/1-research`](.agent/workflows/1-research.md)   | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
+| 2. Implement | [`/2-implement`](.agent/workflows/2-implement.md) | TDD cycle: Red → Green → Refactor                                                                                       |
+| 3. Integrate | [`/3-integrate`](.agent/workflows/3-integrate.md) | Integration tests with Testcontainers                                                                                   |
+| 3.5. E2E     | [`/e2e-test`](.agent/workflows/e2e-test.md)       | End-to-end validation with Playwright                                                                                   |
+| 4. Verify    | [`/4-verify`](.agent/workflows/4-verify.md)       | Full lint, test, and build validation                                                                                   |
+| 5. Ship      | [`/5-commit`](.agent/workflows/5-commit.md)       | Git commit with conventional format                                                                                     |
+
+#### 🔧 Specialized Workflows
+
+| Workflow                                      | When to Use                                          |
+| --------------------------------------------- | ---------------------------------------------------- |
+| [`/quick-fix`](.agent/workflows/quick-fix.md) | Bug fixes with known root cause (<50 lines)          |
+| [`/refactor`](.agent/workflows/refactor.md)   | Safely restructure code while preserving behavior    |
+| [`/audit`](.agent/workflows/audit.md)         | Code review and quality inspection (no new features) |
+
+<!-- DIRECTORY STRUCTURE -->
+## Directory Structure
+
+```
+.agent/
+├── rules/             # 30 rules (mandates + principles)
+│   ├── rugged-software-constitution.md
+│   ├── security-mandate.md
+│   ├── rule-priority.md
+│   └── ...            
+├── skills/            # 7 specialized skills
+│   ├── debugging-protocol/
+│   ├── frontend-design/
+│   ├── mobile-design/
+│   ├── sequential-thinking/
+│   ├── code-review/
+│   ├── guardrails/
+│   └── adr/
+└── workflows/         # 10 development workflows
+    ├── orchestrator.md
+    ├── 1-research.md
+    ├── 2-implement.md
+    ├── 3-integrate.md
+    ├── 4-verify.md
+    ├── 5-commit.md
+    ├── quick-fix.md
+    ├── refactor.md
+    ├── audit.md
+    └── e2e-test.md
+```
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Include more specialized skills to aid development process.
+- [x] Include more specialized skills to aid development process (7 skills shipped).
+- [x] Add development workflows for structured feature delivery (10 workflows shipped).
 - [ ] Add more language-specific security rules (Python, Go, Rust).
 - [ ] Create a CLI tool for easier installation (`npx install-antigravity`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
+- [ ] Publish comprehensive documentation site (GitHub Pages).
 
 ## Project Adaptation Guide
 
 This setup supports different project structures:
 
-| Project Type | Adaptation |
-|-------------|------------|
-| **Monorepo** (default) | Use as-is |
-| **Single backend** | Remove frontend rules/workflows, keep backend paths |
-| **Single frontend** | Remove backend rules/workflows, keep frontend paths |
-| **Microservices** | Adapt `project-structure.md` per service, add service mesh rules |
-| **Mobile (Flutter/RN)** | Adapt frontend rules, add mobile-specific accessibility/testing |
+| Project Type            | Adaptation                                                       |
+| ----------------------- | ---------------------------------------------------------------- |
+| **Monorepo** (default)  | Use as-is                                                        |
+| **Single backend**      | Remove frontend rules/workflows, keep backend paths              |
+| **Single frontend**     | Remove backend rules/workflows, keep frontend paths              |
+| **Microservices**       | Adapt `project-structure.md` per service, add service mesh rules |
+| **Mobile (Flutter/RN)** | Adapt frontend rules, add mobile-specific accessibility/testing  |
 
 **To adapt:** Edit `project-structure.md` and `4-verify.md` to match your project layout.
 
