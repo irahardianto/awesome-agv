@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="banner.png" alt="Antigravity Setup" width="800" />
   <h3 align="center">Antigravity Setup</h3>
 
   <p align="center">
@@ -49,6 +50,24 @@ To equip your AI agent with these superpowers, follow these steps.
 *   A project where you want to enforce high standards.
 
 ### Installation
+
+**Quick Install (recommended):**
+```sh
+npx awesome-agv
+```
+
+This downloads and installs the latest `.agent/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
+
+**Options:**
+```sh
+# Install into a specific directory
+npx awesome-agv ./my-project
+
+# Overwrite existing installation without prompting
+npx awesome-agv --force
+```
+
+**Manual Install:**
 
 1.  Clone this repository or copy the `.agent` folder into the root of your project.
     ```sh
@@ -192,7 +211,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 - [x] Include more specialized skills to aid development process (7 skills shipped).
 - [x] Add development workflows for structured feature delivery (10 workflows shipped).
 - [ ] Add more language-specific security rules (Python, Go, Rust).
-- [ ] Create a CLI tool for easier installation (`npx install-antigravity`).
+- [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [ ] Publish comprehensive documentation site (GitHub Pages).
 
