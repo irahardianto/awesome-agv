@@ -24,7 +24,7 @@ jobs:
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           echo "Setting version to $VERSION"
-          npm version $VERSION --no-git-tag-version --allow-same-version
+          npm version $VERSION --no-git-tag-version
         working-directory: ./cli
 
       - name: Publish to npm with provenance
