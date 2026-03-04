@@ -92,6 +92,10 @@ pnpm run test -- --coverage
 - [ ] Error handling follows principles
 - [ ] Logging added to operations
 - [ ] Code follows project patterns
+- [ ] List all I/O adapters modified or created (storage files, external API clients)
+- [ ] If adapters were modified: Phase 3 is MANDATORY — do not skip
+
+
 
 ## Next Phase
 Proceed to **Phase 3: Integrate** (`/3-integrate`)

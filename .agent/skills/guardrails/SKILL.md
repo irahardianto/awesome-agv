@@ -57,6 +57,8 @@ Run through this checklist **after writing code, before verification**:
 - [ ] Tests cover happy path
 - [ ] Tests cover at least 2 error paths
 - [ ] Tests cover edge cases relevant to the domain
+- [ ] If I/O adapters were modified: integration tests exist and pass
+- [ ] If UI was modified: E2E tests exist (or Phase 3.5 is planned)
 
 ### Consistency
 - [ ] Follows existing codebase patterns (>80% consistency)

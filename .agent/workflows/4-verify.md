@@ -10,10 +10,20 @@ Run all linters, static analysis, and tests to ensure code quality.
 > **Note:** Paths below follow the project structure defined in `project-structure.md`.
 > Adjust paths to match the actual project layout (e.g. `apps/backend`, `apps/frontend`).
 
-## Prerequisites
-- Phase 3 (Integrate) completed (or skipped if no adapters)
-- Phase 3.5 (E2E) completed (or skipped if no UI changes)
-- All tests passing
+### Phase 3 Gate
+- [ ] Were any storage/database adapter files modified? List them: ___
+- [ ] Were any external API adapters modified? List them: ___
+- [ ] If YES to either: are integration tests written and passing?
+- [ ] If NO to both: state why Phase 3 was skipped
+
+> CRITICAL: If you modified `*_pg.go`, `*_integration*.go`, or any SQL query, Phase 3 is MANDATORY. Do not proceed without integration tests.
+
+### Phase 3.5 Gate
+- [ ] Were any UI changes or modified? List them: ___
+- [ ] If YES: are E2E tests written and passing?
+- [ ] If NO to both: state why Phase 3.5 was skipped
+
+> CRITICAL: If you modified `frontend/*` or any frontend component and integration point, Phase 3.5 is MANDATORY. Do not proceed without E2E tests.
 
 ## If This Phase Fails
 If lint/test/build fails:

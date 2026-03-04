@@ -11,10 +11,14 @@ Test adapter implementations (database, external APIs) with real infrastructure 
 - Phase 2 (Implement) completed
 - Unit tests passing
 
-## When Required
-- Any code that touches database (storage implementations)
-- Any code that calls external APIs
-- Any code that uses message queues, caches, etc.
+## Applicability (Default: REQUIRED)
+This phase is REQUIRED by default. You may ONLY skip it if ALL of the following are true:
+- [ ] No storage/repository files were modified or created
+- [ ] No external API client files were modified or created  
+- [ ] No database queries or schemas were changed
+- [ ] No message queue, cache, or I/O adapter code was touched
+
+If ANY adapter was modified, you MUST write integration tests.
 
 ## If This Phase Fails
 If integration tests fail:
