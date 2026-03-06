@@ -35,6 +35,7 @@ For CLI tools, standalone servers, and single-purpose applications.
           error.rs                   # Feature-specific error types
           repository.rs              # Storage trait definition
           postgres.rs                # Postgres implementation of repository trait
+          mock.rs                    # Mock implementation for testing
         auth/
           mod.rs
           service.rs
@@ -100,7 +101,7 @@ For publishable libraries, SDKs, and reusable components.
 
 ### Cargo Workspace (Multi-Crate)
 
-For complex projects with multiple internal crates. This is the recommended structure for **Pathfinder-type projects** where distinct subsystems benefit from separate compilation units and explicit dependency boundaries.
+For complex projects with multiple internal crates. This is the recommended structure for projects where distinct subsystems benefit from separate compilation units and explicit dependency boundaries.
 
 ```
   project-root/
@@ -108,73 +109,61 @@ For complex projects with multiple internal crates. This is the recommended stru
     Cargo.lock                        # Locked dependency versions (committed for binaries)
 
     crates/
-      pathfinder/                     # Main binary crate (entry point, wiring)
+      myapp/                          # Main binary crate (entry point, wiring)
         Cargo.toml                    # Depends on other workspace crates
         src/
-          main.rs                    # CLI parsing, MCP transport setup
+          main.rs                    # CLI parsing, server setup
           lib.rs
           config.rs
           error.rs
-          mcp/                       # MCP protocol handling
+          api/                       # API / protocol handling
             mod.rs
-            transport.rs             # stdio transport
-            tools.rs                 # Tool registration + dispatch
+            routes.rs                # Route definitions
+            handlers.rs              # Request handlers
 
-      pathfinder-treesitter/          # Tree-sitter engine crate
+      myapp-parser/                   # Domain-specific engine crate
         Cargo.toml
-        build.rs                     # Compiles C grammars via cc crate
+        build.rs                     # Build script (optional — for FFI, codegen)
         src/
           lib.rs
-          parser.rs                  # Language-aware parsing
-          queries.rs                 # .scm query loading + execution
-          semantic_path.rs           # Semantic path resolution
-          repo_map.rs                # get_repo_map implementation
-          cache.rs                   # AST cache with incremental re-parse
-        queries/                     # Bundled .scm query files
-          highlights-go.scm
-          highlights-typescript.scm
-          highlights-python.scm
+          parser.rs                  # Core parsing logic
+          transform.rs               # Data transformations
+          cache.rs                   # Caching layer
+        tests/                       # Per-crate integration tests (public API only)
+          parser_integration.rs
 
-      pathfinder-lsp/                 # LSP client crate
+      myapp-client/                   # External service client crate
         Cargo.toml
         src/
           lib.rs
-          client.rs                  # JSON-RPC client over stdio
-          lifecycle.rs               # Spawn, idle timeout, crash recovery
-          capabilities.rs            # Capability detection + degradation
-          definition.rs              # get_definition implementation
-          call_hierarchy.rs          # analyze_impact implementation
+          client.rs                  # Client implementation
+          lifecycle.rs               # Connection management
+          retry.rs                   # Retry and resilience logic
 
-      pathfinder-search/              # Ripgrep integration crate
+      myapp-search/                   # Search / query engine crate
         Cargo.toml
         src/
           lib.rs
-          search.rs                  # search_codebase implementation
-          filter.rs                  # AST-aware filtering (code_only, comments_only)
+          search.rs                  # Search implementation
+          filter.rs                  # Result filtering
+        tests/                       # Per-crate integration tests
+          search_integration.rs
 
-      pathfinder-edit/                # Shadow Editor crate
+      myapp-common/                   # Shared types and utilities
         Cargo.toml
         src/
           lib.rs
-          surgical_edit.rs           # Edit pipeline implementation
-          occ.rs                     # Version hash + OCC logic
-          diagnostic_diff.rs         # Pre/post diagnostic comparison
-
-      pathfinder-common/              # Shared types and utilities
-        Cargo.toml
-        src/
-          lib.rs
-          types.rs                   # Shared types (SemanticPath, VersionHash, etc.)
-          sandbox.rs                 # Three-tier sandbox enforcement
-          file_watcher.rs            # File watching + expected-write log
+          types.rs                   # Shared domain types
           error.rs                   # Common error types
+        tests/                       # Per-crate integration tests
+          common_integration.rs
 
     tests/                           # Workspace-level integration tests
       integration/
-        full_pipeline_test.rs        # End-to-end MCP tool call tests
+        full_pipeline_test.rs        # End-to-end tests across crates
 
     config/                          # Default configuration
-      pathfinder.config.default.json
+      myapp.config.default.json
 ```
 
 **Key differences from Go/Node layouts:**
@@ -184,6 +173,43 @@ For complex projects with multiple internal crates. This is the recommended stru
 - `Cargo.lock` committed — standard practice for binary projects (not for library crates)
 - No `node_modules/`, `vendor/` — dependencies are managed by Cargo globally in `~/.cargo/`
 - Feature flags in `Cargo.toml` — use `[features]` for optional functionality instead of build-time env vars
+
+### Test Organization in Rust
+
+Rust has a compiler-enforced two-tier test system that differs fundamentally from Go/TS:
+
+**Unit Tests — Inline (Not Separate Files)**
+- Convention: `#[cfg(test)] mod tests` block **at the bottom of each `.rs` file**
+- Tests are compiled conditionally — stripped from production builds
+- Can access **private** functions via `use super::*`
+- This is NOT a shortcut — it is the official, idiomatic Rust convention
+- Do NOT create separate `*_test.rs` files for unit tests
+
+**Integration Tests — `tests/` Directory**
+- Location: `tests/` directory **at each crate's root** (next to `src/`)
+- Each `.rs` file in `tests/` is compiled as its own **separate crate**
+- Can only access the crate's **public API** (`use my_crate::...`)
+- No `#[cfg(test)]` needed — Cargo treats `tests/` as test-only automatically
+- Shared test helpers go in `tests/common/mod.rs` (not `tests/common.rs`)
+
+**Workspace-level tests:**
+- For cross-crate integration / E2E tests, place in `tests/` at the workspace root
+- Or create a dedicated test crate in the workspace (e.g. `tests-integration/` — tokio pattern)
+
+**Example per-crate layout with tests:**
+```
+crates/pathfinder-search/
+  Cargo.toml
+  src/
+    lib.rs                  # Contains #[cfg(test)] mod tests { ... } at bottom
+    search.rs               # Contains #[cfg(test)] mod tests { ... } at bottom
+    filter.rs               # Contains #[cfg(test)] mod tests { ... } at bottom
+    mock.rs                 # Mock implementations
+  tests/                    # Integration tests (separate crate, public API only)
+    search_integration.rs   # Tests search through public lib.rs API
+    common/
+      mod.rs                # Shared test fixtures and helpers
+```
 
 ### Related Principles
 - Project Structure @project-structure.md (core philosophy)

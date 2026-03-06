@@ -9,6 +9,8 @@ description: When writing Rust code, working on a Rust or Cargo project, or revi
 
 Rust's type system and ownership model are your primary tools for correctness. Lean into the compiler — it is your strongest ally. Write code that is idiomatic, safe, and expressive.
 
+> **Scope:** This file covers Rust-specific *coding idioms*. For file layout, see `project-structure-rust-cargo.md`. For test naming conventions, see `testing-strategy.md`. For logging library choice, see `logging-and-observability-principles.md`.
+
 ### Ownership and Borrowing
 
 1. **Prefer borrowing (`&T`, `&mut T`) over cloning**
@@ -131,9 +133,15 @@ pub fn create_task(req: CreateTaskRequest) -> Result<Task, TaskError> { ... }
 
 ### Testing
 
-1. **Test organization:**
-   - Unit tests: `#[cfg(test)] mod tests` at bottom of each module
-   - Integration tests: `tests/` directory at crate root
+1. **Test organization (Rust-specific — differs from Go/TS):**
+   - **Unit tests:** `#[cfg(test)] mod tests` block **at the bottom of each `.rs` file** — this is the idiomatic Rust convention, not a shortcut
+     - Tests can access private functions via `use super::*`
+     - Code inside `#[cfg(test)]` is stripped from production builds
+     - Do NOT create separate `*_test.rs` files — this breaks private access and is non-idiomatic
+   - **Integration tests:** `tests/` directory at crate root (each file compiled as a separate crate)
+     - Only tests public API — use `use my_crate::function;`
+     - No `#[cfg(test)]` annotation needed
+     - Shared helpers: `tests/common/mod.rs` (NOT `tests/common.rs`, which Cargo treats as a test file)
    - Use `#[tokio::test]` for async tests
 
 2. **Test naming:** `fn test_<function>_<scenario>_<expected>()` (snake_case)

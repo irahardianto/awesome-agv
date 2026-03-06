@@ -81,7 +81,9 @@ description: When writing tests, organizing test files, implementing test double
   - **Go:** `*_test.go` (Unit), `*_integration_test.go` (Integration)
   - **Python:** `test_*.py` (Unit), `test_*_integration.py` (Integration)
   - **Java:** `*Test.java` (Unit), `*IT.java` (Integration)
+  - **Rust:** `#[cfg(test)] mod tests` inline in each `.rs` file (Unit), `tests/` directory at crate root (Integration)
   > You must strictly follow the convention for the target language. Do not mix `test` and `spec` suffixes in the same application context.
+  > **Rust exception:** Rust unit tests are **inline** (`#[cfg(test)] mod tests` at the bottom of each `.rs` file), not separate files. This is the official Rust convention — it enables testing private functions and is how `cargo test` discovers unit tests. Integration tests go in `tests/` at the crate root, compiled as separate crates. See `rust-idioms-and-patterns.md` for details.
 
 **2. End-to-End Tests (Separate)**
 - **Rule:** Place in a dedicated `e2e/` folder
