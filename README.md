@@ -107,6 +107,219 @@ The setup uses a **two-tier rule system** to minimize noise while maximizing cov
 
 Conflicts between rules are resolved by [Rule Priority](.agent/rules/rule-priority.md) — security always wins.
 
+### Rule Dependencies
+
+The rules are highly interconnected to provide comprehensive coverage. You can explore these relationships using the **[Interactive Rule Dependency Graph](https://irahardianto.github.io/awesome-agv/rule_dependency_graph.html)**, or view the static diagram below.
+
+<details>
+<summary>View Dependency Graph (Mermaid)</summary>
+
+```mermaid
+graph TD
+  accessibility_principles["accessibility-principles.md"]
+  api_design_principles["api-design-principles.md"]
+  architectural_pattern["architectural-pattern.md"]
+  ci_cd_principles["ci-cd-principles.md"]
+  code_completion_mandate["code-completion-mandate.md"]
+  code_idioms_and_conventions["code-idioms-and-conventions.md"]
+  code_organization_principles["code-organization-principles.md"]
+  command_execution_principles["command-execution-principles.md"]
+  concurrency_and_threading_mandate["concurrency-and-threading-mandate.md"]
+  concurrency_and_threading_principles["concurrency-and-threading-principles.md"]
+  configuration_management_principles["configuration-management-principles.md"]
+  core_design_principles["core-design-principles.md"]
+  data_serialization_and_interchange_principles["data-serialization-and-interchange-principles.md"]
+  database_design_principles["database-design-principles.md"]
+  dependency_management_principles["dependency-management-principles.md"]
+  documentation_principles["documentation-principles.md"]
+  error_handling_principles["error-handling-principles.md"]
+  flutter_idioms_and_patterns["flutter-idioms-and-patterns.md"]
+  git_workflow_principles["git-workflow-principles.md"]
+  go_idioms_and_patterns["go-idioms-and-patterns.md"]
+  logging_and_observability_mandate["logging-and-observability-mandate.md"]
+  logging_and_observability_principles["logging-and-observability-principles.md"]
+  monitoring_and_alerting_principles["monitoring-and-alerting-principles.md"]
+  performance_optimization_principles["performance-optimization-principles.md"]
+  project_structure_flutter_mobile["project-structure-flutter-mobile.md"]
+  project_structure_go_backend["project-structure-go-backend.md"]
+  project_structure_rust_cargo["project-structure-rust-cargo.md"]
+  project_structure_vue_frontend["project-structure-vue-frontend.md"]
+  project_structure["project-structure.md"]
+  resources_and_memory_management_principles["resources-and-memory-management-principles.md"]
+  rugged_software_constitution["rugged-software-constitution.md"]
+  rule_priority["rule-priority.md"]
+  rust_idioms_and_patterns["rust-idioms-and-patterns.md"]
+  security_mandate["security-mandate.md"]
+  security_principles["security-principles.md"]
+  testing_strategy["testing-strategy.md"]
+  typescript_idioms_and_patterns["typescript-idioms-and-patterns.md"]
+  vue_idioms_and_patterns["vue-idioms-and-patterns.md"]
+  accessibility_principles --> core_design_principles
+  accessibility_principles --> security_principles
+  accessibility_principles --> testing_strategy
+  api_design_principles --> data_serialization_and_interchange_principles
+  api_design_principles --> error_handling_principles
+  api_design_principles --> logging_and_observability_mandate
+  api_design_principles --> security_mandate
+  api_design_principles --> security_principles
+  architectural_pattern --> code_organization_principles
+  architectural_pattern --> core_design_principles
+  architectural_pattern --> database_design_principles
+  architectural_pattern --> project_structure
+  architectural_pattern --> testing_strategy
+  ci_cd_principles --> code_completion_mandate
+  ci_cd_principles --> git_workflow_principles
+  ci_cd_principles --> project_structure
+  ci_cd_principles --> security_mandate
+  ci_cd_principles --> testing_strategy
+  code_completion_mandate --> code_idioms_and_conventions
+  code_completion_mandate --> flutter_idioms_and_patterns
+  code_completion_mandate --> go_idioms_and_patterns
+  code_completion_mandate --> rugged_software_constitution
+  code_completion_mandate --> rust_idioms_and_patterns
+  code_completion_mandate --> typescript_idioms_and_patterns
+  code_completion_mandate --> vue_idioms_and_patterns
+  code_idioms_and_conventions --> code_completion_mandate
+  code_idioms_and_conventions --> core_design_principles
+  code_idioms_and_conventions --> flutter_idioms_and_patterns
+  code_idioms_and_conventions --> go_idioms_and_patterns
+  code_idioms_and_conventions --> rust_idioms_and_patterns
+  code_idioms_and_conventions --> typescript_idioms_and_patterns
+  code_idioms_and_conventions --> vue_idioms_and_patterns
+  code_organization_principles --> architectural_pattern
+  code_organization_principles --> core_design_principles
+  code_organization_principles --> project_structure
+  command_execution_principles --> security_mandate
+  command_execution_principles --> security_principles
+  concurrency_and_threading_mandate --> concurrency_and_threading_principles
+  concurrency_and_threading_mandate --> performance_optimization_principles
+  concurrency_and_threading_principles --> error_handling_principles
+  concurrency_and_threading_principles --> resources_and_memory_management_principles
+  concurrency_and_threading_principles --> testing_strategy
+  configuration_management_principles --> security_mandate
+  configuration_management_principles --> security_principles
+  core_design_principles --> accessibility_principles
+  core_design_principles --> architectural_pattern
+  core_design_principles --> code_organization_principles
+  core_design_principles --> documentation_principles
+  data_serialization_and_interchange_principles --> api_design_principles
+  data_serialization_and_interchange_principles --> error_handling_principles
+  data_serialization_and_interchange_principles --> security_mandate
+  data_serialization_and_interchange_principles --> security_principles
+  database_design_principles --> error_handling_principles
+  database_design_principles --> performance_optimization_principles
+  database_design_principles --> security_principles
+  dependency_management_principles --> security_mandate
+  dependency_management_principles --> security_principles
+  documentation_principles --> code_organization_principles
+  documentation_principles --> core_design_principles
+  error_handling_principles --> api_design_principles
+  error_handling_principles --> concurrency_and_threading_mandate
+  error_handling_principles --> logging_and_observability_mandate
+  error_handling_principles --> security_mandate
+  error_handling_principles --> security_principles
+  error_handling_principles --> testing_strategy
+  flutter_idioms_and_patterns --> architectural_pattern
+  flutter_idioms_and_patterns --> code_idioms_and_conventions
+  flutter_idioms_and_patterns --> dependency_management_principles
+  flutter_idioms_and_patterns --> error_handling_principles
+  flutter_idioms_and_patterns --> project_structure_flutter_mobile
+  flutter_idioms_and_patterns --> testing_strategy
+  git_workflow_principles --> code_completion_mandate
+  git_workflow_principles --> security_mandate
+  git_workflow_principles --> testing_strategy
+  go_idioms_and_patterns --> code_idioms_and_conventions
+  go_idioms_and_patterns --> concurrency_and_threading_principles
+  go_idioms_and_patterns --> dependency_management_principles
+  go_idioms_and_patterns --> error_handling_principles
+  go_idioms_and_patterns --> logging_and_observability_principles
+  go_idioms_and_patterns --> project_structure_go_backend
+  go_idioms_and_patterns --> testing_strategy
+  logging_and_observability_mandate --> api_design_principles
+  logging_and_observability_mandate --> error_handling_principles
+  logging_and_observability_mandate --> logging_and_observability_principles
+  logging_and_observability_mandate --> monitoring_and_alerting_principles
+  logging_and_observability_principles --> api_design_principles
+  logging_and_observability_principles --> error_handling_principles
+  logging_and_observability_principles --> logging_and_observability_mandate
+  logging_and_observability_principles --> monitoring_and_alerting_principles
+  logging_and_observability_principles --> security_mandate
+  logging_and_observability_principles --> security_principles
+  monitoring_and_alerting_principles --> concurrency_and_threading_principles
+  monitoring_and_alerting_principles --> error_handling_principles
+  monitoring_and_alerting_principles --> logging_and_observability_mandate
+  monitoring_and_alerting_principles --> logging_and_observability_principles
+  monitoring_and_alerting_principles --> resources_and_memory_management_principles
+  performance_optimization_principles --> concurrency_and_threading_mandate
+  performance_optimization_principles --> concurrency_and_threading_principles
+  performance_optimization_principles --> resources_and_memory_management_principles
+  project_structure_flutter_mobile --> flutter_idioms_and_patterns
+  project_structure_flutter_mobile --> project_structure
+  project_structure_go_backend --> go_idioms_and_patterns
+  project_structure_go_backend --> project_structure
+  project_structure_rust_cargo --> project_structure
+  project_structure_rust_cargo --> rust_idioms_and_patterns
+  project_structure_vue_frontend --> project_structure
+  project_structure_vue_frontend --> typescript_idioms_and_patterns
+  project_structure_vue_frontend --> vue_idioms_and_patterns
+  project_structure --> architectural_pattern
+  project_structure --> code_organization_principles
+  project_structure --> project_structure_flutter_mobile
+  project_structure --> project_structure_go_backend
+  project_structure --> project_structure_rust_cargo
+  project_structure --> project_structure_vue_frontend
+  resources_and_memory_management_principles --> concurrency_and_threading_mandate
+  resources_and_memory_management_principles --> concurrency_and_threading_principles
+  resources_and_memory_management_principles --> error_handling_principles
+  rugged_software_constitution --> architectural_pattern
+  rugged_software_constitution --> code_idioms_and_conventions
+  rugged_software_constitution --> core_design_principles
+  rugged_software_constitution --> error_handling_principles
+  rugged_software_constitution --> logging_and_observability_mandate
+  rugged_software_constitution --> resources_and_memory_management_principles
+  rugged_software_constitution --> security_mandate
+  rugged_software_constitution --> testing_strategy
+  rule_priority --> architectural_pattern
+  rule_priority --> code_completion_mandate
+  rule_priority --> logging_and_observability_mandate
+  rule_priority --> rugged_software_constitution
+  rule_priority --> security_mandate
+  rust_idioms_and_patterns --> code_idioms_and_conventions
+  rust_idioms_and_patterns --> concurrency_and_threading_mandate
+  rust_idioms_and_patterns --> concurrency_and_threading_principles
+  rust_idioms_and_patterns --> dependency_management_principles
+  rust_idioms_and_patterns --> error_handling_principles
+  rust_idioms_and_patterns --> performance_optimization_principles
+  rust_idioms_and_patterns --> resources_and_memory_management_principles
+  rust_idioms_and_patterns --> security_mandate
+  rust_idioms_and_patterns --> testing_strategy
+  security_mandate --> security_principles
+  security_principles --> api_design_principles
+  security_principles --> command_execution_principles
+  security_principles --> configuration_management_principles
+  security_principles --> error_handling_principles
+  security_principles --> logging_and_observability_mandate
+  security_principles --> logging_and_observability_principles
+  testing_strategy --> architectural_pattern
+  testing_strategy --> error_handling_principles
+  testing_strategy --> project_structure
+  typescript_idioms_and_patterns --> code_idioms_and_conventions
+  typescript_idioms_and_patterns --> concurrency_and_threading_mandate
+  typescript_idioms_and_patterns --> dependency_management_principles
+  typescript_idioms_and_patterns --> error_handling_principles
+  typescript_idioms_and_patterns --> security_principles
+  typescript_idioms_and_patterns --> testing_strategy
+  typescript_idioms_and_patterns --> vue_idioms_and_patterns
+  vue_idioms_and_patterns --> architectural_pattern
+  vue_idioms_and_patterns --> code_idioms_and_conventions
+  vue_idioms_and_patterns --> logging_and_observability_principles
+  vue_idioms_and_patterns --> project_structure_vue_frontend
+  vue_idioms_and_patterns --> testing_strategy
+  vue_idioms_and_patterns --> typescript_idioms_and_patterns
+```
+
+</details>
+
 ### Comprehensive Rule Suite
 
 The power of the setup comes from its extensive collection of rules covering every aspect of software engineering.

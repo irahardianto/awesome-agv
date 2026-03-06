@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome-AGV Rule Dependency Graph</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+            overflow: hidden;
+        }
+        #mynetwork {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        #panel {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.85); /* Slate 800 */
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            max-width: 320px;
+        }
+        h1 { 
+            margin: 0 0 12px 0; 
+            font-size: 22px; 
+            font-weight: 600;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p { 
+            margin: 0 0 16px 0; 
+            font-size: 14px; 
+            color: #cbd5e1; /* Slate 300 */
+            line-height: 1.5;
+        }
+        .legend {
+            margin-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 16px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .color-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+        .instruction {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #94a3b8; /* Slate 400 */
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div id="panel">
+        <h1>Rule Dependencies</h1>
+        <p>Interactive visualization of the agent architectural rules and their relationships.</p>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="color-box" style="background: #10b981; border: 1px solid #059669;"></div> Principles</div>
+            <div class="legend-item"><div class="color-box" style="background: #ef4444; border: 1px solid #dc2626;"></div> Mandates / Constitution</div>
+            <div class="legend-item"><div class="color-box" style="background: #3b82f6; border: 1px solid #2563eb;"></div> Idioms</div>
+            <div class="legend-item"><div class="color-box" style="background: #f59e0b; border: 1px solid #d97706;"></div> Structure</div>
+            <div class="legend-item"><div class="color-box" style="background: #8b5cf6; border: 1px solid #7c3aed;"></div> Testing / Other</div>
+        </div>
+
+        <div class="instruction">
+            Scroll to zoom. Drag to pan and reposition nodes. Hover over a node to see its filename.
+        </div>
+    </div>
+    
+    <div id="mynetwork"></div>
+
+    <script type="text/javascript">
+        var nodesData = [{"id": 1, "label": "Accessibility Principles", "group": "principles", "title": "File: accessibility-principles.md"}, {"id": 2, "label": "Api Design Principles", "group": "principles", "title": "File: api-design-principles.md"}, {"id": 3, "label": "Architectural Pattern", "group": "other", "title": "File: architectural-pattern.md"}, {"id": 4, "label": "Ci Cd Principles", "group": "principles", "title": "File: ci-cd-principles.md"}, {"id": 5, "label": "Code Completion Mandate", "group": "mandates", "title": "File: code-completion-mandate.md"}, {"id": 6, "label": "Code Idioms And Conventions", "group": "idioms", "title": "File: code-idioms-and-conventions.md"}, {"id": 7, "label": "Code Organization Principles", "group": "principles", "title": "File: code-organization-principles.md"}, {"id": 8, "label": "Command Execution Principles", "group": "principles", "title": "File: command-execution-principles.md"}, {"id": 9, "label": "Concurrency And Threading Mandate", "group": "mandates", "title": "File: concurrency-and-threading-mandate.md"}, {"id": 10, "label": "Concurrency And Threading Principles", "group": "principles", "title": "File: concurrency-and-threading-principles.md"}, {"id": 11, "label": "Configuration Management Principles", "group": "principles", "title": "File: configuration-management-principles.md"}, {"id": 12, "label": "Core Design Principles", "group": "principles", "title": "File: core-design-principles.md"}, {"id": 13, "label": "Data Serialization And Interchange Principles", "group": "principles", "title": "File: data-serialization-and-interchange-principles.md"}, {"id": 14, "label": "Database Design Principles", "group": "principles", "title": "File: database-design-principles.md"}, {"id": 15, "label": "Dependency Management Principles", "group": "principles", "title": "File: dependency-management-principles.md"}, {"id": 16, "label": "Documentation Principles", "group": "principles", "title": "File: documentation-principles.md"}, {"id": 17, "label": "Error Handling Principles", "group": "principles", "title": "File: error-handling-principles.md"}, {"id": 18, "label": "Flutter Idioms And Patterns", "group": "idioms", "title": "File: flutter-idioms-and-patterns.md"}, {"id": 19, "label": "Git Workflow Principles", "group": "principles", "title": "File: git-workflow-principles.md"}, {"id": 20, "label": "Go Idioms And Patterns", "group": "idioms", "title": "File: go-idioms-and-patterns.md"}, {"id": 21, "label": "Logging And Observability Mandate", "group": "mandates", "title": "File: logging-and-observability-mandate.md"}, {"id": 22, "label": "Logging And Observability Principles", "group": "principles", "title": "File: logging-and-observability-principles.md"}, {"id": 23, "label": "Monitoring And Alerting Principles", "group": "principles", "title": "File: monitoring-and-alerting-principles.md"}, {"id": 24, "label": "Performance Optimization Principles", "group": "principles", "title": "File: performance-optimization-principles.md"}, {"id": 25, "label": "Project Structure Flutter Mobile", "group": "structure", "title": "File: project-structure-flutter-mobile.md"}, {"id": 26, "label": "Project Structure Go Backend", "group": "structure", "title": "File: project-structure-go-backend.md"}, {"id": 27, "label": "Project Structure Rust Cargo", "group": "structure", "title": "File: project-structure-rust-cargo.md"}, {"id": 28, "label": "Project Structure Vue Frontend", "group": "structure", "title": "File: project-structure-vue-frontend.md"}, {"id": 29, "label": "Project Structure", "group": "structure", "title": "File: project-structure.md"}, {"id": 30, "label": "Resources And Memory Management Principles", "group": "principles", "title": "File: resources-and-memory-management-principles.md"}, {"id": 31, "label": "Rugged Software Constitution", "group": "mandates", "title": "File: rugged-software-constitution.md"}, {"id": 32, "label": "Rule Priority", "group": "other", "title": "File: rule-priority.md"}, {"id": 33, "label": "Rust Idioms And Patterns", "group": "idioms", "title": "File: rust-idioms-and-patterns.md"}, {"id": 34, "label": "Security Mandate", "group": "mandates", "title": "File: security-mandate.md"}, {"id": 35, "label": "Security Principles", "group": "principles", "title": "File: security-principles.md"}, {"id": 36, "label": "Testing Strategy", "group": "other", "title": "File: testing-strategy.md"}, {"id": 37, "label": "Typescript Idioms And Patterns", "group": "idioms", "title": "File: typescript-idioms-and-patterns.md"}, {"id": 38, "label": "Vue Idioms And Patterns", "group": "idioms", "title": "File: vue-idioms-and-patterns.md"}];
+        var edgesData = [{"from": 29, "to": 7, "arrows": "to"}, {"from": 29, "to": 28, "arrows": "to"}, {"from": 29, "to": 3, "arrows": "to"}, {"from": 29, "to": 25, "arrows": "to"}, {"from": 29, "to": 27, "arrows": "to"}, {"from": 29, "to": 26, "arrows": "to"}, {"from": 1, "to": 35, "arrows": "to"}, {"from": 1, "to": 36, "arrows": "to"}, {"from": 1, "to": 12, "arrows": "to"}, {"from": 38, "to": 6, "arrows": "to"}, {"from": 38, "to": 28, "arrows": "to"}, {"from": 38, "to": 3, "arrows": "to"}, {"from": 38, "to": 37, "arrows": "to"}, {"from": 38, "to": 22, "arrows": "to"}, {"from": 38, "to": 36, "arrows": "to"}, {"from": 24, "to": 10, "arrows": "to"}, {"from": 24, "to": 30, "arrows": "to"}, {"from": 24, "to": 9, "arrows": "to"}, {"from": 15, "to": 35, "arrows": "to"}, {"from": 15, "to": 34, "arrows": "to"}, {"from": 6, "to": 18, "arrows": "to"}, {"from": 6, "to": 37, "arrows": "to"}, {"from": 6, "to": 38, "arrows": "to"}, {"from": 6, "to": 33, "arrows": "to"}, {"from": 6, "to": 20, "arrows": "to"}, {"from": 6, "to": 12, "arrows": "to"}, {"from": 6, "to": 5, "arrows": "to"}, {"from": 2, "to": 35, "arrows": "to"}, {"from": 2, "to": 13, "arrows": "to"}, {"from": 2, "to": 21, "arrows": "to"}, {"from": 2, "to": 34, "arrows": "to"}, {"from": 2, "to": 17, "arrows": "to"}, {"from": 20, "to": 15, "arrows": "to"}, {"from": 20, "to": 6, "arrows": "to"}, {"from": 20, "to": 10, "arrows": "to"}, {"from": 20, "to": 22, "arrows": "to"}, {"from": 20, "to": 17, "arrows": "to"}, {"from": 20, "to": 26, "arrows": "to"}, {"from": 20, "to": 36, "arrows": "to"}, {"from": 13, "to": 35, "arrows": "to"}, {"from": 13, "to": 2, "arrows": "to"}, {"from": 13, "to": 34, "arrows": "to"}, {"from": 13, "to": 17, "arrows": "to"}, {"from": 19, "to": 34, "arrows": "to"}, {"from": 19, "to": 5, "arrows": "to"}, {"from": 19, "to": 36, "arrows": "to"}, {"from": 10, "to": 30, "arrows": "to"}, {"from": 10, "to": 17, "arrows": "to"}, {"from": 10, "to": 36, "arrows": "to"}, {"from": 18, "to": 15, "arrows": "to"}, {"from": 18, "to": 6, "arrows": "to"}, {"from": 18, "to": 3, "arrows": "to"}, {"from": 18, "to": 25, "arrows": "to"}, {"from": 18, "to": 17, "arrows": "to"}, {"from": 18, "to": 36, "arrows": "to"}, {"from": 14, "to": 35, "arrows": "to"}, {"from": 14, "to": 24, "arrows": "to"}, {"from": 14, "to": 17, "arrows": "to"}, {"from": 30, "to": 10, "arrows": "to"}, {"from": 30, "to": 9, "arrows": "to"}, {"from": 30, "to": 17, "arrows": "to"}, {"from": 22, "to": 35, "arrows": "to"}, {"from": 22, "to": 2, "arrows": "to"}, {"from": 22, "to": 21, "arrows": "to"}, {"from": 22, "to": 23, "arrows": "to"}, {"from": 22, "to": 34, "arrows": "to"}, {"from": 22, "to": 17, "arrows": "to"}, {"from": 17, "to": 2, "arrows": "to"}, {"from": 17, "to": 35, "arrows": "to"}, {"from": 17, "to": 21, "arrows": "to"}, {"from": 17, "to": 34, "arrows": "to"}, {"from": 17, "to": 9, "arrows": "to"}, {"from": 17, "to": 36, "arrows": "to"}, {"from": 23, "to": 10, "arrows": "to"}, {"from": 23, "to": 30, "arrows": "to"}, {"from": 23, "to": 21, "arrows": "to"}, {"from": 23, "to": 22, "arrows": "to"}, {"from": 23, "to": 17, "arrows": "to"}, {"from": 21, "to": 2, "arrows": "to"}, {"from": 21, "to": 22, "arrows": "to"}, {"from": 21, "to": 17, "arrows": "to"}, {"from": 21, "to": 23, "arrows": "to"}, {"from": 3, "to": 29, "arrows": "to"}, {"from": 3, "to": 7, "arrows": "to"}, {"from": 3, "to": 12, "arrows": "to"}, {"from": 3, "to": 14, "arrows": "to"}, {"from": 3, "to": 36, "arrows": "to"}, {"from": 35, "to": 2, "arrows": "to"}, {"from": 35, "to": 11, "arrows": "to"}, {"from": 35, "to": 21, "arrows": "to"}, {"from": 35, "to": 22, "arrows": "to"}, {"from": 35, "to": 8, "arrows": "to"}, {"from": 35, "to": 17, "arrows": "to"}, {"from": 11, "to": 35, "arrows": "to"}, {"from": 11, "to": 34, "arrows": "to"}, {"from": 33, "to": 15, "arrows": "to"}, {"from": 33, "to": 6, "arrows": "to"}, {"from": 33, "to": 10, "arrows": "to"}, {"from": 33, "to": 30, "arrows": "to"}, {"from": 33, "to": 34, "arrows": "to"}, {"from": 33, "to": 17, "arrows": "to"}, {"from": 33, "to": 24, "arrows": "to"}, {"from": 33, "to": 9, "arrows": "to"}, {"from": 33, "to": 36, "arrows": "to"}, {"from": 5, "to": 18, "arrows": "to"}, {"from": 5, "to": 6, "arrows": "to"}, {"from": 5, "to": 31, "arrows": "to"}, {"from": 5, "to": 37, "arrows": "to"}, {"from": 5, "to": 38, "arrows": "to"}, {"from": 5, "to": 33, "arrows": "to"}, {"from": 5, "to": 20, "arrows": "to"}, {"from": 9, "to": 10, "arrows": "to"}, {"from": 9, "to": 24, "arrows": "to"}, {"from": 27, "to": 33, "arrows": "to"}, {"from": 27, "to": 29, "arrows": "to"}, {"from": 7, "to": 29, "arrows": "to"}, {"from": 7, "to": 3, "arrows": "to"}, {"from": 7, "to": 12, "arrows": "to"}, {"from": 4, "to": 29, "arrows": "to"}, {"from": 4, "to": 34, "arrows": "to"}, {"from": 4, "to": 19, "arrows": "to"}, {"from": 4, "to": 5, "arrows": "to"}, {"from": 4, "to": 36, "arrows": "to"}, {"from": 36, "to": 29, "arrows": "to"}, {"from": 36, "to": 17, "arrows": "to"}, {"from": 36, "to": 3, "arrows": "to"}, {"from": 16, "to": 7, "arrows": "to"}, {"from": 16, "to": 12, "arrows": "to"}, {"from": 31, "to": 6, "arrows": "to"}, {"from": 31, "to": 30, "arrows": "to"}, {"from": 31, "to": 21, "arrows": "to"}, {"from": 31, "to": 3, "arrows": "to"}, {"from": 31, "to": 34, "arrows": "to"}, {"from": 31, "to": 17, "arrows": "to"}, {"from": 31, "to": 12, "arrows": "to"}, {"from": 31, "to": 36, "arrows": "to"}, {"from": 8, "to": 35, "arrows": "to"}, {"from": 8, "to": 34, "arrows": "to"}, {"from": 28, "to": 38, "arrows": "to"}, {"from": 28, "to": 29, "arrows": "to"}, {"from": 28, "to": 37, "arrows": "to"}, {"from": 25, "to": 18, "arrows": "to"}, {"from": 25, "to": 29, "arrows": "to"}, {"from": 26, "to": 29, "arrows": "to"}, {"from": 26, "to": 20, "arrows": "to"}, {"from": 12, "to": 16, "arrows": "to"}, {"from": 12, "to": 1, "arrows": "to"}, {"from": 12, "to": 3, "arrows": "to"}, {"from": 12, "to": 7, "arrows": "to"}, {"from": 37, "to": 35, "arrows": "to"}, {"from": 37, "to": 15, "arrows": "to"}, {"from": 37, "to": 6, "arrows": "to"}, {"from": 37, "to": 38, "arrows": "to"}, {"from": 37, "to": 17, "arrows": "to"}, {"from": 37, "to": 9, "arrows": "to"}, {"from": 37, "to": 36, "arrows": "to"}, {"from": 34, "to": 35, "arrows": "to"}, {"from": 32, "to": 31, "arrows": "to"}, {"from": 32, "to": 21, "arrows": "to"}, {"from": 32, "to": 3, "arrows": "to"}, {"from": 32, "to": 34, "arrows": "to"}, {"from": 32, "to": 5, "arrows": "to"}];
+
+        var nodes = new vis.DataSet(nodesData);
+        var edges = new vis.DataSet(edgesData);
+        var container = document.getElementById('mynetwork');
+        
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        
+        var options = {
+            nodes: {
+                shape: 'dot',
+                size: 18,
+                font: {
+                    size: 14,
+                    color: '#f8fafc',
+                    face: 'Inter, sans-serif'
+                },
+                borderWidth: 2,
+                shadow: { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10, x: 2, y: 2 }
+            },
+            edges: {
+                width: 1.5,
+                color: { inherit: 'from', opacity: 0.6 },
+                smooth: {
+                    type: 'curvedCW',
+                    roundness: 0.2
+                },
+                arrows: {
+                    to: { enabled: true, scaleFactor: 0.8, type: 'arrow' }
+                },
+                shadow: { enabled: true, color: 'rgba(0,0,0,0.3)', size: 5, x: 1, y: 1 }
+            },
+            physics: {
+                forceAtlas2Based: {
+                    gravitationalConstant: -120,
+                    centralGravity: 0.015,
+                    springLength: 200,
+                    springConstant: 0.04
+                },
+                maxVelocity: 50,
+                solver: 'forceAtlas2Based',
+                timestep: 0.35,
+                stabilization: { iterations: 150 }
+            },
+            groups: {
+                principles: { 
+                    color: { background: '#10b981', border: '#059669', hover: { background: '#34d399', border: '#10b981' } } 
+                },
+                mandates: { 
+                    color: { background: '#ef4444', border: '#dc2626', hover: { background: '#f87171', border: '#ef4444' } } 
+                },
+                idioms: { 
+                    color: { background: '#3b82f6', border: '#2563eb', hover: { background: '#60a5fa', border: '#3b82f6' } } 
+                },
+                structure: { 
+                    color: { background: '#f59e0b', border: '#d97706', hover: { background: '#fbbf24', border: '#f59e0b' } } 
+                },
+                other: { 
+                    color: { background: '#8b5cf6', border: '#7c3aed', hover: { background: '#a78bfa', border: '#8b5cf6' } } 
+                }
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 150,
+                zoomView: true,
+                dragView: true
+            }
+        };
+
+        var network = new vis.Network(container, data, options);
+        
+        // Emphasize connected nodes on hover
+        network.on("hoverNode", function (params) {
+            network.canvas.body.container.style.cursor = 'pointer';
+        });
+        network.on("blurNode", function (params) {
+            network.canvas.body.container.style.cursor = 'default';
+        });
+    </script>
+</body>
+</html>

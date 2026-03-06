@@ -32,6 +32,12 @@ When rules conflict, [Rule Priority](https://github.com/irahardianto/awesome-agv
 
 ---
 
+## 🕸️ Rule Dependency Graph
+
+The rules are highly interconnected. You can explore these relationships using our **[Interactive Rule Dependency Graph](rule_dependency_graph.html)** to see how individual mandates, principles, and idioms relate to each other.
+
+---
+
 ## 🛡️ Security & Integrity
 
 Rules that ensure code is secure by default.
