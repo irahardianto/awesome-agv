@@ -70,5 +70,7 @@ Use this structure for web frontend applications. The vertical slice principle a
 
 > This structure applies equally to React (.tsx), Vue (.vue), and Svelte (.svelte). Replace component file extensions and state management (Redux/Zustand for React, Pinia for Vue) as needed.
 
-### Related Rules
+### Related Principles
 - Project Structure @project-structure.md (core philosophy)
+- Vue Idioms and Patterns @vue-idioms-and-patterns.md (Composition API, Pinia, composables)
+- TypeScript Idioms and Patterns @typescript-idioms-and-patterns.md (type system, async patterns)

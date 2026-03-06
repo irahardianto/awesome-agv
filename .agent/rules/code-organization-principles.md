@@ -78,6 +78,7 @@ func (l *Logic) CreateOrder(ctx context.Context, req CreateOrderRequest) error {
     task, err := l.taskService.GetTask(ctx, req.TaskID)
     // ... rest of logic
 }
+```
 
 **Rules**
 
@@ -86,8 +87,26 @@ func (l *Logic) CreateOrder(ctx context.Context, req CreateOrderRequest) error {
 - Wire dependencies in cmd/api/main.go
 
 **Wiring Example**
-```
+```go
 // cmd/api/main.go
 taskService := task.NewService(taskStorage)
 orderService := order.NewService(orderStorage, taskService) // Pass task service
 ```
+
+### Avoid Circular Dependencies
+
+**Problem:** Module A imports B, B imports A
+
+- Causes build failures, initialization issues
+- Indicates poor module boundaries
+
+**Solution:**
+
+- Extract shared code to third module
+- Restructure dependencies (A→C, B→C)
+- Use dependency injection
+
+### Related Principles
+- Core Design Principles @core-design-principles.md
+- Project Structure @project-structure.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md

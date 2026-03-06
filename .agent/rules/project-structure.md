@@ -26,28 +26,28 @@ trigger: always_on
 
 Each layout follows the universal philosophy above. Load the relevant layout when working with a specific language or framework:
 
-| Layout | File | When to Use |
-|---|---|---|
-| Go Backend | @project-structure-go-backend.md | Go services, APIs, CLI tools |
-| Vue/React Frontend | @project-structure-vue-frontend.md | Web frontends (Vue, React, Svelte) |
-| Flutter/Mobile | @project-structure-flutter-mobile.md | Mobile apps (Flutter, React Native) |
-| Rust/Cargo | @project-structure-rust-cargo.md | Rust binaries, libraries, workspaces |
+| Layout             | File                                 | When to Use                          |
+| ------------------ | ------------------------------------ | ------------------------------------ |
+| Go Backend         | @project-structure-go-backend.md     | Go services, APIs, CLI tools         |
+| Vue/React Frontend | @project-structure-vue-frontend.md   | Web frontends (Vue, React, Svelte)   |
+| Flutter/Mobile     | @project-structure-flutter-mobile.md | Mobile apps (Flutter, React Native)  |
+| Rust/Cargo         | @project-structure-rust-cargo.md     | Rust binaries, libraries, workspaces |
 
 > This Feature/Domain/UI/API structure is framework-agnostic. It applies equally to any language or framework. The layout files provide language-specific conventions (file naming, module systems, test locations) while preserving the vertical slice architecture.
 
 ### Adapting for Different Project Types
 
-| Project Type | What to Change |
-|-------------|----------------|
-| **Monorepo** (default) | Use as-is — `apps/backend/`, `apps/frontend/`, `apps/mobile/` |
-| **Single backend** | Flatten to root: `cmd/`, `internal/` (Go) or `src/` (Rust) at project root |
-| **Single frontend** | Flatten to root: `src/` at project root (no `apps/` wrapper) |
-| **Single mobile** | Flatten to root: `lib/` at project root (no `apps/` wrapper) |
-| **Single Rust binary** | Flatten to root: `src/`, `tests/`, `benches/` at project root with `Cargo.toml` |
-| **Rust library** | Flatten to root: `src/`, `examples/`, `tests/` at project root with `Cargo.toml` (lib target) |
-| **Rust workspace** | `crates/` at root with workspace `Cargo.toml` — each crate follows single-crate layout internally |
-| **Microservices** | One directory per service under `apps/` (each with own `go.mod`/`Cargo.toml`/`Dockerfile`) |
-| **Full-stack + mobile** | Use all relevant layout files under `apps/` |
+| Project Type            | What to Change                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------- |
+| **Monorepo** (default)  | Use as-is — `apps/backend/`, `apps/frontend/`, `apps/mobile/`                                     |
+| **Single backend**      | Flatten to root: `cmd/`, `internal/` (Go) or `src/` (Rust) at project root                        |
+| **Single frontend**     | Flatten to root: `src/` at project root (no `apps/` wrapper)                                      |
+| **Single mobile**       | Flatten to root: `lib/` at project root (no `apps/` wrapper)                                      |
+| **Single Rust binary**  | Flatten to root: `src/`, `tests/`, `benches/` at project root with `Cargo.toml`                   |
+| **Rust library**        | Flatten to root: `src/`, `examples/`, `tests/` at project root with `Cargo.toml` (lib target)     |
+| **Rust workspace**      | `crates/` at root with workspace `Cargo.toml` — each crate follows single-crate layout internally |
+| **Microservices**       | One directory per service under `apps/` (each with own `go.mod`/`Cargo.toml`/`Dockerfile`)        |
+| **Full-stack + mobile** | Use all relevant layout files under `apps/`                                                       |
 
 **Single-app projects** don't need the `apps/` directory — put the language-specific root directories directly at the project root. The internal structure (features, platform, etc.) stays the same.
 
@@ -76,3 +76,8 @@ src/
 - Each service follows the same layout internally (see language-specific files)
 - Add `shared/` at root for cross-service contracts (protobuf, shared types) — keep this minimal
 - Services communicate via API calls or message queues, never direct imports
+
+### Related Principles
+- Code Organization Principles @code-organization-principles.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
+

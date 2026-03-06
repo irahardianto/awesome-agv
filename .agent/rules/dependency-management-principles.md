@@ -15,10 +15,13 @@ description: When managing project dependencies, configuring package files, or o
 
 **Use lock files:**
 
-- package-lock.json (Node.js)  
-- Cargo.lock (Rust)  
-- go.sum (Go)  
-- requirements.txt (Python)
+- `package-lock.json` (Node.js / npm)  
+- `pnpm-lock.yaml` (Node.js / pnpm)  
+- `yarn.lock` (Node.js / yarn)  
+- `Cargo.lock` (Rust)  
+- `go.sum` (Go)  
+- `pubspec.lock` (Flutter / Dart)  
+- `requirements.txt` / `poetry.lock` (Python)
 
 ### Minimize Dependencies
 

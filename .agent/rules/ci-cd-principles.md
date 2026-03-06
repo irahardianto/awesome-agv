@@ -167,3 +167,4 @@ dev → staging → production
 - Security Mandate @security-mandate.md (secrets management)
 - Git Workflow Principles @git-workflow-principles.md (branch strategy)
 - Project Structure @project-structure.md (service paths)
+- Testing Strategy @testing-strategy.md (unit and integration test stages)

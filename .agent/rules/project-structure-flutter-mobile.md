@@ -12,7 +12,7 @@ Use this structure for Flutter or React Native mobile applications. The vertical
     mobile/                           # Mobile application source code (Flutter)
       lib/
         core/                         # Foundational concerns (the "Framework")
-          di/                         # Dependency injection setup (get_it, riverpod)
+          di/                         # Dependency injection — Riverpod ProviderScope setup
             injection.dart            # Service locator / provider registration
           network/                    # HTTP client setup, interceptors
             api_client.dart           # Dio/http client with base config
@@ -38,9 +38,9 @@ Use this structure for Flutter or React Native mobile applications. The vertical
               task_card_test.dart      # Widget tests
             # --- State Management ---
             state/
-              task_cubit.dart          # BLoC/Cubit or Riverpod provider
-              task_state.dart          # State classes (loading, loaded, error)
-              task_cubit_test.dart     # Unit tests for state logic
+              task_notifier.dart       # Riverpod AsyncNotifier
+              task_state.dart          # State classes (generated via freezed)
+              task_notifier_test.dart  # Unit tests for state logic
             # --- Domain (Business Logic) ---
             models/
               task.dart               # Domain model (freezed/equatable)
@@ -76,7 +76,7 @@ Use this structure for Flutter or React Native mobile applications. The vertical
       test/                           # Test directory (mirrors lib/)
         features/
           task/
-            task_cubit_test.dart
+            task_notifier_test.dart
             task_logic_test.dart
         integration_test/             # Integration / E2E tests
           task_flow_test.dart
@@ -88,9 +88,10 @@ Use this structure for Flutter or React Native mobile applications. The vertical
 **Key differences from web frontend:**
 - `screens/` replaces `views/` — mobile uses screen-based navigation
 - `widgets/` replaces `components/` — Flutter's terminology
-- `state/` replaces `store/` — BLoC/Cubit/Riverpod instead of Pinia/Redux
+- `state/` replaces `store/` — Riverpod `AsyncNotifier`/`Notifier` instead of Pinia/Redux
 - `repository/` replaces `api/` — mobile often caches data locally
-- `core/di/` handles dependency injection (get_it, riverpod)
+- `core/di/` handles dependency injection (Riverpod `ProviderScope`)
 
-### Related Rules
+### Related Principles
 - Project Structure @project-structure.md (core philosophy)
+- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md (Riverpod patterns, widget idioms)

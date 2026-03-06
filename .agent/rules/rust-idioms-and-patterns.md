@@ -1,9 +1,9 @@
 ---
 trigger: model_decision
-description: When working on a Rust or Cargo project, writing Rust code, or reviewing Rust idioms and safety practices
+description: When writing Rust code, working on a Rust or Cargo project, or reviewing Rust idioms and safety practices
 ---
 
-## Rust Idioms and Safety
+## Rust Idioms and Patterns
 
 ### Core Philosophy
 
@@ -54,6 +54,16 @@ pub enum PathfinderError {
 
 // ❌ Bad — stringly-typed, unmatchable
 fn do_thing() -> Result<(), String> { ... }
+
+// ✅ Annotate public Result-producing functions to force callers to handle them
+#[must_use]
+pub fn create_task(req: CreateTaskRequest) -> Result<Task, TaskError> { ... }
+
+// Triggers a compiler warning when the return value is fully ignored:
+//   create_task(req);          // warning: unused `Result` that must be used
+//
+// This does NOT trigger the warning (intentional discard — still valid when used deliberately):
+//   let _ = create_task(req);  // explicit discard, silences warning by design
 ```
 
 ### Async and Concurrency
@@ -136,13 +146,19 @@ fn do_thing() -> Result<(), String> { ... }
 
 ### Clippy and Formatting
 
-1. **`cargo clippy` must pass with zero warnings** before any commit
+1. **`cargo check` for fast iteration during development**
+   - `cargo check`: type-checks without producing a binary — fastest feedback loop
+   - `cargo clippy`: includes `cargo check` plus lint rules — use before committing
+   - `cargo build`: only when you need the actual binary/library artifact
+   - Never run `cargo build` during TDD cycles — it is significantly slower than `cargo check`
+
+2. **`cargo clippy` must pass with zero warnings** before any commit
    - Use `#[allow(clippy::...)]` only with a `// ALLOW:` comment explaining why
    - Prefer fixing the lint over suppressing it
 
-2. **`cargo fmt` is non-negotiable** — all code must be formatted
+3. **`cargo fmt` is non-negotiable** — all code must be formatted
 
-3. **Recommended project-level Clippy configuration (`.clippy.toml` or `Cargo.toml`):**
+4. **Recommended project-level Clippy configuration (`.clippy.toml` or `Cargo.toml`):**
 
 ```toml
 [lints.clippy]

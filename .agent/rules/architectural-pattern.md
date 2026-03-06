@@ -154,36 +154,30 @@ find_symbol("Interface") OR find_symbol("Repository") OR find_symbol("Service")
 
 4. **If consistency <80%**: STOP and report fragmentation to human.
 
-### Testing Requirements
+### Testability Compliance
 
-**Unit Tests (must run without infrastructure):**
-- Mock all I/O dependencies
-- Test business logic in isolation
-- Fast (<100ms per test)
-- >85% coverage of business paths
+These are **architectural** requirements that the code structure must satisfy — not testing mechanics. A design that cannot meet them is not compliant with this architecture.
 
-**Integration Tests (Testcontainers):**
-- Use real dependencies (via Testcontainers, Firebase emulator)
-- Test adapter implementations
-- Verify contracts work end-to-end
-- Cover all I/O adapters
+**Unit testability (non-negotiable):**
+- Unit tests MUST run without starting any database, external service, or network call
+- All I/O dependencies MUST be abstractable to the point where a mock can replace them
+- Business logic MUST be exercisable in isolation from infrastructure (enforced by Rules 1 & 2)
 
-**Test Organization:**
-- Unit/Integration tests: Co-located with implementation
-- E2E tests: Separate `/e2e` directory
+**Integration testability:**
+- Every I/O adapter MUST be independently testable against real infrastructure
+- Adapters must be replaceable — the application must not hard-wire a specific implementation
+
+**Test co-location (structural rule):**
+- Unit and integration tests: co-located with the implementation they test (test lives next to the code)
+- E2E tests: isolated in a separate `/e2e` directory — they cross feature boundaries and belong to none
+
+> For test pyramid proportions, naming conventions, tool choices, and language-specific tooling, see Testing Strategy @testing-strategy.md.
 
 ### Language-Specific Idioms
 
-**How to achieve testability in each ecosystem:**
+For language-specific abstraction patterns and test tooling, see the dedicated idiom files listed in `code-idioms-and-conventions.md`. Those files contain the authoritative guidance per ecosystem and are independently maintainable.
 
-| Language/Framework | Abstraction Pattern | Test Strategy |
-|-------------------|---------------------|---------------|
-| **Go** | Interface types, dependency injection | Table-driven tests, mock implementations |
-| **TypeScript/Vue** | Interface types, service layer, Pinia stores | Vitest with `vi.mock`, `createTestingPinia` |
-| **TypeScript/React** | Interface types, service layer, Context/hooks | Jest with mock factories, React Testing Library |
-| **Python** | `typing.Protocol` or abstract base classes | pytest with fixtures, monkeypatch |
-| **Rust** | Traits, dependency injection | Unit tests with mock implementations, `#[cfg(test)]` |
-| **Flutter/Dart** | Abstract classes, dependency injection | `mockito` package, widget tests |
+**Universal rule:** In every language, the testability pattern is the same — I/O is behind an interface, business logic is pure, and tests inject a mock/fake implementation. The idiom files describe *how* to express this pattern in each ecosystem's syntax.
 
 ### Enforcement Checklist
 
@@ -197,6 +191,6 @@ Before marking code complete, verify:
 ### Related Principles
 - Core Design Principles @core-design-principles.md
 - Testing Strategy @testing-strategy.md
-- Avoid Circular Dependencies @avoid-circular-dependencies.md
 - Code Organization Principles @code-organization-principles.md
 - Project Structure @project-structure.md
+- Database Design Principles @database-design-principles.md

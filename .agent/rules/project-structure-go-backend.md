@@ -54,5 +54,6 @@ Use this structure for Go backend applications. The vertical slice principle app
 - Tests live alongside the code they test (`_test.go` suffix)
 - `go.mod` at the root — single module for the entire application
 
-### Related Rules
+### Related Principles
 - Project Structure @project-structure.md (core philosophy)
+- Go Idioms and Patterns @go-idioms-and-patterns.md (coding idioms, error handling, naming)

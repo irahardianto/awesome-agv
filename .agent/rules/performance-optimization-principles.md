@@ -81,8 +81,8 @@ description: When working on performance optimization, profiling, benchmarking, 
 
 **Connection Pooling:**
 
-- Reuse expensive resources (database connections, HTTP connections)  
-- See "Resource and Memory Management Principles"
+- Reuse expensive resources (database connections, HTTP connections)
+- See Resource and Memory Management Principles @resources-and-memory-management-principles.md for pool sizing and configuration
 
 ### Performance Optimization Checklist
 

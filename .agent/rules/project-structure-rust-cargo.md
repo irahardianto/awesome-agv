@@ -185,6 +185,6 @@ For complex projects with multiple internal crates. This is the recommended stru
 - No `node_modules/`, `vendor/` — dependencies are managed by Cargo globally in `~/.cargo/`
 - Feature flags in `Cargo.toml` — use `[features]` for optional functionality instead of build-time env vars
 
-### Related Rules
+### Related Principles
 - Project Structure @project-structure.md (core philosophy)
-- Rust Idioms and Safety @rust-idioms-and-safety.md
+- Rust Idioms and Patterns @rust-idioms-and-patterns.md

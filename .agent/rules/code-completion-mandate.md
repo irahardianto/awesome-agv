@@ -8,14 +8,14 @@ trigger: always_on
 
 **Before marking any code task as complete, you MUST run automated quality checks and remediate all issues.**
 
-This is NOT OPTIONAL. Delivering code without validation violates the Rugged Software Manifesto @rugged-software-manifesto.
+This is NOT OPTIONAL. Delivering code without validation violates the Rugged Software Constitution @rugged-software-constitution.md.
 
 ### The Completion Checklist
 
 Every code generation task follows this workflow:
 
 1. **Generate** - Write the code based on requirements
-2. **Validate** - Run language-appropriate quality checks
+2. **Validate** - Run language-appropriate quality checks (see below)
 3. **Remediate** - Fix all detected issues
 4. **Verify** - Re-run checks to confirm fixes
 5. **Deliver** - Mark task complete only after all checks pass
@@ -24,46 +24,27 @@ Every code generation task follows this workflow:
 
 ### Language-Specific Quality Commands
 
-When you complete code, run these commands based on the language:
+The authoritative commands for each language live in the corresponding idiom file — this keeps the work of maintaining them close to the language expertise. Load the relevant file to get the exact commands to run:
 
-#### Go
-```bash
-# Format
-gofumpt -l -w .
+| Language             | Idiom File                         | Commands Section                 |
+| -------------------- | ---------------------------------- | -------------------------------- |
+| **Go**               | @go-idioms-and-patterns.md         | § Formatting and Static Analysis |
+| **TypeScript / Vue** | @typescript-idioms-and-patterns.md | § Formatting and Static Analysis |
+| **Vue 3**            | @vue-idioms-and-patterns.md        | § Linting and Type Checking      |
+| **Flutter / Dart**   | @flutter-idioms-and-patterns.md    | § Linting and Formatting         |
+| **Rust**             | @rust-idioms-and-patterns.md       | § Clippy and Formatting          |
 
-# Static Analysis
-go vet ./...
-staticcheck ./...
+### Failure Protocol
 
-# Security
-gosec -quiet ./...
+**If any quality check fails:**
 
-# Tests
-go test -race ./...
-```
-
-**If any command fails:**
-
-1. Read the error output 
+1. Read the error output completely
 2. Fix the identified issues in the code
-3. Re-run the command
-4. Do not proceed until all pass
+3. Re-run the failing command
+4. Do not proceed until all checks pass
 
-#### TypeScript/Vue
-```bash
-# Format & Lint
-pnpm run lint --fix
+> Never disable a lint rule or suppress a warning to make checks pass. Fix the root cause.
 
-# Type Check
-npx vue-tsc --noEmit
-
-# Tests
-pnpm run test
-```
-
-**If any command fails:**
-
-1. Read the error output
-2. Fix the identified issues
-3. Re-run the command
-4. Do not proceed until all pass
+### Related Principles
+- Rugged Software Constitution @rugged-software-constitution.md
+- Code Idioms and Conventions @code-idioms-and-conventions.md

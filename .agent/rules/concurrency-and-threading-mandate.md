@@ -6,25 +6,19 @@ trigger: always_on
 
 ### When to Use Concurrency
 
-**I/O-Bound Operations (async/await, event loops):**
+**I/O-Bound Operations:** Use asynchronous I/O, event-driven concurrency, or coroutines when waiting on network requests, file I/O, or database queries.
 
-- Network requests, file I/O, database queries  
-- Waiting for external responses dominates execution time  
-- Use: Asynchronous I/O, event-driven concurrency, coroutines
+**CPU-Bound Operations:** Use OS threads or thread pools for heavy computation, data processing, or encoding work where CPU cycles dominate.
 
-**CPU-Bound Operations (threads, parallel processing):**
+**Don't Over-Use Concurrency:** Concurrency adds significant complexity (race conditions, deadlocks, debugging difficulty). Profile first — only add concurrency when there is a measurable performance benefit.
 
-- Heavy computation, data processing, video encoding  
-- CPU cycles dominate execution time  
-- Use: OS threads, thread pools, parallel workers
-
-**Don't Over-Use Concurrency:**
-
-- Adds significant complexity (race conditions, deadlocks, debugging difficulty)  
-- Use only when there's measurable performance benefit  
-- Profile first, optimize second
+For implementation details (race condition prevention, deadlock avoidance, message passing patterns), see Concurrency and Threading Principles @concurrency-and-threading-principles.md.
 
 ### When NOT to Use Concurrency
 - Simple synchronous operations
 - No measurable performance benefit
 - Avoid premature optimization
+
+### Related Principles
+- Concurrency and Threading Principles @concurrency-and-threading-principles.md
+- Performance Optimization Principles @performance-optimization-principles.md

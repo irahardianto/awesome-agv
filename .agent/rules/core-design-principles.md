@@ -84,3 +84,9 @@ trigger: always_on
 - Poor UX from clean code can be fixed; poor code from UX pressure becomes tech debt
 - Maintainability enables future UX improvements
 - Never sacrifice code quality for short-term UX gains
+
+### Related Principles
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
+- Code Organization Principles @code-organization-principles.md
+- Documentation Principles @documentation-principles.md
+- Accessibility Principles @accessibility-principles.md

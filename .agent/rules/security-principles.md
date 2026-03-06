@@ -48,3 +48,4 @@ description: When implementing authentication, authorization, input validation, 
 - Logging and Observability Mandate @logging-and-observability-mandate.md
 - Logging and Observability Principles @logging-and-observability-principles.md
 - Configuration Management Principles @configuration-management-principles.md
+- Command Execution Principles @command-execution-principles.md

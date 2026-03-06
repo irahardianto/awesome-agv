@@ -5,20 +5,7 @@ description: When implementing logging, working with loggers, or setting up obse
 
 ## Logging and Observability Principles
 
-> **⚠️ Prerequisite:** All operations MUST be logged per Logging and Observability Mandate @logging-and-observability-mandate.md. This guide provides implementation details.
-
-### Quick Reference: Mandatory Requirements
-
-Before diving into implementation details, remember these requirements from Logging and Observability Mandate @logging-and-observability-mandate.md:
-
-✅ **Every operation must log:**
-1. Start (with correlationId, operation name, context)
-2. Success (with duration, result identifiers)
-3. Failure (with error details, stack trace)
-
-✅ **Mandatory fields:** correlationId, operation, duration, userId (when applicable), error (on failure)
-
-✅ **Use middleware/interceptors** for automatic coverage
+> **⚠️ Prerequisite:** All operations MUST be logged per Logging and Observability Mandate @logging-and-observability-mandate.md. This guide provides implementation patterns only.
 
 
 ### Logging Standards
@@ -27,14 +14,14 @@ Before diving into implementation details, remember these requirements from Logg
 
 Use consistent log levels across all services:
 
-| Level | When to Use | Examples |
-|-------|-------------|----------|
-| **TRACE** | Extremely detailed diagnostic info | Function entry/exit, variable states (dev only) |
-| **DEBUG** | Detailed flow for debugging | Query execution, cache hits/misses, state transitions |
-| **INFO** | General informational messages | Request started, task created, user logged in |
-| **WARN** | Potentially harmful situations | Deprecated API usage, fallback triggered, retry attempt |
+| Level     | When to Use                             | Examples                                                 |
+| --------- | --------------------------------------- | -------------------------------------------------------- |
+| **TRACE** | Extremely detailed diagnostic info      | Function entry/exit, variable states (dev only)          |
+| **DEBUG** | Detailed flow for debugging             | Query execution, cache hits/misses, state transitions    |
+| **INFO**  | General informational messages          | Request started, task created, user logged in            |
+| **WARN**  | Potentially harmful situations          | Deprecated API usage, fallback triggered, retry attempt  |
 | **ERROR** | Error events that allow app to continue | Request failed, external API timeout, validation failure |
-| **FATAL** | Severe errors causing shutdown | Database unreachable, critical config missing |
+| **FATAL** | Severe errors causing shutdown          | Database unreachable, critical config missing            |
 
 #### Logging Rules
 
@@ -146,7 +133,7 @@ logger.error({
 ```
 
 #### Python (using structlog)
-```
+```python
 
 import structlog
 
@@ -288,11 +275,11 @@ log.Fatal("critical dependency unavailable",
 
 #### Environment-Specific Configuration
 
-| Environment | Level | Format | Destination |
-|-------------|-------|--------|-------------|
-| **Development** | DEBUG | Pretty (colored) | Console |
-| **Staging** | INFO | JSON | Stdout → CloudWatch/GCP |
-| **Production** | INFO | JSON | Stdout → CloudWatch/GCP |
+| Environment     | Level | Format           | Destination             |
+| --------------- | ----- | ---------------- | ----------------------- |
+| **Development** | DEBUG | Pretty (colored) | Console                 |
+| **Staging**     | INFO  | JSON             | Stdout → CloudWatch/GCP |
+| **Production**  | INFO  | JSON             | Stdout → CloudWatch/GCP |
 
 **Configuration (Go example):**
 ```
@@ -365,35 +352,9 @@ logger := slog.New(slog.NewJSONHandler(&buf, nil))
 - [ ] Error logs include error details
 - [ ] Performance-critical paths use DEBUG level
 
-### Observability Strategy
-
-**Three Pillars:**
-
-1. **Logs:** What happened (events, errors, state changes)  
-2. **Metrics:** How much/how many (quantitative measurements)  
-3. **Traces:** How did it happen (request flow through system)
-
-**Key Metrics:**
-
-- **RED (for services):**  
-    
-  - Rate: Requests per second  
-  - Errors: Error rate/count  
-  - Duration: Latency (p50, p95, p99)
-
-
-- **USE (for resources):**  
-    
-  - Utilization: % resource in use (CPU, memory, disk)  
-  - Saturation: How full (queue depth, wait time)  
-  - Errors: Error count
-
-**Health Checks:**
-
-- `/health`: Simple "am I alive?" (process health only)  
-- `/ready`: "Am I ready to serve?" (includes dependencies)
-
 ### Related Principles
+- Logging and Observability Mandate @logging-and-observability-mandate.md
+- Monitoring and Alerting Principles @monitoring-and-alerting-principles.md
 - Error Handling Principles @error-handling-principles.md
 - Security Mandate @security-mandate.md
 - Security Principles @security-principles.md

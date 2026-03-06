@@ -125,5 +125,5 @@ description: When working with resources requiring cleanup (files, database conn
 
 ### Related Principles
 - Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
-- Concurrency and Threading Implementation Principles @concurrency-and-threading-principles.md
+- Concurrency and Threading Principles @concurrency-and-threading-principles.md
 - Error Handling Principles @error-handling-principles.md - Resource cleanup in error paths

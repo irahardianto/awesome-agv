@@ -3,7 +3,7 @@ trigger: model_decision
 description: When implementing concurrent, parallel, or multi-threaded code (async/await, threads, goroutines, actors)
 ---
 
-## Concurrency Implementation Principles
+## Concurrency and Threading Principles
 
 **1. Avoid Race Conditions**
 

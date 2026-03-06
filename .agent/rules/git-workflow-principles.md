@@ -17,17 +17,17 @@ description: When creating branches, committing code, managing PRs, or working w
 ```
 
 **Types:**
-| Type | Purpose |
-|------|---------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, semicolons, etc. |
+| Type       | Purpose                          |
+| ---------- | -------------------------------- |
+| `feat`     | New feature                      |
+| `fix`      | Bug fix                          |
+| `docs`     | Documentation only               |
+| `style`    | Formatting, semicolons, etc.     |
 | `refactor` | Code change (no new feature/fix) |
-| `test` | Adding or updating tests |
-| `chore` | Maintenance, dependencies |
-| `perf` | Performance improvement |
-| `ci` | CI/CD configuration changes |
+| `test`     | Adding or updating tests         |
+| `chore`    | Maintenance, dependencies        |
+| `perf`     | Performance improvement          |
+| `ci`       | CI/CD configuration changes      |
 
 **Rules:**
 - Description is imperative mood ("add" not "added", "fix" not "fixes")
@@ -85,3 +85,4 @@ chore/update-deps
 ### Related Principles
 - Code Completion Mandate @code-completion-mandate.md
 - Testing Strategy @testing-strategy.md
+- Security Mandate @security-mandate.md

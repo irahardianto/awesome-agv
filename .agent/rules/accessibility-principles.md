@@ -57,5 +57,6 @@ Follow **WCAG 2.1 Level AA** as the baseline for all user-facing interfaces.
 - [ ] ARIA used correctly (native first)?
 
 ### Related Principles
+- Core Design Principles @core-design-principles.md
 - Security Principles @security-principles.md (XSS prevention in user content)
 - Testing Strategy @testing-strategy.md (accessibility testing)
