@@ -24,11 +24,11 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 
 ## At a Glance
 
-| Component     | Count | Purpose                                                                    |
-| ------------- | ----- | -------------------------------------------------------------------------- |
-| **Rules**     | 30    | Security, reliability, architecture, maintainability, and DevOps standards |
-| **Skills**    | 7     | Specialized capabilities for debugging, design, code review, and more      |
-| **Workflows** | 10    | End-to-end development processes from research to ship                     |
+| Component     | Count | Purpose                                                                           |
+| ------------- | ----- | --------------------------------------------------------------------------------- |
+| **Rules**     | 38    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
+| **Skills**    | 7     | Specialized capabilities for debugging, design, code review, and more             |
+| **Workflows** | 10    | End-to-end development processes from research to ship                            |
 
 ## Core Philosophy
 
@@ -58,7 +58,20 @@ Detailed guidance activated only when the agent is working on relevant areas:
 - CI/CD rules activate when editing pipelines
 - Accessibility rules activate when building UIs
 
-This means the agent isn't overwhelmed with 30 rules on every task — it gets the critical mandates always, and the contextual principles only when they matter.
+This means the agent isn't overwhelmed with 38 rules on every task — it gets the critical mandates always, and the contextual principles only when they matter.
+
+## Opinionated Defaults
+
+Awesome AGV ships with **opinionated technology choices** for each layer of the stack. Each has a dedicated idiom file with patterns, tooling, and verification commands:
+
+| Stack        | Default Choice                                      |
+| ------------ | --------------------------------------------------- |
+| **Backend**  | Go — vanilla stdlib, minimal deps                   |
+| **Frontend** | TypeScript + Vue 3 — Composition API, Pinia, Vitest |
+| **Mobile**   | Flutter + Riverpod — freezed models, go_router      |
+| **Systems**  | Rust — tokio, thiserror/anyhow, clippy pedantic     |
+
+These are starting points, not constraints. Idiom files are modular — swap or edit them to match your stack. See [Adapting](/awesome-agv/adapting) for details.
 
 ## Compatibility
 
@@ -78,7 +91,7 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 
 ```
 .agent/
-├── rules/             # 30 rules (mandates + principles)
+├── rules/             # 38 rules (mandates + principles + language idioms)
 ├── skills/            # 7 specialized skills
 └── workflows/         # 10 development workflows
 ```
@@ -87,7 +100,7 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 
 Explore each component in detail:
 
-- [**Rules Reference**](/awesome-agv/rules) — All 30 rules organized by category
+- [**Rules Reference**](/awesome-agv/rules) — All 38 rules organized by category
 - [**Skills Reference**](/awesome-agv/skills) — All 7 specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — All 10 development workflows
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed

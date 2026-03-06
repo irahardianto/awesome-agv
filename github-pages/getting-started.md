@@ -135,7 +135,7 @@ This produces a structured findings report graded by severity (Critical → Majo
 
 ## Next Steps
 
-- [**Rules Reference**](/awesome-agv/rules) — Explore all 30 rules
+- [**Rules Reference**](/awesome-agv/rules) — Explore all 38 rules
 - [**Skills Reference**](/awesome-agv/skills) — Learn about specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — Understand the development workflows
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

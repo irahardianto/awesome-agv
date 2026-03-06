@@ -23,14 +23,14 @@ Customize for your project type, language, and team.
 
 The setup supports different project structures out of the box. To adapt, **edit `project-structure.md` only** — it's the single source of truth.
 
-| Project Type | What to Change |
-|-------------|----------------|
-| **Monorepo** (default) | Use as-is — `apps/backend/`, `apps/frontend/`, `apps/mobile/` |
-| **Single backend** | Flatten to root: `cmd/`, `internal/` at project root (no `apps/` wrapper) |
-| **Single frontend** | Flatten to root: `src/` at project root (no `apps/` wrapper) |
-| **Single mobile** | Flatten to root: `lib/` at project root (no `apps/` wrapper) |
-| **Microservices** | One directory per service under `apps/` |
-| **Full-stack + mobile** | Use all three sections under `apps/` |
+| Project Type            | What to Change                                                            |
+| ----------------------- | ------------------------------------------------------------------------- |
+| **Monorepo** (default)  | Use as-is — `apps/backend/`, `apps/frontend/`, `apps/mobile/`             |
+| **Single backend**      | Flatten to root: `cmd/`, `internal/` at project root (no `apps/` wrapper) |
+| **Single frontend**     | Flatten to root: `src/` at project root (no `apps/` wrapper)              |
+| **Single mobile**       | Flatten to root: `lib/` at project root (no `apps/` wrapper)              |
+| **Microservices**       | One directory per service under `apps/`                                   |
+| **Full-stack + mobile** | Use all three sections under `apps/`                                      |
 
 ---
 
@@ -190,11 +190,15 @@ infra/
 
 ## Language-Specific Adaptation
 
+Awesome AGV ships with **opinionated idiom files** for each supported language. These files contain patterns, tooling commands, and conventions specific to each ecosystem.
+
 ### Go (Default Backend)
 
-The rules are heavily optimized for Go. No changes needed for Go projects.
+Dedicated files: `go-idioms-and-patterns.md`, `project-structure-go-backend.md`
 
-**Verification commands:**
+The rules are heavily optimized for Go with vanilla stdlib patterns. Covers error handling, interfaces, goroutines, naming, and testing.
+
+**Verification commands (from the idiom file):**
 ```bash
 gofumpt -l -e -w .
 go vet ./...
@@ -205,51 +209,59 @@ go test -race ./...
 
 ### TypeScript / Vue (Default Frontend)
 
-The rules include first-class TypeScript/Vue support. No changes needed.
+Dedicated files: `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `project-structure-vue-frontend.md`
 
-**Verification commands:**
+First-class support for TypeScript strict mode with Vue 3 Composition API, Pinia stores, and Vitest.
+
+**Verification commands (from the idiom file):**
 ```bash
 pnpm run lint --fix
 npx vue-tsc --noEmit
 pnpm run test
 ```
 
-### Python
+### Flutter / Riverpod (Default Mobile)
 
-Add Python-specific verification to `4-verify.md`:
+Dedicated files: `flutter-idioms-and-patterns.md`, `project-structure-flutter-mobile.md`
 
+Riverpod state management, freezed immutable models, go_router navigation, and const widget optimization.
+
+**Verification commands (from the idiom file):**
 ```bash
-# Format
-black .
-isort .
-
-# Lint
-ruff check .
-mypy .
-
-# Security
-bandit -r . -x tests
-
-# Tests
-pytest --cov=.
+dart format .
+flutter analyze
+flutter test
 ```
 
-### Rust
+### Rust (Default Systems)
 
-Add Rust-specific verification to `4-verify.md`:
+Dedicated files: `rust-idioms-and-patterns.md`, `project-structure-rust-cargo.md`
+
+Ownership patterns, `thiserror`/`anyhow` error handling, async with `tokio`, and clippy pedantic mode.
+
+**Verification commands (from the idiom file):**
+```bash
+cargo fmt -- --check
+cargo clippy -- -D warnings
+cargo test
+cargo audit
+```
+
+### Python (Not Shipped — Add Manually)
+
+No dedicated idiom file is included. To add Python support:
+
+1. Create `.agent/rules/python-idioms-and-patterns.md`
+2. Set `trigger: model_decision`
+3. Add verification commands:
 
 ```bash
-# Format
-cargo fmt -- --check
-
-# Lint
-cargo clippy -- -D warnings
-
-# Tests
-cargo test
-
-# Security
-cargo audit
+black .
+isort .
+ruff check .
+mypy .
+bandit -r . -x tests
+pytest --cov=.
 ```
 
 ---
@@ -283,12 +295,12 @@ The full setup works well for solo developers. Consider:
 
 If a rule doesn't apply to your project, you can safely delete it:
 
-| If Your Project... | Safe to Remove |
-|-------|----------------|
-| Has no frontend | `accessibility-principles.md` |
-| Has no database | `database-design-principles.md` |
-| Has no CI/CD | `ci-cd-principles.md` |
-| Is not a monorepo | Adjust `project-structure.md` (don't delete) |
+| If Your Project... | Safe to Remove                               |
+| ------------------ | -------------------------------------------- |
+| Has no frontend    | `accessibility-principles.md`                |
+| Has no database    | `database-design-principles.md`              |
+| Has no CI/CD       | `ci-cd-principles.md`                        |
+| Is not a monorepo  | Adjust `project-structure.md` (don't delete) |
 
 **Never remove:**
 - `rugged-software-constitution.md`
@@ -300,13 +312,31 @@ These form the foundation that makes the entire system work.
 
 ---
 
+## Changing the Default Framework
+
+The idiom files are modular — you can swap or replace them to match your project's technology choices. Here's what to edit for common framework swaps:
+
+| If You Want To...                   | Files to Edit or Replace                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Swap Vue for React**              | Replace `vue-idioms-and-patterns.md` with a React idiom file, update `project-structure-vue-frontend.md` |
+| **Swap Riverpod for BLoC/Cubit**    | Edit `flutter-idioms-and-patterns.md` — replace Riverpod sections with BLoC patterns                     |
+| **Swap Go for Python/Java/Node**    | Replace `go-idioms-and-patterns.md` and `project-structure-go-backend.md`                                |
+| **Swap tokio for async-std (Rust)** | Edit `rust-idioms-and-patterns.md` — replace tokio patterns with async-std equivalents                   |
+| **Add a new language entirely**     | Create `{lang}-idioms-and-patterns.md`, add to `code-idioms-and-conventions.md` table                    |
+
+**Key principle:** The idiom files only affect the agent's *coding style and tooling*. The universal rules (security, testability, architecture) remain unchanged regardless of your stack.
+
+---
+
 ## Files to Edit
 
 When adapting, these are the only files you typically need to change:
 
-| File | What to Edit |
-|------|-------------|
-| `project-structure.md` | Directory layout, app paths |
-| `4-verify.md` | Validation commands for your languages |
-| `code-completion-mandate.md` | Quality commands for your stack |
-| Add/remove rule files | Rules for your specific needs |
+| File                            | What to Edit                                |
+| ------------------------------- | ------------------------------------------- |
+| `project-structure.md`          | Directory layout, app paths                 |
+| `project-structure-{lang}.md`   | Language-specific directory layout          |
+| `{lang}-idioms-and-patterns.md` | Language patterns, tooling, conventions     |
+| `4-verify.md`                   | Validation commands for your languages      |
+| `code-completion-mandate.md`    | Quality commands (delegates to idiom files) |
+| Add/remove rule files           | Rules for your specific needs               |

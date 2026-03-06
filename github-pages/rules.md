@@ -7,7 +7,7 @@ nav_order: 3
 # Rules Reference
 {: .no_toc }
 
-All 30 rules organized by category, with trigger types and descriptions.
+All 38 rules organized by category, with trigger types and descriptions.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -219,14 +219,41 @@ model_decision
 
 Principles for running external commands and shell scripts securely — preventing injection, handling exit codes, and managing process lifecycles.
 
-### Avoid Circular Dependencies
+### Project Structure — Go Backend
 {: .d-inline-block }
-always_on
-{: .label .label-red }
+model_decision
+{: .label .label-blue }
 
-**File:** `avoid-circular-dependencies.md`
+**File:** `project-structure-go-backend.md`
 
-Preventing module import cycles. Solutions: extract shared code to a third module, restructure dependencies, or use dependency injection.
+Go-specific directory layout for backend services, including `cmd/`, `internal/`, and feature-based organization.
+
+### Project Structure — Vue Frontend
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `project-structure-vue-frontend.md`
+
+Vue/React frontend directory layout with feature-based organization: components, stores, API, and services.
+
+### Project Structure — Flutter Mobile
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `project-structure-flutter-mobile.md`
+
+Flutter and React Native mobile app layout: screens, widgets, state management, and repository pattern.
+
+### Project Structure — Rust/Cargo
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `project-structure-rust-cargo.md`
+
+Rust workspace and crate layout: `src/`, `tests/`, `benches/`, and multi-crate workspace organization.
 
 ---
 
@@ -250,7 +277,52 @@ always_on
 
 **File:** `code-idioms-and-conventions.md`
 
-Write idiomatic code for the target language. Follow community conventions, use language built-ins, avoid cross-language anti-patterns.
+Write idiomatic code for the target language. Follow community conventions, use language built-ins, avoid cross-language anti-patterns. Delegates to dedicated language idiom files for ecosystem-specific guidance.
+
+### Go Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `go-idioms-and-patterns.md`
+
+Go-specific patterns: error handling with `%w`, small interfaces, goroutines and channels, naming conventions, table-driven tests, and `gofumpt`/`staticcheck`/`gosec` tooling.
+
+### TypeScript Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `typescript-idioms-and-patterns.md`
+
+TypeScript type system idioms: strict mode, discriminated unions, `unknown` over `any`, `readonly`, runtime validation with Zod, `Promise.all` patterns, and Vitest testing.
+
+### Vue Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `vue-idioms-and-patterns.md`
+
+Vue 3 Composition API patterns: `<script setup>`, `ref` vs `reactive`, Pinia Setup Stores, composables, `defineProps`/`defineEmits` with TypeScript, and `createTestingPinia` for tests.
+
+### Flutter Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `flutter-idioms-and-patterns.md`
+
+Flutter/Dart patterns: `const` constructors, widget decomposition, immutable models with `freezed`, Riverpod state management (provider types, `ref.watch` vs `ref.read`), `go_router` navigation, and `flutter analyze` tooling.
+
+### Rust Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `rust-idioms-and-patterns.md`
+
+Rust ownership and borrowing, error handling with `thiserror`/`anyhow`, async with `tokio`, unsafe code policy, idiomatic patterns (builder, newtype, typestate), and `cargo clippy` configuration.
 
 ### Testing Strategy
 {: .d-inline-block }
@@ -344,7 +416,7 @@ always_on
 Before marking any code task as complete, you MUST run automated quality checks:
 1. Generate → 2. Validate → 3. Remediate → 4. Verify → 5. Deliver
 
-Includes language-specific quality commands for Go and TypeScript/Vue.
+Delegates language-specific quality commands (linters, formatters, type checkers) to the respective idiom files.
 
 ### Rule Priority
 {: .d-inline-block }

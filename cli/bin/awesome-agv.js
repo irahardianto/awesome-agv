@@ -91,7 +91,7 @@ ${color.bold}EXAMPLES${color.reset}
   npx awesome-agv --force
 
 ${color.bold}WHAT GETS INSTALLED${color.reset}
-  ${icons.book}  30 Rules    — Security, architecture, testing, DevOps standards
+  ${icons.book}  38 Rules    — Security, architecture, language idioms, DevOps standards
   ${icons.tool}  7 Skills    — Debugging, design, code review, and more
   ${icons.cycle}  10 Workflows — End-to-end development processes
 

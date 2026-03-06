@@ -98,14 +98,16 @@ Choose the right trigger for custom rules:
 
 **Example:** A "never use `eval()`" rule should be `always_on`. A "use GraphQL pagination" rule should be `model_decision` with a description mentioning GraphQL.
 
-### Adding Language-Specific Rules
+### Customizing Language-Specific Rules
 
-The current rule set is language-agnostic. To add language-specific guidance:
+Awesome AGV already includes dedicated idiom files for Go, TypeScript, Vue, Flutter, and Rust. To customize:
 
-1. Create `.agent/rules/go-specific.md` (or `python-specific.md`, etc.)
-2. Set `trigger: model_decision`
-3. Add a description like: "When writing Go code"
-4. Include language idioms, common pitfalls, and preferred patterns
+1. **Edit the existing idiom file** — e.g., `go-idioms-and-patterns.md` to add team-specific conventions
+2. **Replace an idiom file** — swap `vue-idioms-and-patterns.md` for a React file if you use React
+3. **Add a new language** — create `.agent/rules/{lang}-idioms-and-patterns.md` with `trigger: model_decision`
+4. **Register in** `code-idioms-and-conventions.md` — add a row to the language table so the agent knows when to activate it
+
+See [Adapting — Changing the Default Framework](/awesome-agv/adapting#changing-the-default-framework) for a full guide.
 
 ---
 

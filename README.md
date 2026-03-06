@@ -22,6 +22,8 @@
 
 Instead of just generating code that works, the rules and skills ensures agents generate code that **survives**.
 
+> **⚠️ Opinionated by design.** Awesome AGV ships with opinionated defaults for specific technology stacks. See [Opinionated Technology Choices](#opinionated-technology-choices) for details and how to customize.
+
 While this configuration is originally designed for **Antigravity**, it is built on standard markdown-based context protocols that are easily portable to other AI coding tools. As a matter of fact, the original form [Technical Constitution](https://github.com/irahardianto/technical-constitution/blob/main/technical-constitution-full.md) was first created for **Gemini CLI**
 
 You can drop this configuration into the context or custom rule settings of:
@@ -34,7 +36,7 @@ For example, the principles of the [Rugged Software Constitution](.agent/rules/r
 
 ### Key Features
 
-*   📏 **30 Rules** — covering security, reliability, architecture, maintainability, and DevOps.
+*   📏 **38 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
 *   🛠️ **7 Skills** — specialized capabilities for debugging, design, code review, and more.
 *   🔄 **10 Workflows** — end-to-end development processes from research to ship.
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
@@ -128,14 +130,22 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[API Design Principles](.agent/rules/api-design-principles.md)**: Creating clean, intuitive, and versionable APIs.
 *   **[Architectural Pattern](.agent/rules/architectural-pattern.md)**: Testability-first design with I/O isolation.
 *   **[Project Structure](.agent/rules/project-structure.md)**: Feature-based organization (the single source of truth for layout).
+*   **[Project Structure — Go Backend](.agent/rules/project-structure-go-backend.md)**: Go-specific directory layout.
+*   **[Project Structure — Vue Frontend](.agent/rules/project-structure-vue-frontend.md)**: Vue/React frontend layout.
+*   **[Project Structure — Flutter Mobile](.agent/rules/project-structure-flutter-mobile.md)**: Flutter/RN mobile app layout.
+*   **[Project Structure — Rust/Cargo](.agent/rules/project-structure-rust-cargo.md)**: Rust workspace and crate layout.
 *   **[Database Design](.agent/rules/database-design-principles.md)**: Schema design, migrations, and query safety.
 *   **[Data Serialization](.agent/rules/data-serialization-and-interchange-principles.md)**: Safe data handling and formats.
 *   **[Command Execution](.agent/rules/command-execution-principles.md)**: Principles for running system commands securely.
-*   **[Avoid Circular Dependencies](.agent/rules/avoid-circular-dependencies.md)**: Preventing module import cycles.
 
 #### 🧩 Maintainability & Quality
 *   **[Code Organization](.agent/rules/code-organization-principles.md)**: Structuring projects for readability.
 *   **[Code Idioms](.agent/rules/code-idioms-and-conventions.md)**: Following language-specific best practices.
+*   **[Go Idioms](.agent/rules/go-idioms-and-patterns.md)**: Go-specific patterns, error handling, concurrency, and tooling.
+*   **[TypeScript Idioms](.agent/rules/typescript-idioms-and-patterns.md)**: TypeScript type system, strict mode, async patterns.
+*   **[Vue Idioms](.agent/rules/vue-idioms-and-patterns.md)**: Vue 3 Composition API, Pinia stores, composables.
+*   **[Flutter Idioms](.agent/rules/flutter-idioms-and-patterns.md)**: Flutter/Dart, Riverpod state management, freezed models.
+*   **[Rust Idioms](.agent/rules/rust-idioms-and-patterns.md)**: Ownership, error handling, async with tokio, clippy.
 *   **[Testing Strategy](.agent/rules/testing-strategy.md)**: Ensuring code is verifiable and tested.
 *   **[Dependency Management](.agent/rules/dependency-management-principles.md)**: Managing external libraries safely.
 *   **[Documentation Principles](.agent/rules/documentation-principles.md)**: Writing clear and helpful documentation.
@@ -193,7 +203,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 ```
 .agent/
-├── rules/             # 30 rules (mandates + principles)
+├── rules/             # 38 rules (mandates + principles + language idioms)
 │   ├── rugged-software-constitution.md
 │   ├── security-mandate.md
 │   ├── rule-priority.md
@@ -224,10 +234,23 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 - [x] Include more specialized skills to aid development process (7 skills shipped).
 - [x] Add development workflows for structured feature delivery (10 workflows shipped).
-- [ ] Add more language-specific security rules (Python, Go, Rust).
+- [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [x] Publish comprehensive documentation site (GitHub Pages).
+
+## Opinionated Technology Choices
+
+Awesome AGV ships with **opinionated defaults** for specific technology stacks. Each stack has dedicated idiom files with patterns, tooling, and verification commands.
+
+| Stack        | Default Choice                                      | Idiom File(s)                                                     |
+| ------------ | --------------------------------------------------- | ----------------------------------------------------------------- |
+| **Backend**  | Go — vanilla stdlib, minimal deps                   | `go-idioms-and-patterns.md`                                       |
+| **Frontend** | TypeScript + Vue 3 — Composition API, Pinia, Vitest | `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md` |
+| **Mobile**   | Flutter + Riverpod — freezed models, go_router      | `flutter-idioms-and-patterns.md`                                  |
+| **Systems**  | Rust — tokio, thiserror/anyhow, clippy pedantic     | `rust-idioms-and-patterns.md`                                     |
+
+**Using a different framework?** The idiom files are modular — swap or edit them to match your stack. See the [Adapting guide](https://irahardianto.github.io/awesome-agv/adapting) for which files to change.
 
 ## Project Adaptation Guide
 
@@ -241,7 +264,7 @@ This setup supports different project structures:
 | **Microservices**       | Adapt `project-structure.md` per service, add service mesh rules |
 | **Mobile (Flutter/RN)** | Adapt frontend rules, add mobile-specific accessibility/testing  |
 
-**To adapt:** Edit `project-structure.md` and `4-verify.md` to match your project layout.
+**To adapt:** Edit `project-structure.md`, the relevant idiom file, and `4-verify.md` to match your project layout.
 
 <!-- CONTRIBUTING -->
 ## Contributing

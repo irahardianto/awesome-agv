@@ -46,7 +46,6 @@ Mandates are **non-negotiable constraints** loaded in every session. They repres
 | Architectural Pattern           | I/O isolation, pure business logic                      |
 | Code Organization Principles    | Feature-based organization                              |
 | Code Idioms & Conventions       | Idiomatic code for target language                      |
-| Avoid Circular Dependencies     | No module import cycles                                 |
 | Project Structure               | Feature-based layout (single source of truth)           |
 | Rule Priority                   | Conflict resolution                                     |
 
@@ -64,26 +63,35 @@ Principles are **detailed guidance** activated only when the agent determines th
 
 ### Current Principles
 
-| Principle                          | Activates When                            |
-| ---------------------------------- | ----------------------------------------- |
-| Security Principles                | Implementing auth, validation, crypto     |
-| Error Handling Principles          | Working with error types, recovery        |
-| Concurrency & Threading Principles | Writing async, threaded, or parallel code |
-| Performance Optimization           | Profiling, benchmarking, critical paths   |
-| Resource & Memory Management       | Files, connections, pools, cleanup        |
-| Monitoring & Alerting              | Health checks, metrics, circuit breakers  |
-| Configuration Management           | Env vars, secrets, config files           |
-| API Design Principles              | REST endpoints, handlers, middleware      |
-| Database Design Principles         | Schema, migrations, queries, transactions |
-| Data Serialization                 | JSON, XML, YAML, protobuf                 |
-| Command Execution                  | Shell scripts, external processes         |
-| Testing Strategy                   | Writing tests, test organization          |
-| Dependency Management              | Package management, version pinning       |
-| Documentation Principles           | Comments, docs, READMEs                   |
-| Logging & Observability Principles | Implementation guide for logging          |
-| Accessibility Principles           | WCAG, semantic HTML, ARIA                 |
-| Git Workflow Principles            | Commits, branches, PRs                    |
-| CI/CD Principles                   | Pipelines, Docker, GitHub Actions         |
+| Principle                          | Activates When                             |
+| ---------------------------------- | ------------------------------------------ |
+| Security Principles                | Implementing auth, validation, crypto      |
+| Error Handling Principles          | Working with error types, recovery         |
+| Concurrency & Threading Principles | Writing async, threaded, or parallel code  |
+| Performance Optimization           | Profiling, benchmarking, critical paths    |
+| Resource & Memory Management       | Files, connections, pools, cleanup         |
+| Monitoring & Alerting              | Health checks, metrics, circuit breakers   |
+| Configuration Management           | Env vars, secrets, config files            |
+| API Design Principles              | REST endpoints, handlers, middleware       |
+| Database Design Principles         | Schema, migrations, queries, transactions  |
+| Data Serialization                 | JSON, XML, YAML, protobuf                  |
+| Command Execution                  | Shell scripts, external processes          |
+| Testing Strategy                   | Writing tests, test organization           |
+| Dependency Management              | Package management, version pinning        |
+| Documentation Principles           | Comments, docs, READMEs                    |
+| Logging & Observability Principles | Implementation guide for logging           |
+| Accessibility Principles           | WCAG, semantic HTML, ARIA                  |
+| Git Workflow Principles            | Commits, branches, PRs                     |
+| CI/CD Principles                   | Pipelines, Docker, GitHub Actions          |
+| Go Idioms & Patterns               | Go-specific patterns, tooling, testing     |
+| TypeScript Idioms & Patterns       | Type system, strict mode, async patterns   |
+| Vue Idioms & Patterns              | Composition API, Pinia stores, composables |
+| Flutter Idioms & Patterns          | Riverpod, freezed models, go_router        |
+| Rust Idioms & Patterns             | Ownership, error handling, async/tokio     |
+| Project Structure — Go Backend     | Go-specific directory layout               |
+| Project Structure — Vue Frontend   | Vue/React frontend layout                  |
+| Project Structure — Flutter Mobile | Flutter/RN mobile app layout               |
+| Project Structure — Rust/Cargo     | Rust workspace and crate layout            |
 
 ### How Context Activation Works
 
