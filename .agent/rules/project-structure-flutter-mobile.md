@@ -12,8 +12,6 @@ Use this structure for Flutter or React Native mobile applications. The vertical
     mobile/                           # Mobile application source code (Flutter)
       lib/
         core/                         # Foundational concerns (the "Framework")
-          di/                         # Dependency injection — Riverpod ProviderScope setup
-            injection.dart            # Service locator / provider registration
           network/                    # HTTP client setup, interceptors
             api_client.dart           # Dio/http client with base config
             api_interceptor.dart      # Auth token, logging interceptors
@@ -23,31 +21,34 @@ Use this structure for Flutter or React Native mobile applications. The vertical
             app_theme.dart            # ThemeData, color schemes
             app_typography.dart       # TextStyles, font families
           router/                     # Navigation / routing
-            app_router.dart           # GoRouter / auto_route config
+            app_router.dart           # GoRouter config (@riverpod function)
+            app_router.g.dart         # Generated provider code
           constants/                  # App-wide constants
 
         features/                     # Business Features (Vertical Slices)
           task/                       # Task management feature
             # --- Presentation ---
             screens/
-              task_list_screen.dart    # Full screen (route target)
+              task_list_screen.dart    # Full screen (route target, ConsumerWidget)
               task_detail_screen.dart
             widgets/                  # Feature-specific widgets
               task_card.dart
               task_form.dart
-              task_card_test.dart      # Widget tests
-            # --- State Management ---
+
+            # --- State Management (Riverpod 3) ---
             state/
-              task_notifier.dart       # Riverpod AsyncNotifier
+              task_notifier.dart       # @riverpod class (Notifier/AsyncNotifier)
+              task_notifier.g.dart     # Generated provider code (build_runner)
               task_state.dart          # State classes (generated via freezed)
-              task_notifier_test.dart  # Unit tests for state logic
+
             # --- Domain (Business Logic) ---
             models/
-              task.dart               # Domain model (freezed/equatable)
+              task.dart               # Domain model (freezed)
               task.g.dart             # Generated code (json_serializable)
+              task.freezed.dart       # Generated code (freezed)
             logic/
               task_logic.dart         # Pure business rules
-              task_logic_test.dart    # Unit tests (pure functions)
+
             # --- Data (I/O Abstraction) ---
             repository/
               task_repository.dart    # Abstract repository interface
@@ -55,7 +56,6 @@ Use this structure for Flutter or React Native mobile applications. The vertical
               task_repository_mock.dart # Mock for testing
             api/
               task_api.dart           # REST API calls (Dio)
-              task_api_test.dart      # API integration tests
           auth/                       # Authentication feature
             ...
           settings/                   # Settings feature
@@ -73,25 +73,45 @@ Use this structure for Flutter or React Native mobile applications. The vertical
             api_response.dart
             pagination.dart
 
-      test/                           # Test directory (mirrors lib/)
+      test/                           # Test directory (mirrors lib/ layout)
         features/
           task/
-            task_notifier_test.dart
-            task_logic_test.dart
+            state/
+              task_notifier_test.dart  # Unit tests for state logic
+            logic/
+              task_logic_test.dart     # Unit tests for pure business rules
+            widgets/
+              task_card_test.dart      # Widget tests
+            api/
+              task_api_test.dart       # API integration tests
         integration_test/             # Integration / E2E tests
           task_flow_test.dart
 
       pubspec.yaml                    # Dependencies
-      analysis_options.yaml           # Lint rules
+      analysis_options.yaml           # Lint rules (includes riverpod_lint)
 ```
 
 **Key differences from web frontend:**
 - `screens/` replaces `views/` — mobile uses screen-based navigation
 - `widgets/` replaces `components/` — Flutter's terminology
-- `state/` replaces `store/` — Riverpod `AsyncNotifier`/`Notifier` instead of Pinia/Redux
+- `state/` replaces `store/` — Riverpod 3 `@riverpod` class (Notifier/AsyncNotifier) instead of Pinia/Redux
+- `*.g.dart` files in `state/` — generated provider code from `riverpod_generator` + `build_runner`
 - `repository/` replaces `api/` — mobile often caches data locally
-- `core/di/` handles dependency injection (Riverpod `ProviderScope`)
+- No separate `di/` directory — Riverpod 3 uses `ProviderScope` at the app root for dependency injection; no manual service locator needed
+
+**Codegen artifacts (gitignore-able):**
+- `*.g.dart` — generated by `riverpod_generator` and `json_serializable`
+- `*.freezed.dart` — generated by `freezed`
+- Run `dart run build_runner build --delete-conflicting-outputs` after changes
+
+**Test location:**
+
+Tests live in the `test/` directory, mirroring the `lib/` layout. This is Flutter's default convention — `flutter test` discovers tests here automatically with no extra configuration.
+
+- **Naming:** `*_test.dart` (unit), `*_integration_test.dart` (integration)
+- **Discovery:** `flutter test` (runs all tests in `test/`)
+- **Structure:** Mirror the feature directory structure from `lib/`
 
 ### Related Principles
 - Project Structure @project-structure.md (core philosophy)
-- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md (Riverpod patterns, widget idioms)
+- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md (Riverpod 3 patterns, widget idioms)

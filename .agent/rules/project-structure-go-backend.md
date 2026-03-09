@@ -13,37 +13,37 @@ Use this structure for Go backend applications. The vertical slice principle app
       cmd/
         api/
           main.go                     # Entry point: Wires dependencies, router, starts server
-    internal/                         # Private application code
-      platform/                       # Foundational technical concerns (The "Framework")
-        database/                     # DB connection logic
-        server/                       # HTTP server setup (Router, Middleware)
-        logger/                       # Structured logging setup
-      features/                       # Business Features (Vertical Slices)
-        task/                         # Task management
-          # --- Interface Definition ---
-          service.go                  # The public API of this feature (Service struct)
+      internal/                       # Private application code
+        platform/                     # Foundational technical concerns (The "Framework")
+          database/                   # DB connection logic
+          server/                     # HTTP server setup (Router, Middleware)
+          logger/                     # Structured logging setup
+        features/                     # Business Features (Vertical Slices)
+          task/                       # Task management
+            # --- Interface Definition ---
+            service.go                # The public API of this feature (Service struct)
 
-          # --- Delivery (HTTP) ---
-          handler.go                  # HTTP Handlers
-          handler_test.go             # Component tests (httptest + mock service)
+            # --- Delivery (HTTP) ---
+            handler.go                # HTTP Handlers
+            handler_test.go           # Component tests (httptest + mock service)
 
-          # --- Domain (Business Logic) ---
-          logic.go                    # Core business logic methods
-          logic_test.go               # Unit tests (Pure functions + mock storage)
-          models.go                   # Domain structs (Task, NewTaskRequest)
-          errors.go                   # Feature-specific errors
+            # --- Domain (Business Logic) ---
+            logic.go                  # Core business logic methods
+            logic_test.go             # Unit tests (Pure functions + mock storage)
+            models.go                 # Domain structs (Task, NewTaskRequest)
+            errors.go                 # Feature-specific errors
 
-          # --- Storage (Data Access) ---
-          storage.go                  # Storage Interface definition
-          storage_pg.go               # Postgres implementation
-          postgres_integration_test.go # Integration tests (Real DB/Testcontainers)
-          storage_mock.go             # Mock implementation
+            # --- Storage (Data Access) ---
+            storage.go                # Storage Interface definition
+            storage_pg.go             # Postgres implementation
+            postgres_integration_test.go # Integration tests (Real DB/Testcontainers)
+            storage_mock.go           # Mock implementation
+            ...
+          order/                      # Order management
+            handler.go
+            logic.go
+            storage.go
           ...
-        order/                        # Order management
-          handler.go
-          logic.go
-          storage.go
-        ...
 ```
 
 **Key Go conventions:**

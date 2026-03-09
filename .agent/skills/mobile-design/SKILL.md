@@ -86,7 +86,7 @@ Before implementing, verify against:
 - Testing Strategy @testing-strategy.md (widget tests, integration tests)
 - Security Principles @security-principles.md (secure storage, API key handling)
 - Accessibility Principles @accessibility-principles.md (screen reader, dynamic type, contrast)
-- Architectural Patterns @architectural-pattern.md (BLoC/Cubit, repository pattern)
+- Architectural Patterns @architectural-pattern.md (Riverpod 3 Notifier, repository pattern)
 
 **IMPORTANT**: Mobile has unique constraints — battery life, network variability, and user context (one-handed, on-the-go). Every design choice should respect these realities. Beautiful UI that drains battery or stutters on scroll is a failure.
 

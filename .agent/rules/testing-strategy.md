@@ -79,19 +79,21 @@ description: When writing tests, organizing test files, implementing test double
 - **Naming Convention Example:**
   - **TS/JS:** `*.spec.ts` (Unit), `*.integration.spec.ts` (Integration)
   - **Go:** `*_test.go` (Unit), `*_integration_test.go` (Integration)
+  - **Dart/Flutter:** `*_test.dart` (Unit), `*_integration_test.dart` (Integration) — tests live in `test/` mirroring `lib/` layout (Flutter's default convention, discovered by `flutter test`)
   - **Python:** `test_*.py` (Unit), `test_*_integration.py` (Integration)
   - **Java:** `*Test.java` (Unit), `*IT.java` (Integration)
   - **Rust:** `#[cfg(test)] mod tests` inline in each `.rs` file (Unit), `tests/` directory at crate root (Integration)
   > You must strictly follow the convention for the target language. Do not mix `test` and `spec` suffixes in the same application context.
+  > **Language-specific overrides:** Some ecosystems have different test location conventions. When a language-specific project structure file exists (e.g., `project-structure-flutter-mobile.md`, `project-structure-rust-cargo.md`), its test location rules take precedence over the co-location default. See `architectural-pattern.md` § Test co-location for the authoritative rule.
   > **Rust exception:** Rust unit tests are **inline** (`#[cfg(test)] mod tests` at the bottom of each `.rs` file), not separate files. This is the official Rust convention — it enables testing private functions and is how `cargo test` discovers unit tests. Integration tests go in `tests/` at the crate root, compiled as separate crates. See `rust-idioms-and-patterns.md` for details.
 
 **2. End-to-End Tests (Separate)**
 - **Rule:** Place in a dedicated `e2e/` folder
-  - **Single Service:** `e2e/` at project root
+  - **Single app:** `e2e/` at project root
   - **Monorepo:** `apps/e2e/` subdivided by test scope:
     - `apps/e2e/api/` for full API flow E2E tests (HTTP → Database)
     - `apps/e2e/ui/` for full-stack E2E tests (Browser → Backend → Database)
-- **Why:** E2E tests cross boundaries and don't belong to a single feature.
+  > Path adapts to project type per `project-structure.md` § Adapting for Different Project Types.
 - **Naming:** Follow `{feature}-{ui/api}.e2e.test.{ext}` (Universal - configure test runner to match this pattern `**/*.e2e.test.*`)
   - Example: 
     - `user-registration-api.e2e.test.ts`       # Full API flow: HTTP → DB
@@ -128,7 +130,7 @@ mcp_playwright_browser_take_screenshot(filename="login-success.png")
 **Key Principles:**
 - **Unit/Integration tests**: Co-located with implementation
 - **E2E tests**: Separate directory (crosses boundaries)
-- **Test doubles**: Co-located with interface (mock_store.go, taskAPI.mock.ts)
+- **Test doubles**: Co-located with interface (storage_mock.go, taskAPI.mock.ts)
 - **Pattern consistency**: All features follow same structure  
 
 ### Test Quality Standards
@@ -161,6 +163,6 @@ expect(mockRepo.save).toHaveBeenCalledWith(user);
 - E2E tests: Critical user journeys
 
 ### Related Principles
-- Architectural Patterns - Testability-First Design @architectural-pattern.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Error Handling Principles @error-handling-principles.md
 - Project Structure @project-structure.md

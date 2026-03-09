@@ -74,4 +74,4 @@ As an AI agent, I do not just generate functionality; I generate **defensibility
 ### Related Principles
 - Security Mandate @security-mandate.md
 - Error Handling Principles @error-handling-principles.md
-- Architectural Patterns - Testability-First Design @architectural-pattern.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md

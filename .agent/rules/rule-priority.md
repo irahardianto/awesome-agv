@@ -12,7 +12,7 @@ When two rules pull in opposite directions, use this priority to decide:
 2. **Rugged Software Constitution** — foundational philosophy. Code must be defensible.
 3. **Code Completion Mandate** and **Logging and Observability Mandate** — both are always-on enforcement rules. Validation and instrumentation are non-negotiable; neither can be skipped to ship faster.
 4. **Testability-First Design** — maintainability enables future improvements.
-5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom files (`go-idioms-and-patterns.md`, `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `flutter-idioms-and-patterns.md`, `rust-idioms-and-patterns.md`). When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
+5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom files (`go-idioms-and-patterns.md`, `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `flutter-idioms-and-patterns.md`, `rust-idioms-and-patterns.md`) and `concurrency-and-threading-mandate.md`. When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
 6. **YAGNI / KISS** — only when no security, reliability, or maintainability trade-off exists.
 
 ### Common Conflict Resolutions

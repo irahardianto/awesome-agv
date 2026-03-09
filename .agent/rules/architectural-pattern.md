@@ -2,7 +2,7 @@
 trigger: always_on
 ---
 
-## Architectural Patterns - Testability-First Design
+## Architectural Patterns — Testability-First Design
 
 ### Core Principle
 All code must be independently testable without running the full application or external infrastructure.
@@ -168,8 +168,9 @@ These are **architectural** requirements that the code structure must satisfy �
 - Adapters must be replaceable — the application must not hard-wire a specific implementation
 
 **Test co-location (structural rule):**
-- Unit and integration tests: co-located with the implementation they test (test lives next to the code)
+- Default: Unit and integration tests co-locate with the implementation they test (test lives next to the code)
 - E2E tests: isolated in a separate `/e2e` directory — they cross feature boundaries and belong to none
+- **Language overrides:** Some ecosystems have different conventions (e.g., Flutter uses a mirrored `test/` directory, Rust uses inline `#[cfg(test)]` blocks). When a language-specific project structure file exists, its test location rules take precedence over this default. See the relevant `project-structure-*` file for authoritative guidance.
 
 > For test pyramid proportions, naming conventions, tool choices, and language-specific tooling, see Testing Strategy @testing-strategy.md.
 

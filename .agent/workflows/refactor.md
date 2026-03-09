@@ -53,8 +53,7 @@ For each step in the refactoring plan:
 4. **Add new tests** if the refactoring exposes untested behavior
 5. Follow applicable rules:
    - Architectural Patterns @architectural-pattern.md
-   - Code Organization Principles @code-organization-principles.md
-   - Avoid Circular Dependencies @avoid-circular-dependencies.md
+   - Code Organization Principles @code-organization-principles.md (includes circular dependency guidance)
 
 **Key principle:** Never break the build for more than one step at a time.
 

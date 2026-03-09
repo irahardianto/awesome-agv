@@ -86,13 +86,15 @@ mcp_playwright_browser_take_screenshot(filename="docs/e2e-screenshots/{feature}-
 ## E2E Test Structure
 
 ```
-e2e/
-├── api/
-│   └── task-crud-api.e2e.test.ts    # API-only E2E
-└── ui/
-    ├── auth-flow-ui.e2e.test.ts     # Browser E2E
+e2e/                                    # Single-app projects
+├── api/                                # (For monorepo: apps/e2e/api/)
+│   └── task-crud-api.e2e.test.ts       # API-only E2E
+└── ui/                                 # (For monorepo: apps/e2e/ui/)
+    ├── auth-flow-ui.e2e.test.ts        # Browser E2E
     └── task-flow-ui.e2e.test.ts
 ```
+
+> Path adapts to project type per `project-structure.md` § Adapting for Different Project Types.
 
 ## Example: Auth Flow E2E
 

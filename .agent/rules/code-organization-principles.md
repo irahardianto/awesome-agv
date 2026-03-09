@@ -22,6 +22,7 @@ trigger: always_on
 **Directory Structure (Language-Agnostic):**
 
 > Paths below are illustrative examples following `project-structure.md` — the single source of truth for project layout.
+> **Note:** The generic filenames below are illustrative. Always use language-specific naming conventions from the relevant `project-structure-*` file (e.g., `storage.go` in Go, `task.api.ts` in TypeScript, `task_repository.dart` in Dart).
 
 ```
 /task
@@ -37,14 +38,16 @@ trigger: always_on
 
 **Go Example:**
 ```
-/apps/backend/task
+apps/backend/internal/features/task/
 
-- task.go               # API endpoints (public)
-- business.go           # Pure domain logic
-- store.go              # interface UserStore
-- postgres.go           # implements UserStore
-- task_test.go          # Unit tests with MockStore
-- task_integration_test.go # Integration test with Testcontainers for real dependency
+- service.go            # Public API of this feature (Service struct)
+- handler.go            # HTTP handlers
+- logic.go              # Pure domain logic
+- storage.go            # interface Storage
+- storage_pg.go         # implements Storage (PostgreSQL)
+- storage_mock.go       # Mock implementation for testing
+- logic_test.go         # Unit tests with MockStorage
+- postgres_integration_test.go # Integration test with Testcontainers
 ```
 
 **Vue Example:**
