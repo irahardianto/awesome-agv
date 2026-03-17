@@ -27,7 +27,7 @@ description: When implementing authentication, authorization, input validation, 
 ### Input Validation & Sanitization
 
 * **Principle:** "All Input is Evil until Proven Good."  
-* **Validation:** Validate against a strict Schema (Zod/Pydantic) at the *Controller/Port* boundary.  
+* **Validation:** Validate against a strict Schema (Zod/Pydantic) at the *Handler/Port* boundary.  
 * **Allowlist:** Check for "Good characters" (e.g., `^[a-zA-Z0-9]+$`), do not try to filter "Bad characters."  
 * **Sanitization:** Strip dangerous tags from rich text input using a proven library (e.g., DOMPurify equivalent).
 
