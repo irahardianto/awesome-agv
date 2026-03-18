@@ -20,7 +20,7 @@ All code must be independently testable without running the full application or 
 - Message queues
 
 **Implementation Discovery:**
-1. Search for existing abstraction patterns: `find_symbol("Interface")`, `find_symbol("Mock")`, `find_symbol("Repository")`
+1. Search the codebase for existing abstraction patterns by looking for symbols named: `Interface`, `Mock`, `Repository`, `Store`, `Adapter` (use your available codebase search tool — Pathfinder, grep, IDE symbol search, etc.)
 2. Match the style (interface in Go, Protocol in Python, interface in TypeScript)
 3. Implement production adapter AND test adapter
 
@@ -136,11 +136,8 @@ err = store.SaveOrder(ctx, order)
 **Before implementing ANY feature:**
 
 1. **Search existing patterns** (MANDATORY):
-```
-
-find_symbol("Interface") OR find_symbol("Repository") OR find_symbol("Service")
-
-```
+   Search the codebase for symbols named: `Interface`, `Repository`, `Service`, `Store`, `Mock`
+   (use your available codebase search tool — Pathfinder, grep, IDE symbol search, etc.)
 
 2. **Examine 3 existing modules** for consistency:
 - How do they handle database access?
@@ -169,7 +166,7 @@ These are **architectural** requirements that the code structure must satisfy �
 
 **Test co-location (structural rule):**
 - Default: Unit and integration tests co-locate with the implementation they test (test lives next to the code)
-- E2E tests: isolated in a separate `/e2e` directory — they cross feature boundaries and belong to none
+- E2E tests: isolated in a dedicated directory — `e2e/` at the project root for single-app projects, or `apps/e2e/` for monorepos. They cross feature boundaries and belong to none. See Testing Strategy @testing-strategy.md for the complete E2E directory layout.
 - **Language overrides:** Some ecosystems have different conventions (e.g., Flutter uses a mirrored `test/` directory, Rust uses inline `#[cfg(test)]` blocks). When a language-specific project structure file exists, its test location rules take precedence over this default. See the relevant `project-structure-*` file for authoritative guidance.
 
 > For test pyramid proportions, naming conventions, tool choices, and language-specific tooling, see Testing Strategy @testing-strategy.md.

@@ -20,7 +20,7 @@ Fast-track bug fixes and small changes that don't require full research or integ
 
 ## Pre-Implementation Checklist
 Before starting, you MUST:
-1. Scan `.agent/rules/` directory for applicable rules
+1. Scan `.agents/rules/` directory for applicable rules
 2. Read `rule-priority.md` for conflict resolution
 3. Confirm the fix scope is truly small and isolated
 

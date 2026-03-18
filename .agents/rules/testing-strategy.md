@@ -117,13 +117,14 @@ mcp_playwright_browser_click(ref="<ref>")
 # Wait for results
 mcp_playwright_browser_wait_for(text="Welcome")
 
-# Take screenshot for walkthrough documentation
-mcp_playwright_browser_take_screenshot(filename="login-success.png")
+# Capture snapshot for walkthrough documentation (captures full accessibility tree)
+mcp_playwright_browser_snapshot(filename="login-success.md")
 ```
 
 **E2E Test Requirements:**
-- Take screenshot at each major step
-- Save screenshots to walkthrough as proof of functionality
+- Capture a snapshot (`mcp_playwright_browser_snapshot`) at each major step
+- Save snapshots to walkthrough as proof of functionality
+- If visual proof is needed, use `browser_subagent` with `RecordingName` to produce a recorded video artifact
 - Test happy path AND at least one error path
 - Clean up test data after test (or use unique identifiers)
 

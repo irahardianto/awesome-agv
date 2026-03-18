@@ -8,7 +8,7 @@ description: Git commit with conventional format
 Commit completed work with proper conventional commit format.
 
 > **Note:** For detailed conventions (branch naming, commit types, PR size, merge strategy), 
-> see `git-workflow-principles.md` in `.agent/rules/`.
+> see `git-workflow-principles.md` in `.agents/rules/`.
 
 ## Prerequisites
 - All verification checks pass

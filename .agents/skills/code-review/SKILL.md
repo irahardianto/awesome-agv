@@ -22,7 +22,7 @@ Identify the files/features to review. Determine the review scope:
 - **Full codebase audit** — all features
 
 ### 2. Load the Rule Set
-Read all applicable rules from `.agent/rules/`. Use `rule-priority.md` for severity classification.
+Read all applicable rules from `.agents/rules/`. Use `rule-priority.md` for severity classification.
 
 ### 3. Review Categories (Priority Order)
 
@@ -105,7 +105,7 @@ When invoked as a standalone review (not via `/audit`), saving to `docs/audits/`
 | `[PAT]`  | Pattern consistency | `code-organization-principles.md`                  |
 
 ## Rule Compliance
-This skill enforces all rules in `.agent/rules/`. Key references:
+This skill enforces all rules in `.agents/rules/`. Key references:
 - Rule Priority @rule-priority.md (severity classification)
 - Security Principles @security-principles.md
 - Architectural Patterns @architectural-pattern.md

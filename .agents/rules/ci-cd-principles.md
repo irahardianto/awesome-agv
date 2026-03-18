@@ -5,11 +5,26 @@ description: When configuring CI/CD pipelines, deployment processes, release str
 
 ## CI/CD Principles
 
-> **Agent scope:** This rule is most useful when writing CI/CD manifests
+> **Agent scope:** This rule applies when writing CI/CD manifests
 > (Dockerfile, docker-compose, GitHub Actions, GitLab CI, etc.).
-> Use these principles to generate correct, production-grade pipeline configurations.
+> It is layered by deployment complexity — apply only the levels relevant to the project.
 
-### Pipeline Design
+---
+
+### Deployment Complexity Levels
+
+| Level | Applies When | Key Additions |
+|-------|-------------|---------------|
+| **0 — All projects** | Always | Lint, test, security scan, secrets management |
+| **1 — Containerized** | Docker image is the artifact | Multi-stage build, image scan, SBOM attestation |
+| **2 — Orchestrated** | Kubernetes or managed container platform | Deployment strategies, GitOps |
+
+Load supplementary rules when reaching Level 2:
+- Deployment strategies + GitOps → **@ci-cd-gitops-kubernetes.md**
+
+---
+
+### Level 0 — Universal Pipeline Design
 
 **Pipeline Stages (in order):**
 
@@ -17,9 +32,8 @@ description: When configuring CI/CD pipelines, deployment processes, release str
 2. **Build** — compile, bundle, generate artifacts
 3. **Unit Test** — fast tests with mocked dependencies
 4. **Integration Test** — tests against real dependencies (Testcontainers)
-5. **Security Scan** — dependency audit, SAST, secrets detection, container image scan
-6. **Build & Publish Image** — multi-stage Docker build, tag with git sha + semver
-7. **Deploy** — push to target environment
+5. **Security Scan** — dependency audit, SAST, secrets detection
+6. **Deploy** — push to target environment
 
 **Rules:**
 
@@ -27,9 +41,94 @@ description: When configuring CI/CD pipelines, deployment processes, release str
 - **Pipeline must be deterministic** — same input = same output, every time
 - **Keep pipelines under 15 minutes** — optimize slow stages
 - **Never skip failing steps** — fix the pipeline, don't bypass it
-- **Build once, deploy many** — same image artifact promotes through all environments
+- **Build once, deploy many** — same artifact promotes through all environments
 
-### Manifest Patterns
+---
+
+### Level 0 — Deploy Target Examples
+
+The deploy stage varies by target. The pipeline stages before it are identical.
+
+**Docker Compose (local / staging):**
+```bash
+docker compose up --build
+```
+
+**Cloud Run:**
+```bash
+gcloud run deploy myapp \
+  --image gcr.io/project/myapp:$GIT_SHA \
+  --region us-central1
+```
+
+**Vercel (frontend SPA):**
+```bash
+vercel deploy --prod
+```
+
+**Kubernetes:**
+Use GitOps — see **@ci-cd-gitops-kubernetes.md**.
+
+---
+
+### Level 0 — Manifest Patterns
+
+#### GitHub Actions
+
+```yaml
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod   # Pin via go.mod
+          cache: true               # Cache dependencies
+      - run: gofumpt -l -e -d .
+      - run: go vet ./...
+      - run: staticcheck ./...
+
+  test:
+    needs: lint                     # Fail fast: lint before test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: go test -race -cover ./...
+
+  security:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan for secrets
+        uses: trufflesecurity/trufflehog@v3   # Pin to release tag
+      - name: Audit dependencies
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+```
+
+**Rules:**
+
+- Pin action versions (`@v4`, not `@latest` or `@main`)
+- Use `needs:` to enforce stage ordering
+- Cache dependencies (`cache: true` in setup actions)
+- Use `go-version-file` / `node-version-file` instead of hardcoding versions
+- Never put secrets in workflow files — use `${{ secrets.NAME }}`
+
+---
+
+### Level 1 — Containerized Projects
 
 #### Dockerfile (Multi-Stage Build)
 
@@ -97,165 +196,96 @@ volumes:
 - Use volumes for persistent data
 - Never hardcode credentials — use env_file or environment variables
 
-#### GitHub Actions
+#### Image Scan + SBOM Attestation
+
+After building and pushing a container image, scan it and attach a signed SBOM attestation.
+
+**Preferred approach: Cosign keyless signing (no key management required)**
+
+Cosign integrates with your CI provider's OIDC token (GitHub Actions, GitLab CI) to sign
+images and attestations without storing or rotating cryptographic keys. The signature is
+anchored to a transparency log (Rekor), making it auditable and policy-enforceable.
 
 ```yaml
-name: CI
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod   # Pin via go.mod
-          cache: true               # Cache dependencies
-      - run: gofumpt -l -e -d .
-      - run: go vet ./...
-      - run: staticcheck ./...
-
-  test:
-    needs: lint                     # Fail fast: lint before test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-      - run: go test -race -cover ./...
-
-  security:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Scan for secrets
-        uses: trufflesecurity/trufflehog@main
-      - name: Audit dependencies
-        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
-
   build:
     needs: security
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write              # Required for Cosign keyless signing
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
       - name: Build and push image
-        run: docker build -t app:${{ github.sha }} .
+        id: build
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}:${{ github.sha }} .
+          docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
+
       - name: Scan container image
-        run: trivy image --severity HIGH,CRITICAL --exit-code 1 app:${{ github.sha }}
+        run: |
+          trivy image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+
       - name: Generate SBOM
-        run: syft app:${{ github.sha }} -o cyclonedx-json > sbom.json
-      - uses: actions/upload-artifact@v4
-        with: { name: sbom, path: sbom.json }
+        run: |
+          syft ghcr.io/${{ github.repository }}:${{ github.sha }} \
+            -o cyclonedx-json > sbom.json
+
+      - name: Attest SBOM to image (keyless, OIDC-backed)
+        run: |
+          cosign attest \
+            --predicate sbom.json \
+            --type cyclonedx \
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+        # Cosign uses the GitHub Actions OIDC token automatically.
+        # No COSIGN_PASSWORD or secret keys required.
 ```
+
+**How the SBOM travels with the image:**
+
+The SBOM attestation is stored as an OCI reference in the same container registry alongside
+the image digest. It requires no additional infrastructure — any registry that supports OCI
+artifacts (ghcr.io, Google Artifact Registry, AWS ECR, Docker Hub) works out of the box.
+
+To verify the attestation at any time:
+```bash
+cosign verify-attestation \
+  --type cyclonedx \
+  ghcr.io/org/app@sha256:<digest>
+```
+
+**Use ORAS instead of Cosign when:**
+- You need to attach arbitrary supply chain artifacts (scan reports, provenance JSON, build logs)
+  that go beyond what Cosign's attestation model covers.
+- `oras attach ghcr.io/org/app@sha256:<digest> scan-report.json`
 
 **Rules:**
 
-- Pin action versions (`@v4`, not `@latest` or `@main`)
-- Use `needs:` to enforce stage ordering
-- Cache dependencies (`cache: true` in setup actions)
-- Use `go-version-file` / `node-version-file` instead of hardcoding versions
-- Never put secrets in workflow files — use `${{ secrets.NAME }}`
+- Prefer Cosign keyless signing — eliminates secret key management overhead
+- SBOM is attached to the image in the OCI registry — not stored as a CI artifact
+- Scan BEFORE attesting — the SBOM reflects the scanned image
+- For non-containerized apps (Vercel, Netlify frontend), use `npm audit`/`yarn audit` instead;
+  no SBOM attachment applies
 
 ---
 
-### Deployment Strategies
+### Deployment vs Release (Feature Flags)
 
-#### Blue-Green Deployment
+Code deployment and feature release are separate concerns. When the PRD or technical
+architecture explicitly requires gradual rollout, A/B testing, or kill switches, feature
+flags can decouple them.
 
-**When:** Zero-downtime deployments where rollback must be instant and clean.
-
-```
-┌──────────────┐     ┌──────────────┐
-│   Blue (v1)  │     │  Green (v2)  │
-│  [LIVE 100%] │────→│  [STANDBY]   │
-└──────────────┘     └──────────────┘
-         ↕ Switch load balancer
-┌──────────────┐     ┌──────────────┐
-│   Blue (v1)  │     │  Green (v2)  │
-│  [STANDBY]   │     │  [LIVE 100%] │
-└──────────────┘     └──────────────┘
-```
-
-**Rules:**
-
-- Both environments must be identical in infrastructure
-- Run smoke tests against green before switching traffic
-- Keep blue alive for at least 30 minutes post-switch (fast rollback window)
-- Database migrations must be backward-compatible (blue still runs against same DB)
-
-#### Canary Deployment
-
-**When:** Risk-reducing incremental rollout; A/B testing deployment variants.
-
-```
-Traffic split during rollout:
-  5% → canary (v2)
- 95% → stable (v1)
-         ↓ metrics look good
- 25% → canary
- 75% → stable
-         ↓ bake time passes
-100% → canary (now stable)
-```
-
-**Rules:**
-
-- Define success metrics before starting rollout (error rate, latency SLO)
-- Set automatic rollback threshold: if canary error rate > 2× baseline → auto-rollback
-- Minimum bake time per traffic increment: 15–30 minutes
-- Use feature flags (not just traffic routing) for functional canary tests
-
-#### Rolling Deployment (Kubernetes)
-
-```yaml
-strategy:
-  type: RollingUpdate
-  rollingUpdate:
-    maxSurge: 25% # Max pods above desired count during update
-    maxUnavailable: 0% # Zero-downtime: don't remove pods before new ones ready
-```
-
-**Rules:**
-
-- Always set `maxUnavailable: 0` for production services with SLO requirements
-- Set `minReadySeconds` to let pods stabilize before proceeding
-- Configure `terminationGracePeriodSeconds` to finish in-flight requests
-
----
-
-### Feature Flags
-
-Use feature flags to decouple **deployment** from **release**. Code can be deployed without being enabled.
-
-**When to use:**
-
-- Risky features that need gradual rollout
-- A/B testing and experimentation
-- Kill switches for problematic code paths
-- Database migrations (enable new code path only after data migration complete)
-
-**Types:**
-| Flag Type | Use | Example |
-|-----------|-----|---------|
-| **Release flag** | Enable feature for % of users | `new-checkout-flow: 0→5→25→100%` |
-| **Ops flag** | Emergency kill switch | `use-legacy-payment-provider` |
-| **Experiment flag** | A/B test | `button-color-test` |
-| **Permission flag** | Feature entitlement | `pro-tier-analytics` |
-
-**Rules:**
-
-- Every flag has an **owner** and an **expiry date** (maximum 90 days for release flags)
-- Remove flags after 100% rollout — flag debt is real tech debt
-- Flags are evaluated server-side (not client-side) for security-sensitive features
-- Store flag config in a dedicated service (LaunchDarkly, Unleash, Flagsmith) — not hardcoded
+> **Agent rule:** Do NOT implement feature flags unless explicitly required by the
+> PRD or technical architecture document. See **@feature-flags-principles.md** for
+> implementation guidance when they are required.
 
 ---
 
@@ -277,66 +307,42 @@ dev → staging → production
 
 ---
 
-### GitOps (Kubernetes / Infrastructure)
-
-For Kubernetes-based environments, use **declarative GitOps** instead of imperative `kubectl apply`.
-
-**Pattern:**
-
-```
-Application Repo (code) → CI builds image → pushes tag to Config Repo
-Config Repo (K8s manifests) → ArgoCD/Flux syncs to cluster automatically
-```
-
-**Rules:**
-
-- Git is the **single source of truth** for cluster state
-- All changes to production go through PRs on the config repo — no direct `kubectl` in prod
-- ArgoCD/Flux continuously reconciles — any manual drift is auto-corrected
-- Secrets reference external secret stores (External Secrets Operator, Sealed Secrets) — never plaintext in git
-
-```yaml
-# Example ArgoCD Application
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: myapp-production
-spec:
-  source:
-    repoURL: https://github.com/org/config-repo
-    path: environments/production/myapp
-    targetRevision: HEAD
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: production
-  syncPolicy:
-    automated:
-      prune: true # Remove resources deleted from git
-      selfHeal: true # Reconcile manual drift
-```
-
----
-
 ### CI/CD Checklist
 
+**Always (all projects):**
 - [ ] Pipeline stages run in correct order (lint → build → test → security → deploy)?
 - [ ] All versions pinned (base images, CI actions, tool versions)?
 - [ ] Dependency caching enabled?
-- [ ] Multi-stage Docker builds used?
 - [ ] No secrets in config files (use env vars or secrets manager)?
-- [ ] Health checks defined for all dependencies?
-- [ ] Secret scanning + container image scanning in CI?
-- [ ] SBOM generated on every production build?
-- [ ] Deployment strategy defined (blue-green, canary, or rolling)?
-- [ ] Feature flags in use for risky/incremental releases?
-- [ ] GitOps in place for infrastructure (no manual kubectl in prod)?
+- [ ] Secret scanning in CI?
+- [ ] Health checks defined for all service dependencies?
 - [ ] Pipeline completes in under 15 minutes?
+
+**If building container images (Level 1):**
+- [ ] Multi-stage Docker builds used?
+- [ ] Container image scanned for HIGH/CRITICAL CVEs?
+- [ ] SBOM generated and attested to image via Cosign (keyless)?
+
+**If deploying to Kubernetes (Level 2):**
+- [ ] Deployment strategy defined (blue-green, canary, or rolling)?
+- [ ] GitOps in place — no direct `kubectl apply` in production?
+- [ ] Secrets reference external store, not plaintext in git?
+- See **@ci-cd-gitops-kubernetes.md** for full checklist
+
+**If feature flags are required by PRD/architecture:**
+- [ ] Flag infrastructure specified in tech architecture document?
+- [ ] Every flag has an owner and expiry date?
+- See **@feature-flags-principles.md** for full checklist
+
+---
 
 ### Related Principles
 
 - Code Completion Mandate @code-completion-mandate.md (validation before ship)
 - Security Mandate @security-mandate.md (secrets management)
-- Security Principles @security-principles.md (SBOM, image scanning)
+- Security Principles @security-principles.md (image scanning, SBOM)
 - Git Workflow Principles @git-workflow-principles.md (branch strategy)
 - Project Structure @project-structure.md (service paths)
 - Testing Strategy @testing-strategy.md (unit and integration test stages)
+- GitOps + Kubernetes Deployment @ci-cd-gitops-kubernetes.md
+- Feature Flags @feature-flags-principles.md

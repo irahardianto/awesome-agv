@@ -41,7 +41,7 @@ const REPO_OWNER = 'irahardianto';
 const REPO_NAME = 'awesome-agv';
 const BRANCH = 'main';
 const TARBALL_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${BRANCH}.tar.gz`;
-const AGENT_DIR = '.agent';
+const AGENT_DIR = '.agents';
 
 // ── CLI Argument Parsing ───────────────────────────────────────────────────────
 function parseArgs(argv) {
@@ -77,7 +77,7 @@ ${color.bold}ARGUMENTS${color.reset}
   target-dir    Directory to install into (default: current directory)
 
 ${color.bold}OPTIONS${color.reset}
-  -f, --force   Overwrite existing .agent directory without prompting
+  -f, --force   Overwrite existing .agents directory without prompting
   -h, --help    Show this help message
 
 ${color.bold}EXAMPLES${color.reset}

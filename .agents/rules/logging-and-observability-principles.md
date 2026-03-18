@@ -132,7 +132,7 @@ logger.error({
 
 ```
 
-#### Python (using structlog)
+##### Python (using structlog)
 ```python
 
 import structlog
@@ -153,7 +153,7 @@ user_id=user_id,
 
 ```
 
-#### Log Patterns by Operation Type
+##### Log Patterns by Operation Type
 
 ##### API Request/Response
 ```

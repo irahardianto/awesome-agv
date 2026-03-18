@@ -18,7 +18,7 @@ Structured checklists that ensure the agent considers all applicable rules befor
 
 Run through this checklist **before writing any code**:
 
-- [ ] Identified all applicable rules from `.agent/rules/`
+- [ ] Identified all applicable rules from `.agents/rules/`
 - [ ] Searched for existing patterns in codebase (Pattern Discovery Protocol from `architectural-pattern.md`)
 - [ ] Confirmed project structure alignment (`project-structure.md`)
 - [ ] Identified I/O boundaries that need abstraction

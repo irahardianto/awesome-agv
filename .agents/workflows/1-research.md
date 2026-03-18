@@ -45,22 +45,23 @@ Topics for "Task CRUD API":
 - JWT authentication middleware
 ```
 
-### 6. Search Qurio
-Run searches for EACH topic:
+### 6. Search External Documentation
+For EACH topic, search external documentation using the best tool available in your environment:
 
-[comment]: # (2-5 keywords only!)
+**Documentation search tools (use whichever is available):**
+- **Qurio** (`mcp_qurio_qurio_search`, `mcp_qurio_qurio_read_page`) — if Qurio MCP is enabled
+- **Context7** or similar MCP documentation servers — if available
+- **`search_web` / `read_url_content`** — universal fallback always available
 
+**Search strategy (2-5 keywords per query):**
 ```
-qurio_search(query="Go ServeMux routing")
-qurio_search(query="SQLC CRUD queries")
-qurio_search(query="Pinia store setup")
+# Using available documentation tool:
+search(query="Go ServeMux routing")
+search(query="SQLC CRUD queries")
+search(query="Pinia store setup")
 
-# More complex query
-qurio_search(query="<tech-keywords>", alpha=0.5)
-qurio_search(query="<tech-keywords>", alpha=0.5, limit=10, source_id="<source_id>")
-
-# Read full page
-qurio_read_page(url="https://go.dev/doc/go1.25")
+# For deeper reading on a specific URL:
+read_page(url="https://go.dev/doc/<topic>")
 ```
 
 ### 7. Document Findings
@@ -91,15 +92,12 @@ Then create an ADR using the **ADR Skill** at `docs/decisions/NNNN-short-title.m
 **Skills to consider:**
 - **Sequential Thinking** — for complex design decisions with multiple trade-offs
 
-### 9. Fallback to Web Search
-If Qurio yields no results, use web search.
-
-### 10. State Training Data Usage
+### 9. Fallback: State Training Data Usage
 If relying on training data, explicitly state:
 > "I am relying on my training data for this solution as external verification was unavailable."
 
 ## If This Phase Fails
-If Qurio and web search yield no results:
+If no documentation search tool yields results:
 1. Document what was searched
 2. State: "Relying on training data"
 3. Proceed with caution

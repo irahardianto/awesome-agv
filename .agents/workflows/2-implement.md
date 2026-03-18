@@ -58,7 +58,7 @@ go test -v ./internal/features/{feature}/...
 Improve the code while keeping tests green:
 - Improve names and structure
 - Remove duplication
-- **Follow predefined agent rules** (read applicable `.agent/rules/*.md`)
+- **Follow predefined agent rules** (read applicable `.agents/rules/*.md`)
 - **Handle errors** per Error Handling Principles
 - **Add logging** per Logging and Observability Mandate
 - If the refactoring is complex, activate the **Sequential Thinking** skill

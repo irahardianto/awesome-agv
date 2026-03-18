@@ -9,7 +9,7 @@ description: When working with application configuration, environment variables,
 
 **Configuration:**
 
-- Environment-specific values (URLs, credentials, feature flags, timeouts)  
+- Environment-specific values (URLs, credentials, timeouts)  
 - Changes between dev/staging/prod  
 - Can change without code deployment
 
@@ -102,6 +102,9 @@ production:
   password: <%= ENV['PROD_DB_PASSWORD'] %>
 ```
 
+> **Note:** Feature flag configuration is a distinct, PRD-gated concern — not routine application configuration. See Feature Flags Principles @feature-flags-principles.md for when and how feature flags are used.
+
 ### Related Principles
 - Security Mandate @security-mandate.md
 - Security Principles @security-principles.md
+- Feature Flags Principles @feature-flags-principles.md

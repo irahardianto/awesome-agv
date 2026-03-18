@@ -68,9 +68,9 @@ mcp_playwright_browser_click(ref="<ref>")
 mcp_playwright_browser_wait_for(text="Welcome")
 ```
 
-**Take screenshot for documentation:**
+**Capture snapshot for walkthrough documentation:**
 ```
-mcp_playwright_browser_take_screenshot(filename="docs/e2e-screenshots/{feature}-{description}.png")
+mcp_playwright_browser_snapshot(filename="docs/e2e-screenshots/{feature}-{description}.md")
 ```
 
 ### 4. Document Results
@@ -78,10 +78,11 @@ mcp_playwright_browser_take_screenshot(filename="docs/e2e-screenshots/{feature}-
 **Screenshot location:** `docs/e2e-screenshots/{feature}-{description}.png`
 
 1. Create `docs/e2e-screenshots/` if it doesn't exist
-2. Save all screenshots there with descriptive names (e.g., `auth-login-success.png`, `task-create-form.png`)
-3. Embed screenshots in the walkthrough artifact using `![description](file:///path/to/screenshot.png)`
-4. Note any failures or issues
-5. Update test files if needed
+2. Save all snapshots there with descriptive names
+3. For visual proof (video recording), use `browser_subagent` with `RecordingName` parameter
+4. Embed walkthrough documentation in the walkthrough artifact
+5. Note any failures or issues
+6. Update test files if needed
 
 ## E2E Test Structure
 
@@ -126,5 +127,5 @@ describe('Authentication Flow', () => {
 
 ## Completion Criteria
 - [ ] All critical user flows tested
-- [ ] Screenshots captured for walkthrough
+- [ ] Snapshots captured and embedded in walkthrough
 - [ ] No blocking issues found

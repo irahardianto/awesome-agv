@@ -25,7 +25,7 @@ Safely restructure existing code while preserving behavior. Uses a different min
 
 ## Pre-Implementation Checklist
 Before starting, you MUST:
-1. Scan `.agent/rules/` directory for applicable rules
+1. Scan `.agents/rules/` directory for applicable rules
 2. Read `architectural-pattern.md` and `project-structure.md`
 3. Read `rule-priority.md` for conflict resolution
 

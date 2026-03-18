@@ -12,8 +12,9 @@ When two rules pull in opposite directions, use this priority to decide:
 2. **Rugged Software Constitution** — foundational philosophy. Code must be defensible.
 3. **Code Completion Mandate** and **Logging and Observability Mandate** — both are always-on enforcement rules. Validation and instrumentation are non-negotiable; neither can be skipped to ship faster.
 4. **Testability-First Design** — maintainability enables future improvements.
-5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom files (`go-idioms-and-patterns.md`, `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `flutter-idioms-and-patterns.md`, `rust-idioms-and-patterns.md`) and `concurrency-and-threading-mandate.md`. When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
-6. **YAGNI / KISS** — only when no security, reliability, or maintainability trade-off exists.
+5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom files (`go-idioms-and-patterns.md`, `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `flutter-idioms-and-patterns.md`, `rust-idioms-and-patterns.md`), `concurrency-and-threading-mandate.md`, and `ci-cd-principles.md`. When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
+6. **PRD-gated principles** — only apply when the PRD or technical architecture document *explicitly requires* the capability. Includes `feature-flags-principles.md` and `ci-cd-gitops-kubernetes.md`. Must not be applied based on speculation; agent must confirm requirement before activating.
+7. **YAGNI / KISS** — only when no security, reliability, or maintainability trade-off exists.
 
 ### Common Conflict Resolutions
 
@@ -24,6 +25,7 @@ When two rules pull in opposite directions, use this priority to decide:
 | Performance vs YAGNI ("should I optimize this now?")                  | **Measure first.** Only optimize after profiling shows a real bottleneck.       |
 | DRY vs Clarity ("should I abstract this into a shared utility?")      | **Clarity wins** until duplication reaches 3+ instances (Rule of Three).        |
 | Speed vs Logging ("skip logging to ship faster")                      | **Logging wins.** Silent failures are the enemy.                                |
+| YAGNI vs PRD-gated requirement ("feature flags aren't needed")        | **PRD wins.** If explicitly required, YAGNI cannot override it.                 |
 
 ### Guiding Principle
 

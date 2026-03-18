@@ -21,7 +21,7 @@ Inspect existing code quality and produce structured findings. This workflow doe
 
 ## Pre-Audit Checklist
 Before starting, you MUST:
-1. Scan `.agent/rules/` directory — these form the review criteria
+1. Scan `.agents/rules/` directory — these form the review criteria
 2. Read `rule-priority.md` for conflict resolution
 3. Identify the scope of the audit (specific feature, module, or full codebase)
 
