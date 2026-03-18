@@ -84,7 +84,7 @@ The Implement phase enforces Red → Green → Refactor. This isn't ceremonial:
 Rules are plain markdown files. To customize:
 
 1. **Edit existing rules** — adjust thresholds, add team-specific conventions
-2. **Add new rules** — create new `.md` files in `.agent/rules/`
+2. **Add new rules** — create new `.md` files in `.agents/rules/`
 3. **Remove rules** — delete files you don't need (but be careful with mandates)
 
 ### Rule Trigger Types
@@ -100,11 +100,11 @@ Choose the right trigger for custom rules:
 
 ### Customizing Language-Specific Rules
 
-Awesome AGV already includes dedicated idiom files for Go, TypeScript, Vue, Flutter, and Rust. To customize:
+Awesome AGV already includes dedicated idiom files for Go, TypeScript, Vue, Flutter, Rust, and Python. To customize:
 
 1. **Edit the existing idiom file** — e.g., `go-idioms-and-patterns.md` to add team-specific conventions
 2. **Replace an idiom file** — swap `vue-idioms-and-patterns.md` for a React file if you use React
-3. **Add a new language** — create `.agent/rules/{lang}-idioms-and-patterns.md` with `trigger: model_decision`
+3. **Add a new language** — create `.agents/rules/{lang}-idioms-and-patterns.md` with `trigger: model_decision`
 4. **Register in** `code-idioms-and-conventions.md` — add a row to the language table so the agent knows when to activate it
 
 See [Adapting — Changing the Default Framework](/awesome-agv/adapting#changing-the-default-framework) for a full guide.

@@ -32,11 +32,11 @@ You can drop this configuration into the context or custom rule settings of:
 *   **Claude Code**
 *   Any other agentic tool that supports custom system prompts or context loading.
 
-For example, the principles of the [Rugged Software Constitution](.agent/rules/rugged-software-constitution.md) which is based on [Rugged Software Manifesto](https://ruggedsoftware.org/) are universal and will improve the output of any LLM-based coding assistant.
+For example, the principles of the [Rugged Software Constitution](.agents/rules/rugged-software-constitution.md) which is based on [Rugged Software Manifesto](https://ruggedsoftware.org/) are universal and will improve the output of any LLM-based coding assistant.
 
 ### Key Features
 
-*   📏 **38 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
+*   📏 **42 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
 *   🛠️ **7 Skills** — specialized capabilities for debugging, design, code review, and more.
 *   🔄 **10 Workflows** — end-to-end development processes from research to ship.
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
@@ -60,15 +60,15 @@ To equip your AI agent with these superpowers, follow these steps.
 npx awesome-agv
 ```
 
-This downloads and installs the latest `.agent/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
+This downloads and installs the latest `.agents/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
 
 **Options:**
 
 | Flag           | Description                                    |
 | -------------- | ---------------------------------------------- |
-| `[target-dir]` | Directory to install into (default: `./`)      |
-| `--force, -f`  | Overwrite existing `.agent/` without prompting |
-| `--help, -h`   | Show help                                      |
+| `[target-dir]` | Directory to install into (default: `./`)       |
+| `--force, -f`  | Overwrite existing `.agents/` without prompting |
+| `--help, -h`   | Show help                                       |
 
 ### Examples
 
@@ -85,11 +85,11 @@ npx awesome-agv --force
 
 **Manual Install:**
 
-1.  Clone this repository or copy the `.agent` folder into the root of your project.
+1.  Clone this repository or copy the `.agents` folder into the root of your project.
     ```sh
-    cp -r /path/to/awesome-agv/.agent ./your-project-root/
+    cp -r /path/to/awesome-agv/.agents ./your-project-root/
     ```
-2.  Ensure your AI agent is configured to read from the `.agent` directory (most of well-known AI coding assistant are adhering to the `.agent` convention by default, no action needed) or manually ingest the `.agent/rules/**` as part of its system prompt.
+2.  Ensure your AI agent is configured to read from the `.agents` directory (most of well-known AI coding assistant are adhering to the `.agents` convention by default, no action needed) or manually ingest the `.agents/rules/**` as part of its system prompt.
 
 <!-- USAGE -->
 ## Usage
@@ -105,7 +105,7 @@ The setup uses a **two-tier rule system** to minimize noise while maximizing cov
 | **Mandates**   | `always_on`      | Non-negotiable constraints loaded in every session (security, logging, code completion).                                     |
 | **Principles** | `model_decision` | Contextual guidance activated only when working on relevant areas (e.g., database rules activate only when writing queries). |
 
-Conflicts between rules are resolved by [Rule Priority](.agent/rules/rule-priority.md) — security always wins.
+Conflicts between rules are resolved by [Rule Priority](.agents/rules/rule-priority.md) — security always wins.
 
 ### Rule Dependencies
 
@@ -154,6 +154,10 @@ graph TD
   testing_strategy["testing-strategy.md"]
   typescript_idioms_and_patterns["typescript-idioms-and-patterns.md"]
   vue_idioms_and_patterns["vue-idioms-and-patterns.md"]
+  python_idioms_and_patterns["python-idioms-and-patterns.md"]
+  project_structure_python_backend["project-structure-python-backend.md"]
+  feature_flags_principles["feature-flags-principles.md"]
+  ci_cd_gitops_kubernetes["ci-cd-gitops-kubernetes.md"]
   accessibility_principles --> core_design_principles
   accessibility_principles --> security_principles
   accessibility_principles --> testing_strategy
@@ -316,6 +320,18 @@ graph TD
   vue_idioms_and_patterns --> project_structure_vue_frontend
   vue_idioms_and_patterns --> testing_strategy
   vue_idioms_and_patterns --> typescript_idioms_and_patterns
+  python_idioms_and_patterns --> code_idioms_and_conventions
+  python_idioms_and_patterns --> project_structure_python_backend
+  python_idioms_and_patterns --> testing_strategy
+  python_idioms_and_patterns --> error_handling_principles
+  python_idioms_and_patterns --> concurrency_and_threading_mandate
+  python_idioms_and_patterns --> logging_and_observability_principles
+  python_idioms_and_patterns --> security_principles
+  python_idioms_and_patterns --> dependency_management_principles
+  project_structure_python_backend --> project_structure
+  project_structure_python_backend --> python_idioms_and_patterns
+  code_idioms_and_conventions --> python_idioms_and_patterns
+  code_completion_mandate --> python_idioms_and_patterns
 ```
 
 </details>
@@ -325,62 +341,66 @@ graph TD
 The power of the setup comes from its extensive collection of rules covering every aspect of software engineering.
 
 #### 🛡️ Security & Integrity
-*   **[Rugged Software Constitution](.agent/rules/rugged-software-constitution.md)**: The core philosophy of defensible coding.
-*   **[Security Mandate](.agent/rules/security-mandate.md)**: Non-negotiable security requirements.
-*   **[Security Principles](.agent/rules/security-principles.md)**: Best practices for secure design.
+*   **[Rugged Software Constitution](.agents/rules/rugged-software-constitution.md)**: The core philosophy of defensible coding.
+*   **[Security Mandate](.agents/rules/security-mandate.md)**: Non-negotiable security requirements.
+*   **[Security Principles](.agents/rules/security-principles.md)**: Best practices for secure design.
 
 #### ⚡ Reliability & Performance
-*   **[Error Handling Principles](.agent/rules/error-handling-principles.md)**: Techniques for robust error management.
-*   **[Concurrency & Threading](.agent/rules/concurrency-and-threading-principles.md)**: Safe parallel execution and deadlock prevention.
-*   **[Concurrency & Threading Mandate](.agent/rules/concurrency-and-threading-mandate.md)**: When to use (and not use) concurrency.
-*   **[Performance Optimization](.agent/rules/performance-optimization-principles.md)**: Writing efficient and scalable code.
-*   **[Resource Management](.agent/rules/resources-and-memory-management-principles.md)**: Handling memory and system resources responsibly.
-*   **[Monitoring & Alerting](.agent/rules/monitoring-and-alerting-principles.md)**: Health checks, metrics, and graceful degradation.
-*   **[Configuration Management](.agent/rules/configuration-management-principles.md)**: Environment variables, secrets, and config hierarchy.
+*   **[Error Handling Principles](.agents/rules/error-handling-principles.md)**: Techniques for robust error management.
+*   **[Concurrency & Threading](.agents/rules/concurrency-and-threading-principles.md)**: Safe parallel execution and deadlock prevention.
+*   **[Concurrency & Threading Mandate](.agents/rules/concurrency-and-threading-mandate.md)**: When to use (and not use) concurrency.
+*   **[Performance Optimization](.agents/rules/performance-optimization-principles.md)**: Writing efficient and scalable code.
+*   **[Resource Management](.agents/rules/resources-and-memory-management-principles.md)**: Handling memory and system resources responsibly.
+*   **[Monitoring & Alerting](.agents/rules/monitoring-and-alerting-principles.md)**: Health checks, metrics, and graceful degradation.
+*   **[Configuration Management](.agents/rules/configuration-management-principles.md)**: Environment variables, secrets, and config hierarchy.
 
 #### 🏗️ Architecture & Design
-*   **[Core Design Principles](.agent/rules/core-design-principles.md)**: Fundamental software design rules (SOLID, DRY, etc.).
-*   **[API Design Principles](.agent/rules/api-design-principles.md)**: Creating clean, intuitive, and versionable APIs.
-*   **[Architectural Pattern](.agent/rules/architectural-pattern.md)**: Testability-first design with I/O isolation.
-*   **[Project Structure](.agent/rules/project-structure.md)**: Feature-based organization (the single source of truth for layout).
-*   **[Project Structure — Go Backend](.agent/rules/project-structure-go-backend.md)**: Go-specific directory layout.
-*   **[Project Structure — Vue Frontend](.agent/rules/project-structure-vue-frontend.md)**: Vue/React frontend layout.
-*   **[Project Structure — Flutter Mobile](.agent/rules/project-structure-flutter-mobile.md)**: Flutter/RN mobile app layout.
-*   **[Project Structure — Rust/Cargo](.agent/rules/project-structure-rust-cargo.md)**: Rust workspace and crate layout.
-*   **[Database Design](.agent/rules/database-design-principles.md)**: Schema design, migrations, and query safety.
-*   **[Data Serialization](.agent/rules/data-serialization-and-interchange-principles.md)**: Safe data handling and formats.
-*   **[Command Execution](.agent/rules/command-execution-principles.md)**: Principles for running system commands securely.
+*   **[Core Design Principles](.agents/rules/core-design-principles.md)**: Fundamental software design rules (SOLID, DRY, etc.).
+*   **[API Design Principles](.agents/rules/api-design-principles.md)**: Creating clean, intuitive, and versionable APIs.
+*   **[Architectural Pattern](.agents/rules/architectural-pattern.md)**: Testability-first design with I/O isolation.
+*   **[Project Structure](.agents/rules/project-structure.md)**: Feature-based organization (the single source of truth for layout).
+*   **[Project Structure — Go Backend](.agents/rules/project-structure-go-backend.md)**: Go-specific directory layout.
+*   **[Project Structure — Vue Frontend](.agents/rules/project-structure-vue-frontend.md)**: Vue/React frontend layout.
+*   **[Project Structure — Flutter Mobile](.agents/rules/project-structure-flutter-mobile.md)**: Flutter/RN mobile app layout.
+*   **[Project Structure — Rust/Cargo](.agents/rules/project-structure-rust-cargo.md)**: Rust workspace and crate layout.
+*   **[Project Structure — Python Backend](.agents/rules/project-structure-python-backend.md)**: Python service and API layout.
+*   **[Database Design](.agents/rules/database-design-principles.md)**: Schema design, migrations, and query safety.
+*   **[Data Serialization](.agents/rules/data-serialization-and-interchange-principles.md)**: Safe data handling and formats.
+*   **[Command Execution](.agents/rules/command-execution-principles.md)**: Principles for running system commands securely.
 
 #### 🧩 Maintainability & Quality
-*   **[Code Organization](.agent/rules/code-organization-principles.md)**: Structuring projects for readability.
-*   **[Code Idioms](.agent/rules/code-idioms-and-conventions.md)**: Following language-specific best practices.
-*   **[Go Idioms](.agent/rules/go-idioms-and-patterns.md)**: Go-specific patterns, error handling, concurrency, and tooling.
-*   **[TypeScript Idioms](.agent/rules/typescript-idioms-and-patterns.md)**: TypeScript type system, strict mode, async patterns.
-*   **[Vue Idioms](.agent/rules/vue-idioms-and-patterns.md)**: Vue 3 Composition API, Pinia stores, composables.
-*   **[Flutter Idioms](.agent/rules/flutter-idioms-and-patterns.md)**: Flutter/Dart, Riverpod state management, freezed models.
-*   **[Rust Idioms](.agent/rules/rust-idioms-and-patterns.md)**: Ownership, error handling, async with tokio, clippy.
-*   **[Testing Strategy](.agent/rules/testing-strategy.md)**: Ensuring code is verifiable and tested.
-*   **[Dependency Management](.agent/rules/dependency-management-principles.md)**: Managing external libraries safely.
-*   **[Documentation Principles](.agent/rules/documentation-principles.md)**: Writing clear and helpful documentation.
-*   **[Logging & Observability](.agent/rules/logging-and-observability-principles.md)**: Ensuring system visibility.
-*   **[Logging & Observability Mandate](.agent/rules/logging-and-observability-mandate.md)**: All operations must be logged — no exceptions.
-*   **[Accessibility Principles](.agent/rules/accessibility-principles.md)**: WCAG 2.1 AA compliance for UIs.
-*   **[Git Workflow](.agent/rules/git-workflow-principles.md)**: Conventional commits, branch naming, and PR hygiene.
+*   **[Code Organization](.agents/rules/code-organization-principles.md)**: Structuring projects for readability.
+*   **[Code Idioms](.agents/rules/code-idioms-and-conventions.md)**: Following language-specific best practices.
+*   **[Go Idioms](.agents/rules/go-idioms-and-patterns.md)**: Go-specific patterns, error handling, concurrency, and tooling.
+*   **[TypeScript Idioms](.agents/rules/typescript-idioms-and-patterns.md)**: TypeScript type system, strict mode, async patterns.
+*   **[Vue Idioms](.agents/rules/vue-idioms-and-patterns.md)**: Vue 3 Composition API, Pinia stores, composables.
+*   **[Flutter Idioms](.agents/rules/flutter-idioms-and-patterns.md)**: Flutter/Dart, Riverpod state management, freezed models.
+*   **[Rust Idioms](.agents/rules/rust-idioms-and-patterns.md)**: Ownership, error handling, async with tokio, clippy.
+*   **[Python Idioms](.agents/rules/python-idioms-and-patterns.md)**: Type hints, Protocols, pytest, ruff/mypy tooling.
+*   **[Testing Strategy](.agents/rules/testing-strategy.md)**: Ensuring code is verifiable and tested.
+*   **[Dependency Management](.agents/rules/dependency-management-principles.md)**: Managing external libraries safely.
+*   **[Documentation Principles](.agents/rules/documentation-principles.md)**: Writing clear and helpful documentation.
+*   **[Logging & Observability](.agents/rules/logging-and-observability-principles.md)**: Ensuring system visibility.
+*   **[Logging & Observability Mandate](.agents/rules/logging-and-observability-mandate.md)**: All operations must be logged — no exceptions.
+*   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA compliance for UIs.
+*   **[Git Workflow](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, and PR hygiene.
 
 #### 🔄 DevOps & Operations
-*   **[CI/CD Principles](.agent/rules/ci-cd-principles.md)**: Pipeline design, Docker, and GitHub Actions.
-*   **[Code Completion Mandate](.agent/rules/code-completion-mandate.md)**: Automated quality checks before every delivery.
-*   **[Rule Priority](.agent/rules/rule-priority.md)**: Conflict resolution when rules contradict each other.
+*   **[CI/CD Principles](.agents/rules/ci-cd-principles.md)**: Pipeline design, Docker, and GitHub Actions.
+*   **[CI/CD GitOps Kubernetes](.agents/rules/ci-cd-gitops-kubernetes.md)**: ArgoCD, Kubernetes deployment patterns (PRD-gated).
+*   **[Feature Flags Principles](.agents/rules/feature-flags-principles.md)**: Flag types, lifecycle, and rollout strategies (PRD-gated).
+*   **[Code Completion Mandate](.agents/rules/code-completion-mandate.md)**: Automated quality checks before every delivery.
+*   **[Rule Priority](.agents/rules/rule-priority.md)**: Conflict resolution when rules contradict each other.
 
 ### Specialized Skills
 
-*   **[Debugging Protocol](.agent/skills/debugging-protocol/SKILL.md)**: Systematic approach to solving errors.
-*   **[Frontend Design](.agent/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
-*   **[Mobile Design](.agent/skills/mobile-design/SKILL.md)**: Production-grade mobile interfaces for Flutter and React Native.
-*   **[Sequential Thinking](.agent/skills/sequential-thinking/SKILL.md)**: A tool for breaking down complex problems, an adaptation from [Sequential Thinking MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
-*   **[Code Review](.agent/skills/code-review/SKILL.md)**: Structured code review protocol against the full rule set.
-*   **[Guardrails](.agent/skills/guardrails/SKILL.md)**: Pre-flight checklist and post-implementation self-review.
-*   **[ADR (Architecture Decision Records)](.agent/skills/adr/SKILL.md)**: Document significant architectural decisions with context and trade-offs.
+*   **[Debugging Protocol](.agents/skills/debugging-protocol/SKILL.md)**: Systematic approach to solving errors.
+*   **[Frontend Design](.agents/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
+*   **[Mobile Design](.agents/skills/mobile-design/SKILL.md)**: Production-grade mobile interfaces for Flutter and React Native.
+*   **[Sequential Thinking](.agents/skills/sequential-thinking/SKILL.md)**: A tool for breaking down complex problems, an adaptation from [Sequential Thinking MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
+*   **[Code Review](.agents/skills/code-review/SKILL.md)**: Structured code review protocol against the full rule set.
+*   **[Guardrails](.agents/skills/guardrails/SKILL.md)**: Pre-flight checklist and post-implementation self-review.
+*   **[ADR (Architecture Decision Records)](.agents/skills/adr/SKILL.md)**: Document significant architectural decisions with context and trade-offs.
 
 ### Development Workflows
 
@@ -394,29 +414,29 @@ The primary workflow for building features. Phases execute sequentially — **no
 Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → Ship
 ```
 
-| Phase        | Workflow                                          | Purpose                                                                                                                 |
-| ------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 1. Research  | [`/1-research`](.agent/workflows/1-research.md)   | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
-| 2. Implement | [`/2-implement`](.agent/workflows/2-implement.md) | TDD cycle: Red → Green → Refactor                                                                                       |
-| 3. Integrate | [`/3-integrate`](.agent/workflows/3-integrate.md) | Integration tests with Testcontainers                                                                                   |
-| 3.5. E2E     | [`/e2e-test`](.agent/workflows/e2e-test.md)       | End-to-end validation with Playwright                                                                                   |
-| 4. Verify    | [`/4-verify`](.agent/workflows/4-verify.md)       | Full lint, test, and build validation                                                                                   |
-| 5. Ship      | [`/5-commit`](.agent/workflows/5-commit.md)       | Git commit with conventional format                                                                                     |
+| Phase        | Workflow                                            | Purpose                                                                                                                 |
+| ------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1. Research  | [`/1-research`](.agents/workflows/1-research.md)   | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
+| 2. Implement | [`/2-implement`](.agents/workflows/2-implement.md) | TDD cycle: Red → Green → Refactor                                                                                       |
+| 3. Integrate | [`/3-integrate`](.agents/workflows/3-integrate.md) | Integration tests with Testcontainers                                                                                   |
+| 3.5. E2E     | [`/e2e-test`](.agents/workflows/e2e-test.md)       | End-to-end validation with Playwright                                                                                   |
+| 4. Verify    | [`/4-verify`](.agents/workflows/4-verify.md)       | Full lint, test, and build validation                                                                                   |
+| 5. Ship      | [`/5-commit`](.agents/workflows/5-commit.md)       | Git commit with conventional format                                                                                     |
 
 #### 🔧 Specialized Workflows
 
-| Workflow                                      | When to Use                                          |
-| --------------------------------------------- | ---------------------------------------------------- |
-| [`/quick-fix`](.agent/workflows/quick-fix.md) | Bug fixes with known root cause (<50 lines)          |
-| [`/refactor`](.agent/workflows/refactor.md)   | Safely restructure code while preserving behavior    |
-| [`/audit`](.agent/workflows/audit.md)         | Code review and quality inspection (no new features) |
+| Workflow                                        | When to Use                                          |
+| ----------------------------------------------- | ---------------------------------------------------- |
+| [`/quick-fix`](.agents/workflows/quick-fix.md) | Bug fixes with known root cause (<50 lines)          |
+| [`/refactor`](.agents/workflows/refactor.md)   | Safely restructure code while preserving behavior    |
+| [`/audit`](.agents/workflows/audit.md)         | Code review and quality inspection (no new features) |
 
 <!-- DIRECTORY STRUCTURE -->
 ## Directory Structure
 
 ```
-.agent/
-├── rules/             # 38 rules (mandates + principles + language idioms)
+.agents/
+├── rules/             # 42 rules (mandates + principles + language idioms)
 │   ├── rugged-software-constitution.md
 │   ├── security-mandate.md
 │   ├── rule-priority.md
@@ -447,7 +467,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 - [x] Include more specialized skills to aid development process (7 skills shipped).
 - [x] Add development workflows for structured feature delivery (10 workflows shipped).
-- [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust).
+- [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust, Python).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [x] Publish comprehensive documentation site (GitHub Pages).
@@ -456,12 +476,13 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 Awesome AGV ships with **opinionated defaults** for specific technology stacks. Each stack has dedicated idiom files with patterns, tooling, and verification commands.
 
-| Stack        | Default Choice                                      | Idiom File(s)                                                     |
-| ------------ | --------------------------------------------------- | ----------------------------------------------------------------- |
-| **Backend**  | Go — vanilla stdlib, minimal deps                   | `go-idioms-and-patterns.md`                                       |
-| **Frontend** | TypeScript + Vue 3 — Composition API, Pinia, Vitest | `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md` |
-| **Mobile**   | Flutter + Riverpod — freezed models, go_router      | `flutter-idioms-and-patterns.md`                                  |
-| **Systems**  | Rust — tokio, thiserror/anyhow, clippy pedantic     | `rust-idioms-and-patterns.md`                                     |
+| Stack            | Default Choice                                      | Idiom File(s)                                                     |
+| ---------------- | --------------------------------------------------- | ----------------------------------------------------------------- |
+| **Backend**      | Go — vanilla stdlib, minimal deps                   | `go-idioms-and-patterns.md`                                       |
+| **Frontend**     | TypeScript + Vue 3 — Composition API, Pinia, Vitest | `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md` |
+| **Mobile**       | Flutter + Riverpod — freezed models, go_router      | `flutter-idioms-and-patterns.md`                                  |
+| **Systems**      | Rust — tokio, thiserror/anyhow, clippy pedantic     | `rust-idioms-and-patterns.md`                                     |
+| **Scripting/AI** | Python — ruff, mypy strict, pytest, Pydantic        | `python-idioms-and-patterns.md`                                   |
 
 **Using a different framework?** The idiom files are modular — swap or edit them to match your stack. See the [Adapting guide](https://irahardianto.github.io/awesome-agv/adapting) for which files to change.
 

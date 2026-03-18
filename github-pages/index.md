@@ -26,7 +26,7 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 
 | Component     | Count | Purpose                                                                           |
 | ------------- | ----- | --------------------------------------------------------------------------------- |
-| **Rules**     | 38    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
+| **Rules**     | 42    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
 | **Skills**    | 7     | Specialized capabilities for debugging, design, code review, and more             |
 | **Workflows** | 10    | End-to-end development processes from research to ship                            |
 
@@ -34,7 +34,7 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 
 > "I recognize that my code will be attacked."
 
-The setup embodies three commitments from the [Rugged Software Constitution](https://github.com/irahardianto/awesome-agv/blob/main/.agent/rules/rugged-software-constitution.md):
+The setup embodies three commitments from the [Rugged Software Constitution](https://github.com/irahardianto/awesome-agv/blob/main/.agents/rules/rugged-software-constitution.md):
 
 1. **I Am Responsible** — No "happy path" code. Every input is assumed malformed or malicious.
 2. **I Am Defensible** — Code validates its own state. Failures are secure (closed), never undefined.
@@ -58,18 +58,19 @@ Detailed guidance activated only when the agent is working on relevant areas:
 - CI/CD rules activate when editing pipelines
 - Accessibility rules activate when building UIs
 
-This means the agent isn't overwhelmed with 38 rules on every task — it gets the critical mandates always, and the contextual principles only when they matter.
+This means the agent isn't overwhelmed with 42 rules on every task — it gets the critical mandates always, and the contextual principles only when they matter.
 
 ## Opinionated Defaults
 
 Awesome AGV ships with **opinionated technology choices** for each layer of the stack. Each has a dedicated idiom file with patterns, tooling, and verification commands:
 
-| Stack        | Default Choice                                      |
-| ------------ | --------------------------------------------------- |
-| **Backend**  | Go — vanilla stdlib, minimal deps                   |
-| **Frontend** | TypeScript + Vue 3 — Composition API, Pinia, Vitest |
-| **Mobile**   | Flutter + Riverpod — freezed models, go_router      |
-| **Systems**  | Rust — tokio, thiserror/anyhow, clippy pedantic     |
+| Stack            | Default Choice                                      |
+| ---------------- | --------------------------------------------------- |
+| **Backend**      | Go — vanilla stdlib, minimal deps                   |
+| **Frontend**     | TypeScript + Vue 3 — Composition API, Pinia, Vitest |
+| **Mobile**       | Flutter + Riverpod — freezed models, go_router      |
+| **Systems**      | Rust — tokio, thiserror/anyhow, clippy pedantic     |
+| **Scripting/AI** | Python — ruff, mypy strict, pytest, Pydantic        |
 
 These are starting points, not constraints. Idiom files are modular — swap or edit them to match your stack. See [Adapting](/awesome-agv/adapting) for details.
 
@@ -77,21 +78,21 @@ These are starting points, not constraints. Idiom files are modular — swap or 
 
 While originally designed for **Antigravity**, the setup is built on standard markdown-based context protocols that are easily portable:
 
-| Tool             | How to Use                                      |
-| ---------------- | ----------------------------------------------- |
-| **Antigravity**  | Native support via `.agent/` directory          |
-| **Roo Code**     | Drop `.agent/` into project root                |
-| **Claude Code**  | Drop `.agent/` into project root                |
-| **Gemini CLI**   | Ingest rules as custom instructions             |
-| **Other agents** | Load `.agent/rules/**` as system prompt context |
+| Tool             | How to Use                                        |
+| ---------------- | ------------------------------------------------- |
+| **Antigravity**  | Native support via `.agents/` directory           |
+| **Roo Code**     | Drop `.agents/` into project root                 |
+| **Claude Code**  | Drop `.agents/` into project root                 |
+| **Gemini CLI**   | Ingest rules as custom instructions               |
+| **Other agents** | Load `.agents/rules/**` as system prompt context  |
 
 ## What's Inside
 
 <div class="code-example" markdown="1">
 
 ```
-.agent/
-├── rules/             # 38 rules (mandates + principles + language idioms)
+.agents/
+├── rules/             # 42 rules (mandates + principles + language idioms)
 ├── skills/            # 7 specialized skills
 └── workflows/         # 10 development workflows
 ```
@@ -100,7 +101,7 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 
 Explore each component in detail:
 
-- [**Rules Reference**](/awesome-agv/rules) — All 38 rules organized by category
+- [**Rules Reference**](/awesome-agv/rules) — All 42 rules organized by category
 - [**Skills Reference**](/awesome-agv/skills) — All 7 specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — All 10 development workflows
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed

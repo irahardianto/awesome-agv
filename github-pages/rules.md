@@ -7,7 +7,7 @@ nav_order: 3
 # Rules Reference
 {: .no_toc }
 
-All 38 rules organized by category, with trigger types and descriptions.
+All 42 rules organized by category, with trigger types and descriptions.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -21,14 +21,14 @@ All 38 rules organized by category, with trigger types and descriptions.
 
 ## How Rules Work
 
-Rules are markdown files in `.agent/rules/` that provide guidance to AI agents. Each rule has a **trigger type** in its YAML frontmatter:
+Rules are markdown files in `.agents/rules/` that provide guidance to AI agents. Each rule has a **trigger type** in its YAML frontmatter:
 
 | Trigger          | Behavior                                                              |
 | ---------------- | --------------------------------------------------------------------- |
 | `always_on`      | Loaded in every session — non-negotiable constraints                  |
 | `model_decision` | Activated contextually when the agent determines the rule is relevant |
 
-When rules conflict, [Rule Priority](https://github.com/irahardianto/awesome-agv/blob/main/.agent/rules/rule-priority.md) determines the winner. Security always wins.
+When rules conflict, [Rule Priority](https://github.com/irahardianto/awesome-agv/blob/main/.agents/rules/rule-priority.md) determines the winner. Security always wins.
 
 ---
 
@@ -261,6 +261,15 @@ model_decision
 
 Rust workspace and crate layout: `src/`, `tests/`, `benches/`, and multi-crate workspace organization.
 
+### Project Structure — Python Backend
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `project-structure-python-backend.md`
+
+Python backend layout: `src/` package with feature-based modules, `tests/` mirroring source, Poetry/uv dependency management, and `alembic/` for migrations.
+
 ---
 
 ## 🧩 Maintainability & Quality
@@ -329,6 +338,15 @@ model_decision
 **File:** `rust-idioms-and-patterns.md`
 
 Rust ownership and borrowing, error handling with `thiserror`/`anyhow`, async with `tokio`, unsafe code policy, idiomatic patterns (builder, newtype, typestate), and `cargo clippy` configuration.
+
+### Python Idioms & Patterns
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `python-idioms-and-patterns.md`
+
+Python type hints, `typing.Protocol` for interfaces, `pytest` fixtures and parametrize, `ruff` for linting/formatting, `mypy --strict` for type checking, `bandit` for security, virtual environments, and Pydantic models.
 
 ### Testing Strategy
 {: .d-inline-block }
@@ -412,6 +430,24 @@ model_decision
 
 Pipeline design (lint → build → test → deploy), Dockerfile multi-stage builds, Docker Compose patterns, GitHub Actions templates, and environment promotion strategy.
 
+### CI/CD GitOps Kubernetes
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `ci-cd-gitops-kubernetes.md`
+
+ArgoCD GitOps patterns, Kubernetes deployment strategies, Helm chart conventions, and infrastructure-as-code principles. **PRD-gated** — only applies when explicitly required by the technical architecture document.
+
+### Feature Flags Principles
+{: .d-inline-block }
+model_decision
+{: .label .label-blue }
+
+**File:** `feature-flags-principles.md`
+
+Flag types (release, experiment, ops, permission), lifecycle management, rollout strategies, and cleanup policies. **PRD-gated** — only applies when explicitly required by the PRD.
+
 ### Code Completion Mandate
 {: .d-inline-block }
 always_on
@@ -437,4 +473,5 @@ Conflict resolution when rules contradict each other. Priority order:
 3. Code Completion Mandate
 4. Testability-First Design
 5. Feature-specific principles
-6. YAGNI / KISS
+6. PRD-gated principles (feature flags, GitOps)
+7. YAGNI / KISS

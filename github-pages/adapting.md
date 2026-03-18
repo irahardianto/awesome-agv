@@ -247,21 +247,19 @@ cargo test
 cargo audit
 ```
 
-### Python (Not Shipped — Add Manually)
+### Python (Default Scripting/AI)
 
-No dedicated idiom file is included. To add Python support:
+Dedicated files: `python-idioms-and-patterns.md`, `project-structure-python-backend.md`
 
-1. Create `.agent/rules/python-idioms-and-patterns.md`
-2. Set `trigger: model_decision`
-3. Add verification commands:
+Python backend patterns: `typing.Protocol` for interfaces, `pytest` fixtures, `Pydantic` models, virtual environments, and strict type checking.
 
+**Verification commands (from the idiom file):**
 ```bash
-black .
-isort .
-ruff check .
-mypy .
-bandit -r . -x tests
-pytest --cov=.
+ruff format .
+ruff check . --fix
+mypy --strict .
+bandit -r src/ -x tests
+pytest --cov=src
 ```
 
 ---
@@ -320,7 +318,7 @@ The idiom files are modular — you can swap or replace them to match your proje
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | **Swap Vue for React**              | Replace `vue-idioms-and-patterns.md` with a React idiom file, update `project-structure-vue-frontend.md` |
 | **Swap Riverpod for BLoC/Cubit**    | Edit `flutter-idioms-and-patterns.md` — replace Riverpod sections with BLoC patterns                     |
-| **Swap Go for Python/Java/Node**    | Replace `go-idioms-and-patterns.md` and `project-structure-go-backend.md`                                |
+| **Swap Go for Java/Node**           | Replace `go-idioms-and-patterns.md` and `project-structure-go-backend.md`                                |
 | **Swap tokio for async-std (Rust)** | Edit `rust-idioms-and-patterns.md` — replace tokio patterns with async-std equivalents                   |
 | **Add a new language entirely**     | Create `{lang}-idioms-and-patterns.md`, add to `code-idioms-and-conventions.md` table                    |
 

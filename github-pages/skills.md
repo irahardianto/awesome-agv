@@ -21,7 +21,7 @@ All 7 specialized skills that extend your agent's capabilities.
 
 ## What Are Skills?
 
-Skills are folders in `.agent/skills/` that contain structured instructions for specialized tasks. Each skill has a `SKILL.md` file with YAML frontmatter and detailed guidance. More complex skills may include scripts, examples, and resources.
+Skills are folders in `.agents/skills/` that contain structured instructions for specialized tasks. Each skill has a `SKILL.md` file with YAML frontmatter and detailed guidance. More complex skills may include scripts, examples, and resources.
 
 Skills differ from rules in that they are **procedural** — they describe a *process* to follow, not just constraints to respect.
 
@@ -29,7 +29,7 @@ Skills differ from rules in that they are **procedural** — they describe a *pr
 
 ## Debugging Protocol
 
-**File:** `.agent/skills/debugging-protocol/SKILL.md`
+**File:** `.agents/skills/debugging-protocol/SKILL.md`
 
 A systematic protocol for validating root causes of software issues. Instead of guessing, the agent forms hypotheses and tests them methodically.
 
@@ -50,7 +50,7 @@ A systematic protocol for validating root causes of software issues. Instead of 
 
 ## Frontend Design
 
-**File:** `.agent/skills/frontend-design/SKILL.md`
+**File:** `.agents/skills/frontend-design/SKILL.md`
 
 Guidelines for creating distinctive, production-grade web interfaces. Based on [Anthropic's Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
 
@@ -71,7 +71,7 @@ Guidelines for creating distinctive, production-grade web interfaces. Based on [
 
 ## Mobile Design
 
-**File:** `.agent/skills/mobile-design/SKILL.md`
+**File:** `.agents/skills/mobile-design/SKILL.md`
 
 Guidelines for creating distinctive, production-grade mobile interfaces for Flutter and React Native.
 
@@ -93,7 +93,7 @@ Guidelines for creating distinctive, production-grade mobile interfaces for Flut
 
 ## Sequential Thinking
 
-**File:** `.agent/skills/sequential-thinking/SKILL.md`
+**File:** `.agents/skills/sequential-thinking/SKILL.md`
 
 A tool for dynamic, reflective problem-solving through iterative thought chains. Adapted from the [Sequential Thinking MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking).
 
@@ -115,7 +115,7 @@ The agent breaks down a complex problem into sequential thoughts, where each tho
 
 ## Code Review
 
-**File:** `.agent/skills/code-review/SKILL.md`
+**File:** `.agents/skills/code-review/SKILL.md`
 
 A structured protocol for inspecting code quality against the full awesome-agv rule set. Catches issues that linters miss: architectural violations, missing observability, business logic errors, and pattern inconsistencies.
 
@@ -153,7 +153,7 @@ Produces a structured findings document saved to `docs/audits/review-findings-{f
 
 ## Guardrails
 
-**File:** `.agent/skills/guardrails/SKILL.md`
+**File:** `.agents/skills/guardrails/SKILL.md`
 
 Pre-flight checklist and post-implementation self-review protocol. Catches issues that would otherwise only surface during verification.
 
@@ -183,7 +183,7 @@ After writing code:
 
 ## Architecture Decision Records (ADR)
 
-**File:** `.agent/skills/adr/SKILL.md`
+**File:** `.agents/skills/adr/SKILL.md`
 
 Document significant architectural decisions so institutional knowledge persists across conversations and team members. ADRs capture the **why**, not just the **what**.
 

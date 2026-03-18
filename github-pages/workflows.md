@@ -21,7 +21,7 @@ All 10 development workflows — from feature delivery to code audits.
 
 ## What Are Workflows?
 
-Workflows are structured, multi-phase development processes defined in `.agent/workflows/`. They chain rules and skills together into repeatable, quality-enforced development cycles.
+Workflows are structured, multi-phase development processes defined in `.agents/workflows/`. They chain rules and skills together into repeatable, quality-enforced development cycles.
 
 Each workflow is invoked as a **slash command** (e.g., `/orchestrator`, `/quick-fix`) and guides the agent through specific phases with completion criteria at each step.
 
@@ -39,7 +39,7 @@ Each workflow is invoked as a **slash command** (e.g., `/orchestrator`, `/quick-
 
 ## 🏭 Feature Workflow (`/orchestrator`)
 
-**File:** `.agent/workflows/orchestrator.md`
+**File:** `.agents/workflows/orchestrator.md`
 
 The primary workflow for building features. Treats the development lifecycle as a **state machine** — no phase can be skipped.
 
@@ -63,7 +63,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 ### Key Rules
 - **FORBIDDEN from skipping phases** — each phase must complete before the next starts
 - Agent acts as a "Senior Principal Engineer with a mandate for strict protocol adherence"
-- Pre-implementation: scan `.agent/rules/`, identify applicable rules, READ them
+- Pre-implementation: scan `.agents/rules/`, identify applicable rules, READ them
 - Tasks marked `[x]` only after Phase 4 (Verify) passes
 
 
@@ -79,7 +79,7 @@ If a phase fails:
 
 ## Phase 1: Research (`/1-research`)
 
-**File:** `.agent/workflows/1-research.md`
+**File:** `.agents/workflows/1-research.md`
 
 Understand the request context and gather knowledge before writing any code.
 
@@ -102,7 +102,7 @@ Understand the request context and gather knowledge before writing any code.
 
 ## Phase 2: Implement (`/2-implement`)
 
-**File:** `.agent/workflows/2-implement.md`
+**File:** `.agents/workflows/2-implement.md`
 
 Write production code following Test-Driven Development (TDD).
 
@@ -125,7 +125,7 @@ Write production code following Test-Driven Development (TDD).
 
 ## Phase 3: Integrate (`/3-integrate`)
 
-**File:** `.agent/workflows/3-integrate.md`
+**File:** `.agents/workflows/3-integrate.md`
 
 Test adapter implementations with real infrastructure using Testcontainers.
 
@@ -144,7 +144,7 @@ Test adapter implementations with real infrastructure using Testcontainers.
 
 ## Phase 3.5: E2E Test (`/e2e-test`)
 
-**File:** `.agent/workflows/e2e-test.md`
+**File:** `.agents/workflows/e2e-test.md`
 
 Validate complete user journeys through the full system using Playwright MCP.
 
@@ -168,7 +168,7 @@ Validate complete user journeys through the full system using Playwright MCP.
 
 ## Phase 4: Verify (`/4-verify`)
 
-**File:** `.agent/workflows/4-verify.md`
+**File:** `.agents/workflows/4-verify.md`
 
 Run all linters, static analysis, and tests to ensure code quality.
 
@@ -204,7 +204,7 @@ pnpm run build
 
 ## Phase 5: Ship (`/5-commit`)
 
-**File:** `.agent/workflows/5-commit.md`
+**File:** `.agents/workflows/5-commit.md`
 
 Commit completed work with proper conventional commit format.
 
@@ -229,7 +229,7 @@ Commit completed work with proper conventional commit format.
 
 ## 🔧 Quick-Fix Workflow (`/quick-fix`)
 
-**File:** `.agent/workflows/quick-fix.md`
+**File:** `.agents/workflows/quick-fix.md`
 
 Fast-track bug fixes and small changes (<50 lines) that don't require full research or integration phases.
 
@@ -248,7 +248,7 @@ Fast-track bug fixes and small changes (<50 lines) that don't require full resea
 
 ## 🔧 Refactor Workflow (`/refactor`)
 
-**File:** `.agent/workflows/refactor.md`
+**File:** `.agents/workflows/refactor.md`
 
 Safely restructure existing code while preserving behavior.
 
@@ -276,7 +276,7 @@ Never break the build for more than one step at a time.
 
 ## 🔧 Audit Workflow (`/audit`)
 
-**File:** `.agent/workflows/audit.md`
+**File:** `.agents/workflows/audit.md`
 
 Inspect existing code quality without writing new features. Produces structured findings for subsequent fix workflows.
 

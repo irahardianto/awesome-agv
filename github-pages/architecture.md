@@ -21,7 +21,7 @@ How the two-tier rule system is designed and why it works.
 
 ## Design Philosophy
 
-AI coding agents have a fundamental problem: **context window is finite**. Loading 30 detailed rule files into every session would consume precious context and overwhelm the model with irrelevant guidance.
+AI coding agents have a fundamental problem: **context window is finite**. Loading 40+ detailed rule files into every session would consume precious context and overwhelm the model with irrelevant guidance.
 
 Awesome AGV solves this with a **two-tier rule system** inspired by how operating systems handle kernel-mode vs user-mode code — critical operations always run with full privileges, while everything else activates on demand.
 
@@ -88,10 +88,14 @@ Principles are **detailed guidance** activated only when the agent determines th
 | Vue Idioms & Patterns              | Composition API, Pinia stores, composables |
 | Flutter Idioms & Patterns          | Riverpod, freezed models, go_router        |
 | Rust Idioms & Patterns             | Ownership, error handling, async/tokio     |
+| Python Idioms & Patterns           | Type hints, Protocols, pytest, ruff/mypy   |
 | Project Structure — Go Backend     | Go-specific directory layout               |
 | Project Structure — Vue Frontend   | Vue/React frontend layout                  |
 | Project Structure — Flutter Mobile | Flutter/RN mobile app layout               |
 | Project Structure — Rust/Cargo     | Rust workspace and crate layout            |
+| Project Structure — Python Backend | Python service and API layout              |
+| Feature Flags Principles           | Flag types, lifecycle, rollout (PRD-gated) |
+| CI/CD GitOps Kubernetes            | ArgoCD, K8s deployment (PRD-gated)         |
 
 ### How Context Activation Works
 
@@ -119,7 +123,8 @@ When rules conflict, the priority system resolves them:
 3. Code Completion Mandate
 4. Testability-First Design
 5. Feature-specific principles
-6. YAGNI / KISS              ← Only when no other trade-off exists
+6. PRD-gated principles      ← Only when PRD requires it
+7. YAGNI / KISS              ← Only when no other trade-off exists
 ```
 
 ### Common Conflict Examples
@@ -174,21 +179,21 @@ When rules conflict, the priority system resolves them:
 
 ### Adding a New Rule
 
-1. Create a markdown file in `.agent/rules/`
+1. Create a markdown file in `.agents/rules/`
 2. Add YAML frontmatter with `trigger: always_on` or `trigger: model_decision`
 3. For conditional rules, add a `description` that tells the agent when to activate
 4. Add the rule to the appropriate category
 
 ### Adding a New Skill
 
-1. Create a directory in `.agent/skills/{skill-name}/`
+1. Create a directory in `.agents/skills/{skill-name}/`
 2. Create `SKILL.md` with YAML frontmatter (`name`, `description`)
 3. Add detailed instructions, templates, and examples
 4. Optionally add `scripts/`, `examples/`, or `resources/` directories
 
 ### Adding a New Workflow
 
-1. Create a markdown file in `.agent/workflows/`
+1. Create a markdown file in `.agents/workflows/`
 2. Add YAML frontmatter with a `description`
 3. Define phases with clear completion criteria
 4. Reference applicable rules and skills

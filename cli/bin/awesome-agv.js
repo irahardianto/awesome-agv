@@ -91,7 +91,7 @@ ${color.bold}EXAMPLES${color.reset}
   npx awesome-agv --force
 
 ${color.bold}WHAT GETS INSTALLED${color.reset}
-  ${icons.book}  38 Rules    — Security, architecture, language idioms, DevOps standards
+  ${icons.book}  42 Rules    — Security, architecture, language idioms, DevOps standards
   ${icons.tool}  7 Skills    — Debugging, design, code review, and more
   ${icons.cycle}  10 Workflows — End-to-end development processes
 
@@ -153,10 +153,10 @@ function downloadToFile(url, destPath, maxRedirects = 5) {
   });
 }
 
-// ── Extract .agent directory from tarball ──────────────────────────────────────
+// ── Extract .agents directory from tarball ──────────────────────────────────────
 function extractAgentDir(tarballPath, targetDir) {
   // The tarball from GitHub has a root directory like: awesome-agv-main/
-  // We need to extract awesome-agv-main/.agent/ → targetDir/.agent/
+  // We need to extract awesome-agv-main/.agents/ → targetDir/.agents/
   const stripPrefix = `${REPO_NAME}-${BRANCH}/${AGENT_DIR}`;
 
   const agentTargetDir = path.join(targetDir, AGENT_DIR);

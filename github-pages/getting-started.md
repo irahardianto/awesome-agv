@@ -26,16 +26,16 @@ Install and configure Awesome AGV in minutes.
 
 ## Installation
 
-### Option 1: Copy the `.agent` folder
+### Option 1: Copy the `.agents` folder
 
-Clone this repository or copy the `.agent` folder into the root of your project:
+Clone this repository or copy the `.agents` folder into the root of your project:
 
 ```sh
 # Clone the repo
 git clone https://github.com/irahardianto/awesome-agv.git
 
 # Copy the .agent folder into your project
-cp -r awesome-agv/.agent /path/to/your-project/
+cp -r awesome-agv/.agents /path/to/your-project/
 ```
 
 ### Option 2: Git submodule
@@ -45,14 +45,14 @@ Add as a submodule for easy updates:
 ```sh
 cd your-project
 git submodule add https://github.com/irahardianto/awesome-agv.git .awesome-agv
-ln -s .awesome-agv/.agent .agent
+ln -s .awesome-agv/.agents .agents
 ```
 
 ## Configuration
 
 ### Antigravity / Roo Code / Claude Code
 
-These tools read from the `.agent` directory by default. No additional configuration is needed — just drop the folder in and start coding.
+These tools read from the `.agents` directory by default. No additional configuration is needed — just drop the folder in and start coding.
 
 ### Gemini CLI
 
@@ -67,9 +67,9 @@ Ingest the rules as custom system prompt context. You can reference individual r
 
 For any tool that supports custom system prompts or context loading:
 
-1. Load all files from `.agent/rules/` into the system prompt
-2. Optionally load `.agent/skills/` for specialized capabilities
-3. Optionally load `.agent/workflows/` for structured development processes
+1. Load all files from `.agents/rules/` into the system prompt
+2. Optionally load `.agents/skills/` for specialized capabilities
+3. Optionally load `.agents/workflows/` for structured development processes
 
 ## Verifying Installation
 
@@ -135,7 +135,7 @@ This produces a structured findings report graded by severity (Critical → Majo
 
 ## Next Steps
 
-- [**Rules Reference**](/awesome-agv/rules) — Explore all 38 rules
+- [**Rules Reference**](/awesome-agv/rules) — Explore all 42 rules
 - [**Skills Reference**](/awesome-agv/skills) — Learn about specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — Understand the development workflows
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type
