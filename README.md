@@ -37,8 +37,8 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **42 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
-*   🛠️ **7 Skills** — specialized capabilities for debugging, design, code review, and more.
-*   🔄 **10 Workflows** — end-to-end development processes from research to ship.
+*   🛠️ **8 Skills** — specialized capabilities for debugging, design, performance optimization, and more.
+*   🔄 **11 Workflows** — end-to-end development processes from research to ship.
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
 
 > **💡 Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only what you need, modify anything, or build your own workflows. It's a toolkit, not a framework.
@@ -401,6 +401,7 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Code Review](.agents/skills/code-review/SKILL.md)**: Structured code review protocol against the full rule set.
 *   **[Guardrails](.agents/skills/guardrails/SKILL.md)**: Pre-flight checklist and post-implementation self-review.
 *   **[ADR (Architecture Decision Records)](.agents/skills/adr/SKILL.md)**: Document significant architectural decisions with context and trade-offs.
+*   **[Performance Optimization](.agents/skills/perf-optimization/SKILL.md)**: Profile-driven performance optimization with Go pprof, frontend Lighthouse, and bundle analysis tooling.
 
 ### Development Workflows
 
@@ -430,6 +431,7 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 | [`/quick-fix`](.agents/workflows/quick-fix.md) | Bug fixes with known root cause (<50 lines)          |
 | [`/refactor`](.agents/workflows/refactor.md)   | Safely restructure code while preserving behavior    |
 | [`/audit`](.agents/workflows/audit.md)         | Code review and quality inspection (no new features) |
+| [`/perf-optimize`](.agents/workflows/perf-optimize.md) | Profile-driven performance optimization              |
 
 <!-- DIRECTORY STRUCTURE -->
 ## Directory Structure
@@ -441,15 +443,16 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 │   ├── security-mandate.md
 │   ├── rule-priority.md
 │   └── ...            
-├── skills/            # 7 specialized skills
+├── skills/            # 8 specialized skills
 │   ├── debugging-protocol/
 │   ├── frontend-design/
 │   ├── mobile-design/
 │   ├── sequential-thinking/
 │   ├── code-review/
 │   ├── guardrails/
-│   └── adr/
-└── workflows/         # 10 development workflows
+│   ├── adr/
+│   └── perf-optimization/
+└── workflows/         # 11 development workflows
     ├── orchestrator.md
     ├── 1-research.md
     ├── 2-implement.md
@@ -459,14 +462,15 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
     ├── quick-fix.md
     ├── refactor.md
     ├── audit.md
+    ├── perf-optimize.md
     └── e2e-test.md
 ```
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (7 skills shipped).
-- [x] Add development workflows for structured feature delivery (10 workflows shipped).
+- [x] Include more specialized skills to aid development process (8 skills shipped).
+- [x] Add development workflows for structured feature delivery (11 workflows shipped).
 - [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust, Python).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [ ] Add automated validation scripts to check if an agent is following the constitution.

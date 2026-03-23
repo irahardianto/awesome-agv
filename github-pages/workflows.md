@@ -7,7 +7,7 @@ nav_order: 5
 # Workflows Reference
 {: .no_toc }
 
-All 10 development workflows — from feature delivery to code audits.
+All 11 development workflows — from feature delivery to code audits.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -33,6 +33,7 @@ Each workflow is invoked as a **slash command** (e.g., `/orchestrator`, `/quick-
 | Fixing a known bug (<50 lines) | `/quick-fix`                        |
 | Restructuring code             | `/refactor`                         |
 | Reviewing code quality         | `/audit`                            |
+| Optimizing performance         | `/perf-optimize`                    |
 | Running a single phase         | `/1-research`, `/2-implement`, etc. |
 
 ---
@@ -303,3 +304,33 @@ Inspect existing code quality without writing new features. Produces structured 
 
 ### Best Practice
 Run audits in a **fresh conversation** (not the one that wrote the code) to avoid confirmation bias.
+
+---
+
+## 🔧 Performance Optimization Workflow (`/perf-optimize`)
+
+**File:** `.agents/workflows/perf-optimize.md`
+
+Profile-driven performance optimization. Always measure before optimizing — one fix at a time, independently benchmarked and committed.
+
+### When to Use
+- User provides profiling data (pprof, flamegraph, Lighthouse)
+- Benchmarks show regression
+- User asks to optimize a specific component
+
+### Phases
+
+| Phase | Output | Gate |
+| --- | --- | --- |
+| Profile | Raw data + extracted markdown | Data collected |
+| Analyze | `docs/research_logs/{component}-perf-analysis.md` | Top offenders identified |
+| Prioritize | Implementation plan | User approved |
+| Implement | Tests + code + benchmark per fix | Each fix passes tests |
+| Verify | Full benchmark comparison | All checks pass |
+| Ship | Conventional commits (`perf(scope): ...`) | User notified |
+
+### Key Rules
+- **One fix per commit** — never batch optimizations
+- **TDD for each fix** — write test, implement, benchmark
+- **Stop when** remaining cost is in runtime internals, hardware-optimized assembly, or when improvement < 5%
+- Loads the **perf-optimization** skill and relevant language module before starting

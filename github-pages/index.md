@@ -27,8 +27,8 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 | Component     | Count | Purpose                                                                           |
 | ------------- | ----- | --------------------------------------------------------------------------------- |
 | **Rules**     | 42    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
-| **Skills**    | 7     | Specialized capabilities for debugging, design, code review, and more             |
-| **Workflows** | 10    | End-to-end development processes from research to ship                            |
+| **Skills**    | 8     | Specialized capabilities for debugging, design, performance optimization, and more |
+| **Workflows** | 11    | End-to-end development processes from research to ship                             |
 
 ## Core Philosophy
 
@@ -93,8 +93,8 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 ```
 .agents/
 ├── rules/             # 42 rules (mandates + principles + language idioms)
-├── skills/            # 7 specialized skills
-└── workflows/         # 10 development workflows
+├── skills/            # 8 specialized skills
+└── workflows/         # 11 development workflows
 ```
 
 </div>
@@ -102,8 +102,8 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 Explore each component in detail:
 
 - [**Rules Reference**](/awesome-agv/rules) — All 42 rules organized by category
-- [**Skills Reference**](/awesome-agv/skills) — All 7 specialized skills
-- [**Workflows Reference**](/awesome-agv/workflows) — All 10 development workflows
+- [**Skills Reference**](/awesome-agv/skills) — All 8 specialized skills
+- [**Workflows Reference**](/awesome-agv/workflows) — All 11 development workflows
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

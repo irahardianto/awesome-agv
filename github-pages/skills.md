@@ -7,7 +7,7 @@ nav_order: 4
 # Skills Reference
 {: .no_toc }
 
-All 7 specialized skills that extend your agent's capabilities.
+All 8 specialized skills that extend your agent's capabilities.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -207,3 +207,39 @@ Each ADR is stored in `docs/decisions/NNNN-short-title.md` and includes:
 - Number sequentially
 - Never delete ADRs — mark as `Superseded by NNNN`
 - Status lifecycle: `Proposed` → `Accepted` → `Deprecated` or `Superseded`
+
+---
+
+## Performance Optimization
+
+**File:** `.agents/skills/perf-optimization/SKILL.md`
+
+Profile-driven performance optimization protocol. Instead of guessing, the agent profiles first, analyzes data, and applies fixes one-at-a-time with benchmarking.
+
+### When to Use
+- Profiling data is available (pprof, flamegraph, Lighthouse, Chrome DevTools)
+- User asks to analyze or optimize performance of a component
+- Benchmark regression is detected
+- After deploying a feature that touches a hot path
+
+### Core Methodology
+1. **Profile** — collect data using language-appropriate tooling
+2. **Analyze** — focus on cumulative cost, trace flat back to user-land code
+3. **Prioritize** — rank fixes by impact/risk ratio
+4. **Optimize** — one fix at a time, TDD, benchmark immediately
+5. **Verify** — compare before/after with identical benchmark config
+6. **Stop** — when remaining cost is in runtime internals or hardware-optimized code
+
+### Language Modules
+| Module | Use When |
+| --- | --- |
+| Go (`languages/go.md`) | Go services, APIs, CLI tools |
+| Rust (`languages/rust.md`) | Rust binaries, libraries |
+| Python (`languages/python.md`) | Python services, data pipelines |
+| Frontend (`languages/frontend.md`) | Web frontends (JS/TS bundle, rendering, network) |
+
+### Profiling Scripts
+| Script | Purpose |
+| --- | --- |
+| `scripts/go-pprof.sh` | Extract Go pprof CPU/heap profiles into agent-readable markdown |
+| `scripts/frontend-lighthouse.sh` | Core Web Vitals via Lighthouse or Vite chunk analysis |

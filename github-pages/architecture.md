@@ -153,7 +153,8 @@ When rules conflict, the priority system resolves them:
 │  (Activated within workflows on demand)      │
 │                                              │
 │  Debugging Protocol, Code Review,            │
-│  Sequential Thinking, Guardrails, ADR        │
+│  Sequential Thinking, Guardrails, ADR,       │
+│  Perf Optimization, Frontend/Mobile Design   │
 ├──────────────────────────────────────────────┤
 │  Principles (Tier 2)                         │
 │  (Contextual rules activated per task)       │
