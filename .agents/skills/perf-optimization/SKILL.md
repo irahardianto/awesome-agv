@@ -137,6 +137,58 @@ These are generic, language-agnostic patterns. Apply them when the profiling dat
 
 **Fix:** Batch operations into fewer, larger calls. Examples: batch INSERT, pipeline Redis commands, buffer writes.
 
+### Pattern: Artifact Partitioning by Change Frequency
+
+**Symptom:** Deploying a small change invalidates a large cached artifact (JS bundle, Docker image, compiled binary), forcing consumers to re-download/rebuild the entire thing.
+
+**Fix:** Partition build artifacts by change frequency so that stable layers survive volatile deploys:
+- **Stable layer**: dependencies, vendor libraries, base images — changes rarely
+- **Volatile layer**: application code — changes on every deploy
+
+**Examples across stacks:**
+- **JS/Bundler**: Vite `manualChunks` / Webpack `splitChunks` to isolate vendor libraries into separate chunks
+- **Docker**: multi-stage builds with `COPY go.mod` + `RUN go mod download` BEFORE `COPY . .` — dependency layer caches across builds
+- **Monorepo**: separate packages by change frequency so CI only rebuilds what changed
+
+**Safety invariant:** Total artifact size stays the same or slightly increases (chunk overhead). The benefit is on **repeat consumption** — stable layers serve from cache.
+
+**When NOT to apply:** One-shot artifacts with no caching benefit (single-use CI, ephemeral environments).
+
+### Pattern: Dependency Discovery Parallelization
+
+**Symptom:** Sequential resource discovery creates waterfalls — each resource is discovered only after the previous one completes (download → parse → discover next → download → ...).
+
+**Fix:** Declare dependencies as early as possible so the system can fetch them in parallel:
+- Move resource declarations upstream (earlier in the boot/parse sequence)
+- Use explicit hints to bypass sequential discovery chains
+
+**Examples across stacks:**
+- **Browser**: `<link rel="preconnect">` to establish connections before CSS/JS requests them; move CSS `@import` to HTML `<link>` for parallel discovery
+- **Go**: `go mod download` before build to prefetch modules
+- **DB**: connection pool warm-up at startup instead of on first query
+- **DNS**: `dns-prefetch` hints for domains the app will contact
+
+**Safety invariant:** Only pre-declare resources you WILL use. Unused preconnects/prefetches waste resources (TCP connections, DNS queries, module downloads).
+
+### Pattern: Concurrent-Fetch Dedup
+
+**Symptom:** Network tab shows two identical API calls fired at the same time. Multiple UI components mount simultaneously and each independently calls the same fetch function.
+
+**Fix:** Add a loading-state guard (semaphore) at the store/service layer:
+
+```
+async function fetchData() {
+    if (isLoading) return    // ← drop duplicate in-flight request
+    isLoading = true
+    try { data = await api.getData() }
+    finally { isLoading = false }
+}
+```
+
+**When to apply:** When the same data store is used by multiple co-mounted components (e.g., a navigation bar and a page view both calling `fetchProfile()` on mount).
+
+**Caveat:** This is a simple semaphore, not request dedup. If the data needs refreshing after the in-flight call completes, the caller should retry. For advanced use cases, consider a proper request dedup cache (e.g., TanStack Query's `staleTime`).
+
 ---
 
 ## Anti-Patterns (Things NOT to Do)
@@ -146,6 +198,7 @@ These are generic, language-agnostic patterns. Apply them when the profiling dat
 3. **Don't optimize based on gut feeling.** Always profile first. Premature optimization is the root of all evil.
 4. **Don't combine multiple optimizations into one commit.** If a combined commit causes a regression, you can't isolate which fix is at fault.
 5. **Don't disable security features for performance.** Algorithm restriction, input validation, and expiry checks are non-negotiable.
+6. **Don't profile without a stable baseline.** Run benchmarks with fixed parameters (`-benchtime`, `-count`, same machine load). Without a reproducible baseline, before/after comparisons are meaningless noise.
 
 ---
 
@@ -171,3 +224,4 @@ Language-specific data extraction scripts live in `scripts/`:
 | Script | Purpose |
 |---|---|
 | [go-pprof.sh](scripts/go-pprof.sh) | Extract Go pprof CPU/heap profiles into agent-readable markdown |
+| [frontend-lighthouse.sh](scripts/frontend-lighthouse.sh) | Two modes: `lighthouse` (Core Web Vitals, needs Chrome) or `bundle` (Vite chunk analysis, always works) |
