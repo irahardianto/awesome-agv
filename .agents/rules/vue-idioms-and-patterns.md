@@ -298,6 +298,49 @@ Composables are the Vue equivalent of custom hooks — self-contained, reusable 
 
 ---
 
+### Route Transitions
+
+When using `<Transition>` or `<RouterView>` with transition effects, CSS frameworks that use `@layer` (Tailwind v4, Open Props, UnoCSS) can silently break SPA navigation by overriding transition properties in the cascade. This causes `transitionend` to never fire, permanently blocking the entering component.
+
+1. **Avoid `mode="out-in"` when using `@layer`-based CSS frameworks** — the leaving component's `transitionend` event may never fire, blocking the entering component indefinitely. Use simultaneous transitions instead:
+   ```html
+   <!-- ❌ Dangerous with @layer CSS frameworks -->
+   <Transition name="fade" mode="out-in">
+     <component :is="Component" />
+   </Transition>
+
+   <!-- ✅ Safe: simultaneous leave/enter, always mounts new component -->
+   <Transition name="fade">
+     <component :is="Component" :key="$route.path" />
+   </Transition>
+   ```
+
+2. **Always bind `:key="$route.path"`** on dynamic `<component>` inside `<Transition>` — forces Vue to treat each route as a distinct component instance, ensuring proper enter/leave lifecycle
+
+3. **Use `!important` on route transition CSS classes** — guarantees transition properties win the `@layer` cascade:
+   ```css
+   .fade-enter-active {
+     transition: opacity 0.15s ease-in !important;
+   }
+   .fade-leave-active {
+     transition: opacity 0.15s ease-out !important;
+     position: absolute !important;
+     width: 100% !important;
+     top: 0 !important;
+     left: 0 !important;
+   }
+   .fade-enter-from,
+   .fade-leave-to {
+     opacity: 0 !important;
+   }
+   ```
+
+4. **Give the transition parent `position: relative`** — contains the absolutely-positioned leaving element during the simultaneous transition overlap
+
+> For full diagnosis steps when a transition-stuck blank screen occurs, see the Debugging Protocol's [Frontend module](file:///home/irahardianto/works/projects/awesome-agv/.agents/skills/debugging-protocol/languages/frontend.md) § CSS × Animation.
+
+---
+
 ### Testing
 
 > Test naming and pyramid proportions are defined in `testing-strategy.md`. This section covers Vue-specific tooling.

@@ -82,6 +82,7 @@ The `languages/` directory contains **modular, language-specific debugging guide
 | Module | Languages/Runtimes |
 |---|---|
 | [Rust](languages/rust.md) | Rust (cargo, rustc, tokio) |
+| [Frontend](languages/frontend.md) | Vue 3, React, browser, Vite |
 
 > **Contributing new modules:** To add support for a new language, create `languages/{language}.md` following the structure of existing modules. Each module should include: a toolchain reference table, language-specific hypothesis categories, validation task patterns, and an error-type-to-first-action quick reference.
 
