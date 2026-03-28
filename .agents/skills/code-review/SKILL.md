@@ -104,6 +104,21 @@ When invoked as a standalone review (not via `/audit`), saving to `docs/audits/`
 | `[ARCH]` | Architecture        | `architectural-pattern.md`, `project-structure.md` |
 | `[PAT]`  | Pattern consistency | `code-organization-principles.md`                  |
 
+### 7. Language-Specific Anti-Patterns
+
+Load the anti-pattern checklist for the language(s) under review:
+
+| Language | Anti-Patterns |
+|---|---|
+| **Go** | `languages/go.md` |
+| **TypeScript** | `languages/typescript.md` *(placeholder — create when needed)* |
+| **Flutter/Dart** | `languages/flutter.md` *(placeholder — create when needed)* |
+| **Rust** | `languages/rust.md` *(placeholder — create when needed)* |
+
+> Anti-patterns listed in language files are **auto-fail** — they require no judgment call. If the pattern exists in the code, it is a finding.
+
+---
+
 ## Rule Compliance
 This skill enforces all rules in `.agents/rules/`. Key references:
 - Rule Priority @rule-priority.md (severity classification)

@@ -187,11 +187,52 @@ Go favors simplicity, explicitness, and readability. The language is intentional
    }
    ```
 
-2. **`defer` for cleanup — always pair resource acquisition with defer**
+2. **`defer` for cleanup — always use error-checked closures**
+
+   Every deferred cleanup call that returns an error MUST check and log the error.
+   Never use bare `defer X.Close()` — the discarded error hides resource leak failures.
+
    ```go
-   rows, err := db.QueryContext(ctx, query)
-   if err != nil { return err }
+   // ❌ NEVER: Error silently discarded
    defer rows.Close()
+
+   // ✅ ALWAYS: Error-checked closure with structured logging
+   rows, err := db.QueryContext(ctx, query)
+   if err != nil { return fmt.Errorf("querying tasks: %w", err) }
+   defer func() {
+       if err := rows.Close(); err != nil {
+           slog.Warn("failed to close rows", "error", err, "operation", "ListTasks")
+       }
+   }()
+   ```
+
+   **Transaction rollback:**
+   ```go
+   // ❌ NEVER
+   defer tx.Rollback()
+
+   // ✅ ALWAYS: Guard against sql.ErrTxDone (already committed)
+   defer func() {
+       if err := tx.Rollback(); err != nil && !errors.Is(err, sql.ErrTxDone) {
+           slog.Error("failed to rollback transaction", "error", err, "operation", "CreateOrder")
+       }
+   }()
+   ```
+
+   **HTTP response body:**
+   ```go
+   // ❌ NEVER
+   defer resp.Body.Close()
+
+   // ✅ ALWAYS: Drain then close (prevents connection reuse issues)
+   defer func() {
+       if _, err := io.Copy(io.Discard, resp.Body); err != nil {
+           slog.Warn("failed to drain response body", "error", err)
+       }
+       if err := resp.Body.Close(); err != nil {
+           slog.Warn("failed to close response body", "error", err)
+       }
+   }()
    ```
 
 3. **Avoid `init()` functions** — they run implicitly and make testing harder; prefer explicit initialization in `main` or constructors
@@ -256,7 +297,8 @@ All of the following **must pass with zero warnings/errors** before any commit. 
 | `govulncheck`           | Dependency CVE scanning  | `govulncheck ./...`  |
 
 - Never disable a linter without a comment explaining why
-- `//nolint:errcheck` is acceptable only with a `// NOLINT:` rationale comment
+- **`//nolint:errcheck` is NEVER acceptable.** If a function returns an error, handle it — even in `defer`. Use an error-checked closure (see § Idiomatic Patterns above). This is the #1 source of audit findings.
+- Other `//nolint:` directives require a `// NOLINT:` rationale comment AND must be approved during code review
 - Fast iteration during development: `go vet ./...` type-checks and catches correctness issues without producing binaries (analogous to `cargo check`) — reserve `golangci-lint` for pre-commit
 
 > **Logging:** Never use `fmt.Println` or `log.Printf` in production service code — these produce unstructured output. Use `log/slog` (stdlib, Go 1.21+) or the project's chosen adapter. See `logging-and-observability-principles.md` for the required library and patterns.

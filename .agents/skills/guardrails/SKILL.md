@@ -65,6 +65,23 @@ Run through this checklist **after writing code, before verification**:
 - [ ] Naming conventions match the codebase
 - [ ] File organization matches `project-structure.md`
 
+---
+
+## Language-Specific Self-Review
+
+After completing the universal checklist above, load the relevant language-specific checklist:
+
+| Language | Checklist |
+|---|---|
+| **Go** | `languages/go.md` |
+| **TypeScript** | `languages/typescript.md` *(placeholder — create when needed)* |
+| **Flutter/Dart** | `languages/flutter.md` *(placeholder — create when needed)* |
+| **Rust** | `languages/rust.md` *(placeholder — create when needed)* |
+
+> Only load the file for languages you are actively writing. If the file doesn't exist yet, skip — but flag its absence so it can be created.
+
+---
+
 ## Rule Compliance
 This skill enforces:
 - All mandates (always-on rules)
