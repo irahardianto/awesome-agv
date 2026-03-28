@@ -46,6 +46,14 @@ A systematic protocol for validating root causes of software issues. Instead of 
 4. Execute tests and collect evidence
 5. Validate the root cause before applying a fix
 
+### Language Modules
+The `languages/` directory contains modular, language-specific debugging guides that augment the core protocol with specialized tools, hypothesis categories, and validation strategies.
+
+| Module | Languages/Runtimes |
+| --- | --- |
+| Rust (`languages/rust.md`) | Rust (cargo, rustc, tokio) |
+| Frontend (`languages/frontend.md`) | Vue 3, React, browser, Vite |
+
 ---
 
 ## Frontend Design
@@ -135,16 +143,31 @@ A structured protocol for inspecting code quality against the full awesome-agv r
 
 ### Severity Tags
 
-| Tag      | Category            |
-| -------- | ------------------- |
-| `[SEC]`  | Security            |
-| `[DATA]` | Data integrity      |
-| `[RES]`  | Resource leak       |
-| `[TEST]` | Testability         |
-| `[OBS]`  | Observability       |
-| `[ERR]`  | Error handling      |
-| `[ARCH]` | Architecture        |
-| `[PAT]`  | Pattern consistency |
+| Tag      | Category             |
+| -------- | -------------------- |
+| `[SEC]`  | Security             |
+| `[DATA]` | Data integrity       |
+| `[RES]`  | Resource leak        |
+| `[TEST]` | Testability          |
+| `[OBS]`  | Observability        |
+| `[ERR]`  | Error handling       |
+| `[ARCH]` | Architecture         |
+| `[PAT]`  | Pattern consistency  |
+| `[INT]`  | Integration contract |
+| `[DB]`   | Database design      |
+| `[CFG]`  | Configuration        |
+
+### Language-Specific Anti-Patterns
+The `languages/` directory contains auto-fail anti-pattern checklists per language. If a listed pattern exists in the code, it is a finding — no judgment call required.
+
+| Language | Anti-Patterns |
+| --- | --- |
+| **Go** | `languages/go.md` |
+
+### Cross-Boundary Checks
+For full audits, cross-boundary concerns (integration contracts, database schema, configuration hygiene, dependency health, test coverage gaps) are checked via Phase 1.5 of the `/audit` workflow. Standalone reviews should apply applicable dimensions manually and tag findings with `[INT]`, `[DB]`, or `[CFG]`.
+
+**Zero-Findings Guard:** Reviews producing fewer than 3 findings must include a "Dimensions Covered" attestation section listing each cross-boundary dimension examined.
 
 ### Output
 Produces a structured findings document saved to `docs/audits/review-findings-{feature}-{date}-{HHmm}.md`.
@@ -178,6 +201,13 @@ After writing code:
 - **Error Handling** — explicit error paths, context in errors, resources cleaned up
 - **Testing** — happy path, 2+ error paths, edge cases
 - **Consistency** — matches codebase patterns (>80%), naming conventions
+
+### Language-Specific Self-Review
+The `languages/` directory contains modular, language-specific checklists that augment the universal self-review above.
+
+| Language | Checklist |
+| --- | --- |
+| **Go** | `languages/go.md` |
 
 ---
 

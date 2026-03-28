@@ -290,8 +290,24 @@ Inspect existing code quality without writing new features. Produces structured 
 ### Phases
 
 1. **Code Review** — invoke the Code Review Skill against specified files
+1.5. **Cross-Boundary Review** — check integration seams that live between components, not inside any single file
 2. **Automated Verification** — full lint/test/build validation
 3. **Findings Report** — saved to `docs/audits/review-findings-{feature}-{date}-{HHmm}.md`
+
+### Phase 1.5: Cross-Boundary Review
+
+A **menu of dimensions** — activate only those that apply to the project, and state which you skipped and why.
+
+| Dimension | Activate When |
+| --- | --- |
+| **A. Integration Contracts** | Project has both frontend and backend |
+| **B. Database & Schema** | Project uses a relational/document database |
+| **C. Configuration & Environment** | Always — universal |
+| **D. Dependency Health** | Always — universal |
+| **E. Test Coverage Gaps** | Always — universal |
+| **F. Mobile ↔ Backend** | Project has a mobile app and a backend |
+
+**Zero-Findings Guard:** If the audit produces fewer than 3 findings, you MUST complete a "Dimensions Covered" attestation table proving each dimension was explicitly examined before declaring a clean result.
 
 ### Findings Triage
 

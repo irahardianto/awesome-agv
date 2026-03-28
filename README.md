@@ -5,11 +5,12 @@
   <p align="center">
     A rugged, high-quality configuration suite for AI Agents.
     <br />
+    <a href="#getting-started">Getting Started</a>
+    ·
     <a href="#usage">View Rules & Skills</a>
     ·
-    <a href="https://github.com/irahardianto/awesome-agv/issues">Report Bug</a>
-    ·
     <a href="https://github.com/irahardianto/awesome-agv/issues">Request Feature</a>
+    ·
     <br />
     <br />
   </p>

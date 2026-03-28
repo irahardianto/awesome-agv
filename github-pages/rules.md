@@ -301,7 +301,7 @@ model_decision
 
 **File:** `go-idioms-and-patterns.md`
 
-Go-specific patterns: error handling with `%w`, small interfaces, goroutines and channels, naming conventions, table-driven tests, and `gofumpt`/`staticcheck`/`gosec` tooling.
+Go-specific patterns: error handling with `%w`, small interfaces, goroutines and channels, error-checked resource cleanup (defers), `//nolint:errcheck` ban, naming conventions, table-driven tests, and `gofumpt`/`staticcheck`/`gosec` tooling.
 
 ### TypeScript Idioms & Patterns
 {: .d-inline-block }
@@ -310,7 +310,7 @@ model_decision
 
 **File:** `typescript-idioms-and-patterns.md`
 
-TypeScript type system idioms: strict mode, discriminated unions, `unknown` over `any`, `readonly`, runtime validation with Zod, `Promise.all` patterns, and Vitest testing.
+TypeScript type system idioms: strict mode, discriminated unions, `unknown` over `any`, `readonly`, runtime validation with Zod, centralized HTTP client enforcement (no raw `fetch`/`axios` bypass), `Promise.all` patterns, and Vitest testing.
 
 ### Vue Idioms & Patterns
 {: .d-inline-block }
@@ -319,7 +319,7 @@ model_decision
 
 **File:** `vue-idioms-and-patterns.md`
 
-Vue 3 Composition API patterns: `<script setup>`, `ref` vs `reactive`, Pinia Setup Stores, composables, `defineProps`/`defineEmits` with TypeScript, and `createTestingPinia` for tests.
+Vue 3 Composition API patterns: `<script setup>`, `ref` vs `reactive`, Pinia Setup Stores, composables, route transition patterns (CSS `@layer` × SPA conflicts), `defineProps`/`defineEmits` with TypeScript, and `createTestingPinia` for tests.
 
 ### Flutter Idioms & Patterns
 {: .d-inline-block }
