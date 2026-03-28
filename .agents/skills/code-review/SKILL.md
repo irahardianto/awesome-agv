@@ -93,16 +93,19 @@ When invoked as a standalone review (not via `/audit`), saving to `docs/audits/`
 
 ### 6. Severity Tags
 
-| Tag      | Category            | Rule Source                                        |
-| -------- | ------------------- | -------------------------------------------------- |
-| `[SEC]`  | Security            | `security-principles.md`                           |
-| `[DATA]` | Data integrity      | `error-handling-principles.md`                     |
-| `[RES]`  | Resource leak       | `resources-and-memory-management-principles.md`    |
-| `[TEST]` | Testability         | `architectural-pattern.md`, `testing-strategy.md`  |
-| `[OBS]`  | Observability       | `logging-and-observability-mandate.md`             |
-| `[ERR]`  | Error handling      | `error-handling-principles.md`                     |
-| `[ARCH]` | Architecture        | `architectural-pattern.md`, `project-structure.md` |
-| `[PAT]`  | Pattern consistency | `code-organization-principles.md`                  |
+| Tag      | Category             | Rule Source                                        |
+| -------- | -------------------- | -------------------------------------------------- |
+| `[SEC]`  | Security             | `security-principles.md`                           |
+| `[DATA]` | Data integrity       | `error-handling-principles.md`                     |
+| `[RES]`  | Resource leak        | `resources-and-memory-management-principles.md`    |
+| `[TEST]` | Testability          | `architectural-pattern.md`, `testing-strategy.md`  |
+| `[OBS]`  | Observability        | `logging-and-observability-mandate.md`             |
+| `[ERR]`  | Error handling       | `error-handling-principles.md`                     |
+| `[ARCH]` | Architecture         | `architectural-pattern.md`, `project-structure.md` |
+| `[PAT]`  | Pattern consistency  | `code-organization-principles.md`                  |
+| `[INT]`  | Integration contract | `api-design-principles.md`                         |
+| `[DB]`   | Database design      | `database-design-principles.md`                    |
+| `[CFG]`  | Configuration        | `configuration-management-principles.md`           |
 
 ### 7. Language-Specific Anti-Patterns
 
@@ -116,6 +119,14 @@ Load the anti-pattern checklist for the language(s) under review:
 | **Rust** | `languages/rust.md` *(placeholder — create when needed)* |
 
 > Anti-patterns listed in language files are **auto-fail** — they require no judgment call. If the pattern exists in the code, it is a finding.
+
+### 8. Cross-Boundary Checks
+
+For full audits, cross-boundary concerns (integration contracts, database schema, configuration hygiene, dependency health, test coverage gaps) are checked via the dedicated dimension checklist in the `/audit` workflow — **Phase 1.5: Cross-Boundary Review**.
+
+When invoking this skill standalone (outside `/audit`), apply the applicable dimensions from that checklist manually and tag findings with `[INT]`, `[DB]`, or `[CFG]` as appropriate.
+
+**Zero-Findings Guard:** If this review produces fewer than 3 findings, you MUST produce a "Dimensions Covered" attestation section in the findings document, listing each cross-boundary dimension and the specific files or queries you examined. Only then may you declare a clean result.
 
 ---
 

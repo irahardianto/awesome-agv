@@ -63,6 +63,79 @@ Review against these categories (in priority order from `rule-priority.md`):
 - Clear naming that reveals intent
 - No code duplication (DRY)
 
+### Phase 1.5: Cross-Boundary Review
+**Set Mode:** Continue in **PLANNING**
+
+Cross-boundary issues live at the seams between components, not inside any single file. This phase defines a **menu of dimensions** — activate only those that apply to the project under audit, and explicitly state which you skipped and why.
+
+#### Dimension Selection
+
+| Dimension | Activate When |
+|---|---|
+| **A. Integration Contracts** | Project has both a frontend and a backend |
+| **B. Database & Schema** | Project uses a relational/document database |
+| **C. Configuration & Environment** | Always — universal |
+| **D. Dependency Health** | Always — universal |
+| **E. Test Coverage Gaps** | Always — universal |
+| **F. Mobile ↔ Backend** | Project has a mobile app and a backend |
+
+At the start of this phase you MUST state:
+> "Activating dimensions: A, B, C, D, E. Skipping F (no mobile app)."
+
+---
+
+#### Dimension A: Integration Contracts
+*Applies to: full-stack projects with frontend + backend*
+
+- [ ] Map every backend endpoint (route + method) against its frontend adapter — flag any unmapped endpoints in either direction
+- [ ] Verify request/response field names, types, and status codes match across the boundary
+- [ ] Verify all outbound HTTP calls use the project's centralized API client (not raw `fetch`/`axios`) — see `typescript-idioms-and-patterns.md § Centralized HTTP Client`
+- [ ] Build an auth coverage matrix: which endpoints require auth, do the frontend adapters send tokens for each?
+- [ ] Check error contract alignment: does the frontend handle the full set of error codes the backend can return?
+
+#### Dimension B: Database & Schema
+*Applies to: projects using a relational or document database*
+
+- [ ] Verify all tables have required base columns (`id`, `created_at`, `updated_at`)
+- [ ] Check all foreign keys have corresponding indexes
+- [ ] If using Supabase or Postgres RLS: verify RLS policies exist on every table storing user data
+- [ ] Cross-reference the application's struct/model field names against actual DB column names — flag any drift
+- [ ] Check migrations are reversible (up + down) and follow the additive-first strategy
+- [ ] Scan storage adapters for N+1 query patterns
+
+#### Dimension C: Configuration & Environment
+*Always active*
+
+- [ ] No hardcoded secrets, tokens, URLs, or credentials in source code
+- [ ] `.env.template` exists and covers every env var referenced in the codebase
+- [ ] Startup validation fails fast on missing required config (does not silently fall back to bad defaults)
+- [ ] Secrets are never logged (not in debug, not in error messages)
+
+#### Dimension D: Dependency Health
+*Always active*
+
+- [ ] No unused top-level dependencies in `go.mod` / `package.json` / `Cargo.toml`
+- [ ] No circular dependencies between feature modules
+- [ ] Cross-module imports only use each module's public API (not internal files)
+- [ ] Run `npm audit` / `go list -m -json all | nancy` / `cargo audit` — flag high-severity CVEs
+
+#### Dimension E: Test Coverage Gaps
+*Always active*
+
+- [ ] A handler/controller test exists for every API endpoint
+- [ ] An integration test exists for every storage/database adapter
+- [ ] Every error path (catch block, error return) has at least one test that exercises it
+- [ ] E2E tests cover the primary user journeys (login, main feature flow, error states)
+
+#### Dimension F: Mobile ↔ Backend
+*Applies to: projects with a mobile app and a backend*
+
+- [ ] API version compatibility — mobile must not call endpoints that no longer exist
+- [ ] Offline data sync: conflict resolution and retry logic are tested
+- [ ] Auth token refresh flows work correctly when the access token expires mid-session
+
+---
+
 ### Phase 2: Automated Verification
 **Set Mode:** Use `task_boundary` to set mode to **VERIFICATION**
 
@@ -86,6 +159,8 @@ You MUST save the report to the repo (not just as a conversation artifact) so it
 2. Write the findings report to `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 3. Use the template below
 
+> **Zero-Findings Guard:** If the audit produces fewer than 3 findings, you MUST complete the "Dimensions Covered" attestation section in the report before declaring a clean result. This proves cross-boundary coverage was not skipped.
+
 ```markdown
 # Code Audit: {Feature/Module Name}
 Date: {date}
@@ -94,6 +169,7 @@ Date: {date}
 - **Files reviewed:** N
 - **Issues found:** N (X critical, Y major, Z minor)
 - **Test coverage:** N%
+- **Dimensions activated:** A, B, C, D, E (list which were skipped and why)
 
 ## Critical Issues
 Issues that must be fixed before deployment.
@@ -112,6 +188,17 @@ Style, naming, or minor improvements.
 - Tests: PASS/FAIL (N passed, N failed)
 - Build: PASS/FAIL
 - Coverage: N%
+
+## Dimensions Covered
+<!-- Required when total findings < 3 -->
+| Dimension | Status | Files / Queries Examined |
+|---|---|---|
+| A. Integration Contracts | ✅ Checked / ⏭ Skipped (reason) | e.g., all 26 backend routes cross-referenced against 11 frontend adapters |
+| B. Database & Schema | ✅ Checked / ⏭ Skipped (reason) | e.g., reviewed all 8 Supabase tables + 4 storage adapters |
+| C. Configuration & Environment | ✅ Checked | e.g., scanned for raw secrets, verified .env.template |
+| D. Dependency Health | ✅ Checked | e.g., ran npm audit, checked go.mod for unused deps |
+| E. Test Coverage Gaps | ✅ Checked | e.g., verified handler tests for all 26 endpoints |
+| F. Mobile ↔ Backend | ⏭ Skipped | No mobile app in this project |
 ```
 
 ## Feedback Loop

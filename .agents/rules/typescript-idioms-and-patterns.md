@@ -200,6 +200,33 @@ function parseCreateTask(body: unknown): CreateTaskRequest {
 
 ---
 
+### Centralized HTTP Client
+
+**All outbound HTTP calls MUST go through the project's single, shared API client utility.**
+
+Do not call `fetch()` or `axios()` directly in feature code. Route every request through the centralized client (e.g., `apiFetch`, `apiClient`, or equivalent).
+
+**Why this matters:**
+- Consistent auth header injection (token is attached in one place)
+- Correlation-ID propagation — every request carries a traceable ID
+- Centralized error normalization — uniform error shapes for all API failures
+- Single place to add retries, timeouts, and request logging
+
+```typescript
+// ❌ Anti-pattern — bypass: no auth header, no correlation-ID, no logging
+const res = await fetch('/api/tasks');
+
+// ✅ Correct — use the shared client
+import { apiFetch } from '@/infrastructure/apiFetch';
+const res = await apiFetch('/api/tasks');
+```
+
+**Exception:** The centralized client itself may use raw `fetch` or `axios` internally — that is its implementation detail, not a bypass.
+
+> The audit's Integration Contracts dimension (Phase 1.5, Dimension A) checks compliance with this rule. Any direct `fetch`/`axios` call outside the shared client is a `[INT]` finding.
+
+---
+
 ### Module and Export Patterns
 
 1. **Prefer named exports over default exports**
