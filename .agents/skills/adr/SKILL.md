@@ -9,7 +9,7 @@ description: Architecture Decision Record skill for documenting significant arch
 Document significant architectural decisions so institutional knowledge persists across conversations and team members. ADRs capture the **why**, not just the **what**.
 
 ## When to Invoke
-- During Research phase (`/1-research`) when a significant architecture decision is identified
+- During Research phase (`phase-research.md`) when a significant architecture decision is identified
 - When user explicitly asks to document a decision
 - When choosing between 2+ viable approaches
 - When introducing a new dependency or pattern
