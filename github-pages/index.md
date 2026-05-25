@@ -27,7 +27,7 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 | Component     | Count | Purpose                                                                           |
 | ------------- | ----- | --------------------------------------------------------------------------------- |
 | **Rules**     | 42    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
-| **Skills**    | 44    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
+| **Skills**    | 43    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
 | **Workflows** | 12    | End-to-end development processes from research to ship                             |
 | **Agents**    | 15    | Specialized personas for multi-agent orchestration (architect, scout, qa-analyst, etc.) |
 
@@ -95,7 +95,7 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 .agents/
 ├── rules/             # 42 rules (mandates + principles + language idioms)
 ├── agents/            # 15 agent personas
-├── skills/            # 44 specialized skills
+├── skills/            # 43 specialized skills
 └── workflows/         # 12 development workflows
 ```
 
@@ -104,8 +104,9 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 Explore each component in detail:
 
 - [**Rules Reference**](/awesome-agv/rules) — All 42 rules organized by category
-- [**Skills Reference**](/awesome-agv/skills) — All 44 specialized skills
+- [**Skills Reference**](/awesome-agv/skills) — All 43 specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — All 12 development workflows
+- [**Agent Personas**](/awesome-agv/agents) — 15 specialized agent personas for multi-agent orchestration
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

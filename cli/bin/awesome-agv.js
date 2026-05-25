@@ -92,7 +92,7 @@ ${color.bold}EXAMPLES${color.reset}
 
 ${color.bold}WHAT GETS INSTALLED${color.reset}
   ${icons.book}  42 Rules    — Security, architecture, language idioms, DevOps standards
-  ${icons.tool}  44 Skills   — Debugging, design, code review, language idioms, and more
+  ${icons.tool}  43 Skills   — Debugging, design, code review, language idioms, and more
   ${icons.cycle}  12 Workflows — End-to-end development processes
   🤖  15 Agents   — Specialized personas for multi-agent orchestration
 

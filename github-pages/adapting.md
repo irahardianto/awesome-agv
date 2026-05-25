@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Adapting
-nav_order: 8
+nav_order: 9
 ---
 
 # Adapting the Setup
@@ -261,6 +261,35 @@ mypy --strict .
 bandit -r src/ -x tests
 pytest --cov=src
 ```
+
+### Python Backend Layout
+
+For a Python backend-only project:
+
+```
+src/
+  app/
+    features/                 # Business features (vertical slices)
+      task/
+        service.py            # Public API
+        handler.py            # HTTP handlers (FastAPI/Flask)
+        logic.py              # Pure business rules
+        models.py             # Domain models (Pydantic)
+        repository.py         # Storage interface (Protocol)
+        repository_pg.py      # PostgreSQL implementation
+        repository_mock.py    # Mock implementation
+    platform/                 # Framework (db, server, logger)
+tests/
+  features/
+    task/
+      test_logic.py           # Unit tests
+      test_repository_pg.py   # Integration tests
+```
+
+**Adaptation steps:**
+1. Edit `project-structure.md` — use Python Backend layout
+2. Edit `phase-verify.md` — use Python validation commands
+3. Remove frontend/Go-specific rules if not needed
 
 ---
 

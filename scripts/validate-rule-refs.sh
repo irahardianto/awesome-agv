@@ -3,22 +3,22 @@
 # validate-rule-refs.sh
 #
 # Purpose:
-#   Validates all @-references in the .agent/rules/ directory to ensure that
+#   Validates all @-references in the .agents/rules/ directory to ensure that
 #   every referenced file actually exists. A broken @-reference causes agents
 #   to fail silently when loading related principles, resulting in incomplete
 #   guidance being applied.
 #
 # Usage:
-#   bash .agent/scripts/validate-rule-refs.sh
+#   bash .agents/scripts/validate-rule-refs.sh
 #   # Or from any directory:
-#   bash /path/to/.agent/scripts/validate-rule-refs.sh
+#   bash /path/to/.agents/scripts/validate-rule-refs.sh
 #
 # Exit codes:
 #   0 — all references are valid
 #   1 — one or more broken references found
 #
 # How it works:
-#   1. Scans every .md file in .agent/rules/ for @-references (e.g. @foo.md)
+#   1. Scans every .md file in .agents/rules/ for @-references (e.g. @foo.md)
 #   2. For each reference, checks that the corresponding file exists in rules/
 #   3. Reports all broken references with the source file and line number
 # =============================================================================
@@ -30,7 +30,7 @@ set -euo pipefail
 # Resolve the rules directory relative to this script's location.
 # Works regardless of which directory the script is invoked from.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RULES_DIR="$(cd "$SCRIPT_DIR/../.agent/rules" && pwd)"
+RULES_DIR="$(cd "$SCRIPT_DIR/../.agents/rules" && pwd)"
 
 # ---- Colour helpers ---------------------------------------------------------
 RED='\033[0;31m'
@@ -65,7 +65,7 @@ while IFS= read -r -d '' file; do
       echo -e "  ${RED}✗ BROKEN${NC}  $relative_source  →  ${YELLOW}$ref${NC}  (file not found)"
       ((BROKEN++)) || true
     fi
-  done < <(grep -oP '@[a-zA-Z0-9][a-zA-Z0-9-]*\.md' "$file" 2>/dev/null || true)
+  done < <(perl -ne 'print "$1\n" while /(@[a-zA-Z0-9][a-zA-Z0-9-]*\.md)/g' "$file" 2>/dev/null || true)
 done < <(find "$RULES_DIR" -name "*.md" -print0)
 
 # ---- Summary ----------------------------------------------------------------

@@ -32,6 +32,7 @@ Each layout follows the universal philosophy above. Load the relevant layout whe
 | Vue/React Frontend | @project-structure-vue-frontend.md   | Web frontends (Vue, React, Svelte)   |
 | Flutter/Mobile     | @project-structure-flutter-mobile.md | Mobile apps (Flutter, React Native)  |
 | Rust/Cargo         | @project-structure-rust-cargo.md     | Rust binaries, libraries, workspaces |
+| Python Backend     | @project-structure-python-backend.md | Python services, APIs, data pipelines |
 
 > This Feature/Domain/UI/API structure is framework-agnostic. It applies equally to any language or framework. The layout files provide language-specific conventions (file naming, module systems, test locations) while preserving the vertical slice architecture.
 

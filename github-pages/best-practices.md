@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Best Practices
-nav_order: 7
+nav_order: 8
 ---
 
 # Best Practices
@@ -234,3 +234,33 @@ The verify phase catches issues that are invisible during implementation:
 - Security vulnerabilities (with `gosec`)
 
 Always run full verification before shipping.
+
+---
+
+## Multi-Agent Orchestration
+
+### When to Use `/workflow-team` vs `/workflow-solo`
+
+| Situation | Recommendation |
+| --- | --- |
+| Single-domain feature (backend only, frontend only) | `/workflow-solo` |
+| Cross-domain feature (backend + frontend + database) | `/workflow-team` |
+| Feature needing specialized review (security, UX) | `/workflow-team` |
+| Bug fix (any complexity) | `/bugfix` |
+| Solo developer, quick iteration | `/workflow-solo` |
+| Team project, parallel work streams | `/workflow-team` |
+
+### Parallel Dispatch Tips
+
+- **Start small:** Use 2-3 parallel agents before scaling to 5+
+- **MECE is non-negotiable:** Every file must be assigned to exactly one write-agent. Overlap = merge conflicts
+- **Integration tasks are separate:** After parallel agents complete, dispatch a dedicated `[integration]` agent to wire modules together
+- **Review in parallel too:** Dispatch `@qa-analyst[auth]` + `@qa-analyst[tasks]` to review parallel branches simultaneously
+
+### Agent Composition
+
+- **Always SCOUT first** — research agents provide context that makes build agents more effective
+- **DESIGN before BUILD** — architect produces contracts, builders consume them. Skipping DESIGN leads to integration failures
+- **PRE-MORTEM for high-risk features** — `@incident-responder` identifies failure modes before code is written, saving expensive rework
+- **Cross-layer experts in DESIGN** — pull `@database-expert` or `@security-engineer` into the design phase for data-heavy or security-sensitive features
+

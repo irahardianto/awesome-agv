@@ -26,7 +26,36 @@ Install and configure Awesome AGV in minutes.
 
 ## Installation
 
-### Option 1: Copy the `.agents` folder
+### Option 1: Quick Install (Recommended)
+
+```sh
+npx awesome-agv
+```
+
+This downloads and installs the latest `.agents/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
+
+**Options:**
+
+| Flag           | Description                                    |
+| -------------- | ---------------------------------------------- |
+| `[target-dir]` | Directory to install into (default: `./`)       |
+| `--force, -f`  | Overwrite existing `.agents/` without prompting |
+| `--help, -h`   | Show help                                       |
+
+**Examples:**
+
+```bash
+# Install into current directory
+npx awesome-agv
+
+# Install into a specific project
+npx awesome-agv ./my-project
+
+# Overwrite existing installation without prompting
+npx awesome-agv --force
+```
+
+### Option 2: Copy the `.agents` folder
 
 Clone this repository or copy the `.agents` folder into the root of your project:
 
@@ -38,7 +67,7 @@ git clone https://github.com/irahardianto/awesome-agv.git
 cp -r awesome-agv/.agents /path/to/your-project/
 ```
 
-### Option 2: Git submodule
+### Option 3: Git submodule
 
 Add as a submodule for easy updates:
 

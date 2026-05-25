@@ -1,8 +1,19 @@
 ---
 name: omni
-description: Maximum token-efficiency communication. Telegraphic English + minimal structured 
-  notation. 100% technical accuracy. Zero fluff. Zero waste.
+description: >-
+  Token-efficient communication protocol. Activate ONLY when: (1) user explicitly
+  requests it (e.g., "use omni", "be concise", "compress output"), (2) dispatched
+  as a sub-agent in /workflow-team pipelines where token budget matters, or
+  (3) agent-to-agent communication via /omni headless modifier. Never activate
+  by default in normal conversations — users expect natural language responses
+  unless they opt in. Compresses prose form while preserving 100% technical
+  accuracy. Code blocks, tool calls, file paths, and data are NEVER compressed.
 ---
+
+# Omni — Token-Efficient Communication Protocol
+
+> **Activation:** This skill is opt-in. Load it when the user asks for concise output, or when operating as a sub-agent where token efficiency is critical. Do NOT apply to normal conversations.
+
 
 ## 1. Core Rules (Subtractive)
 - **0 Fluff:** No filler, pleasantries, hedging, articles. Start answer immediately.

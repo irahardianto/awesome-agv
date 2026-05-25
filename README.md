@@ -38,7 +38,7 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **42 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
-*   🛠️ **44 Skills** — specialized capabilities for debugging, design, performance optimization, language idioms, and more.
+*   🛠️ **43 Skills** — specialized capabilities for debugging, design, performance optimization, language idioms, and more.
 *   🔄 **12 Workflows** — end-to-end development processes from research to ship.
 *   🤖 **15 Agent Personas** — specialized sub-agents for multi-agent orchestration (architect, backend-engineer, security-engineer, etc.).
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
@@ -394,7 +394,7 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Code Completion Mandate](.agents/rules/code-completion-mandate.md)**: Automated quality checks before every delivery.
 *   **[Rule Priority](.agents/rules/rule-priority.md)**: Conflict resolution when rules contradict each other.
 
-### Specialized Skills (44)
+### Specialized Skills (43)
 
 #### 🔧 Core Engineering Skills
 *   **[Debugging Protocol](.agents/skills/debugging-protocol/SKILL.md)**: Systematic approach to solving errors.
@@ -405,6 +405,7 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Performance Optimization](.agents/skills/perf-optimization/SKILL.md)**: Profile-driven optimization with Go pprof, frontend Lighthouse, and bundle analysis tooling.
 *   **[Refactoring Patterns](.agents/skills/refactoring-patterns/SKILL.md)**: Code smell taxonomy, safe transformation techniques, and metrics tracking.
 *   **[Research Methodology](.agents/skills/research-methodology/SKILL.md)**: Structured research protocol for investigating technologies and patterns.
+*   **[Omni](.agents/skills/omni/SKILL.md)**: Token-efficient communication protocol — opt-in for concise output or agent-to-agent messaging.
 
 #### 🎨 Design & UI Skills
 *   **[Frontend Design](.agents/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
@@ -416,7 +417,7 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Parallel Dispatch Ownership](.agents/skills/parallel-dispatch-ownership/SKILL.md)**: MECE file boundary enforcement to prevent merge conflicts between parallel agents.
 *   **[Parallel Dispatch Merge](.agents/skills/parallel-dispatch-merge/SKILL.md)**: Sequential merge protocol with quality gates for integrating parallel worktree branches.
 
-#### 🌐 Language & Framework Idioms (22)
+#### 🌐 Language & Framework Idioms (18)
 
 Language-specific patterns, tooling, and conventions for ecosystems beyond the core rules:
 
@@ -525,7 +526,7 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 │   ├── security-mandate.md
 │   ├── rule-priority.md
 │   └── ...            
-├── skills/            # 44 specialized skills
+├── skills/            # 43 specialized skills
 │   ├── debugging-protocol/      # Core engineering
 │   ├── frontend-design/
 │   ├── code-review/
@@ -552,7 +553,7 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (44 skills shipped).
+- [x] Include more specialized skills to aid development process (43 skills shipped).
 - [x] Add development workflows for structured feature delivery (12 workflows shipped).
 - [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust, Python + 22 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).

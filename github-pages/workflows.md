@@ -351,3 +351,132 @@ Profile-driven performance optimization. Always measure before optimizing — on
 - **TDD for each fix** — write test, implement, benchmark
 - **Stop when** remaining cost is in runtime internals, hardware-optimized assembly, or when improvement < 5%
 - Loads the **perf-optimization** skill and relevant language module before starting
+
+---
+
+## 🏭 Multi-Agent Pipeline (`/workflow-team`)
+
+**File:** `.agents/workflows/workflow-team.md`
+
+Dispatches specialized sub-agents across layers (research, design, build, review) with parallel execution support. The Pipeline Manager orchestrates — it never writes code itself.
+
+### When to Use
+- Features requiring multiple specializations (backend + frontend + database)
+- Tasks benefiting from parallel development
+- Scenarios needing specialized review (security audit + QA + UX review)
+- Large features that can be decomposed into independent work streams
+
+### Agent Roster (15 Personas)
+
+Agents are organized into four layers with strict boundaries:
+
+#### Research Layer (Read-only)
+
+| Agent | Domain |
+| --- | --- |
+| `@scout` | Codebase exploration, pattern discovery, technology research |
+
+#### Design Layer (Read-only — produces decisions and contracts)
+
+| Agent | Domain |
+| --- | --- |
+| `@architect` | System design, ADRs, API contracts, dependency strategy |
+
+Cross-layer participants can join DESIGN when needed: `@ux-reviewer`, `@database-expert`, `@security-engineer`, `@performance-engineer`.
+
+#### Builder Layer (Write — run in Git worktrees)
+
+| Agent | Domain |
+| --- | --- |
+| `@backend-engineer` | APIs, business logic, concurrency, observability |
+| `@frontend-engineer` | Web UI, components, state management, a11y |
+| `@mobile-engineer` | Flutter/RN, widgets, platform APIs, offline-first |
+| `@database-expert` | Schema, migrations, queries, indexes |
+| `@devops-engineer` | CI/CD, containers, IaC, monitoring |
+| `@technical-writer` | Docs, API docs, changelogs, README |
+| `@test-automation-engineer` | E2E (UI+API), Playwright, test infra |
+| `@performance-engineer` | Profiling, benchmarks, load tests, optimization |
+| `@refactoring-specialist` | Code smell detection, safe transformation |
+
+#### Reviewer Layer (Read-only — post-merge)
+
+| Agent | Domain |
+| --- | --- |
+| `@qa-analyst` | Code review, testing coverage, quality gates |
+| `@security-engineer` | Threats, vulnerabilities, auth, input validation |
+| `@ux-reviewer` | Design heuristics, interaction, a11y, responsive |
+| `@incident-responder` | Triage, RCA, mitigation, postmortems |
+
+### Composable Primitives
+
+Workflows are built from composable primitives — each a stage in the pipeline:
+
+| Primitive | Agents | Dependency |
+| --- | --- | --- |
+| **SCOUT** | scout or domain agent | None |
+| **DESIGN** | architect + optional experts | After SCOUT |
+| **PRE-MORTEM** | incident-responder + optional experts | After DESIGN |
+| **BUILD** | Implementation agents | After DESIGN |
+| **TEST** | test-automation-engineer | After DESIGN |
+| **REVIEW** | qa-analyst + security-engineer + optional | After BUILD/TEST |
+| **REMEDIATE** | Fix agents | After REVIEW |
+| **OPTIMIZE** | performance-engineer | After BUILD |
+| **REFACTOR** | refactoring-specialist | After REVIEW/SCOUT |
+| **INCIDENT** | incident-responder + engineers | Standalone |
+| **VERIFY** | qa-analyst | After final merge |
+| **DOCUMENT** | technical-writer | After VERIFY |
+
+### Workflow Templates
+
+| Template | Pipeline |
+| --- | --- |
+| **A: Full Feature** | SCOUT → DESIGN → PRE-MORTEM → BUILD → REVIEW → REMEDIATE → VERIFY → DOCUMENT |
+| **B: Bug Fix** | SCOUT → BUILD → REVIEW → VERIFY |
+| **C: Audit & Remediation** | SCOUT(review) → REVIEW → REMEDIATE → REVIEW → VERIFY |
+| **D: Mobile Feature** | SCOUT → DESIGN → BUILD → REVIEW → VERIFY |
+| **E: Performance** | SCOUT(profile) → OPTIMIZE → BUILD → REVIEW → VERIFY |
+| **F: Security Hardening** | SCOUT(security) → REMEDIATE → REVIEW → VERIFY |
+| **G: Infrastructure** | DESIGN → BUILD → REVIEW → VERIFY |
+| **H: Documentation** | SCOUT → DOCUMENT → REVIEW |
+| **I: Incident Response** | INCIDENT → REMEDIATE → REVIEW → VERIFY → DOCUMENT |
+| **J: Tech Debt** | SCOUT → REFACTOR → REVIEW → VERIFY |
+| **K: Security + Perf Audit** | SCOUT → REVIEW → REMEDIATE → REVIEW → VERIFY |
+| **L: Pre-Mortem** | DESIGN → PRE-MORTEM → DOCUMENT |
+
+### Parallel Execution
+
+Two types of parallelism are supported:
+
+- **Cross-domain**: Different agent types in parallel (e.g., `@backend-engineer` + `@frontend-engineer`). Always safe — disjoint domains.
+- **Intra-domain**: Multiple instances of the same agent type (e.g., `@backend-engineer[auth]` + `@backend-engineer[tasks]`). Requires MECE decomposition via parallel-dispatch skills.
+
+```
+# Single instance
+@backend-engineer Build the auth feature
+
+# Scoped parallel instances
+@backend-engineer[auth] Implement auth handlers per scope card
+@backend-engineer[tasks] Implement task CRUD per scope card
+```
+
+### Git Worktree Lifecycle
+
+BUILD agents work in isolated Git worktrees to prevent conflicts:
+
+```bash
+# Setup (before dispatch)
+git worktree add .wt/<agent-name>-<scope> -b wt/<agent-name>-<scope>-$(date +%s) HEAD
+
+# Merge (in dependency order, per parallel-dispatch-merge skill)
+git merge --squash wt/<agent-name>-<scope>-<ts>
+git commit -m "<type>(<scope>): <description>"
+
+# Cleanup
+git worktree remove .wt/<agent-name>-<scope>
+git branch -D wt/<agent-name>-<scope>-<ts>
+```
+
+### Circuit Breaker
+- Sub-agent fails → retry ONCE with clarified context
+- Fails again → STOP: `"BLOCKED: {agent_type}[{scope}] failed 2x on {task}. Need human input."`
+- Max 2 attempts per sub-agent per task — non-negotiable
