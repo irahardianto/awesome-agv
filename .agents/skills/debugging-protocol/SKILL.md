@@ -27,7 +27,7 @@ Create a new debugging document using the provided template. This serves as the 
 
 1. Create `docs/debugging/` if it doesn't exist
 2. Copy the template and fill in the issue details
-3. This makes the session accessible from other conversations and agents (e.g., when handing off to a `/quick-fix` or `/orchestrator` workflow)
+3. This makes the session accessible from other conversations and agents (e.g., when handing off to a `/bugfix` or `/workflow-solo` workflow)
 
 ### 2. Define the Problem
 Clearly articulate the **System Context** and **Problem Statement**.
@@ -81,8 +81,19 @@ The `languages/` directory contains **modular, language-specific debugging guide
 
 | Module | Languages/Runtimes |
 |---|---|
+| [Go](languages/go.md) | Go (goroutines, pprof, Delve, race detector) |
+| [TypeScript](languages/typescript.md) | TypeScript, Node.js, Vue, React (async debugging, memory leaks) |
+| [Python](languages/python.md) | Python, Django, FastAPI (pdb, async, import resolution) |
 | [Rust](languages/rust.md) | Rust (cargo, rustc, tokio) |
-| [Frontend](languages/frontend.md) | Vue 3, React, browser, Vite |
+| [Java](languages/java.md) | Java, Spring Boot (JVM tools, heap/thread dumps, connection pools) |
+| [C#](languages/csharp.md) | C#, .NET, ASP.NET Core (dotnet diagnostics, EF Core, async deadlocks) |
+| [Swift](languages/swift.md) | Swift, SwiftUI, iOS/macOS (LLDB, Instruments, actors, retain cycles) |
+| [Flutter](languages/flutter.md) | Flutter, Dart (DevTools, widget rebuilds, layout overflow, isolates) |
+| [C++](languages/cpp.md) | C++ (sanitizers, GDB/LLDB, Valgrind, iterator invalidation, data races) |
+| [Kotlin](languages/kotlin.md) | Kotlin (coroutine debugger, platform types, cancellation, JVM tools) |
+| [PHP](languages/php.md) | PHP, Laravel (Xdebug, autoloading, sessions, white page of death) |
+| [Ruby](languages/ruby.md) | Ruby, Rails (debug gem, Pry, Zeitwerk, N+1, monkey-patch detection) |
+| [Frontend](languages/frontend.md) | Vue 3, React, browser, Vite (CSS, rendering, network) |
 
 > **Contributing new modules:** To add support for a new language, create `languages/{language}.md` following the structure of existing modules. Each module should include: a toolchain reference table, language-specific hypothesis categories, validation task patterns, and an error-type-to-first-action quick reference.
 
