@@ -30,8 +30,6 @@ jobs:
       - name: Copy README for npm package
         run: cp README.md cli/README.md
 
-      - name: Publish to npm with provenance
+      - name: Publish to npm with provenance (Trusted Publishing)
         run: npm publish --provenance --access public
         working-directory: ./cli
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
