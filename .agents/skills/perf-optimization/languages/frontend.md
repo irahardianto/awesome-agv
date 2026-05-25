@@ -1,6 +1,8 @@
-# Frontend Performance Profiling — Vue 3 + Vite + PWA
+# Frontend Performance Profiling
 
-## Stack Context
+> **Applicability:** The patterns in this module apply to **all modern frontend stacks** (Vue, React, Angular, Svelte, plain HTML/JS). Examples use Vue 3 + Vite as the reference implementation, but the tools and optimization strategies (code splitting, lazy loading, resource hints, image optimization, virtual scrolling) are framework-agnostic. Adapt to your stack.
+
+## Stack Context (Reference Implementation)
 
 | Layer | Tool | Version |
 |---|---|---|
@@ -14,7 +16,7 @@
 | Build | vue-tsc + vite build | — |
 | Tests | Vitest + jsdom | ^4.1 |
 
----
+
 
 ## Profiling Toolchain
 

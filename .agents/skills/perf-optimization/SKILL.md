@@ -209,8 +209,17 @@ Load the relevant language module when working with a specific runtime:
 | Module | Use when |
 |---|---|
 | [Go](languages/go.md) | Go services, APIs, CLI tools |
-| [Rust](languages/rust.md) | Rust binaries, libraries |
+| [TypeScript](languages/typescript.md) | Node.js/Deno backend (event loop, streams, connection pools) |
 | [Python](languages/python.md) | Python services, CLI, data pipelines |
+| [Rust](languages/rust.md) | Rust binaries, libraries |
+| [Java](languages/java.md) | Java/JVM services (JFR, GC tuning, JIT, JMH benchmarks) |
+| [C#](languages/csharp.md) | C#/.NET services (Span, ObjectPool, EF Core, BenchmarkDotNet) |
+| [Swift](languages/swift.md) | Swift apps (Instruments, value types, TaskGroup, os_signpost) |
+| [Flutter](languages/flutter.md) | Flutter apps (const widgets, ListView.builder, isolates, DevTools) |
+| [C++](languages/cpp.md) | C++ (data-oriented design, cache locality, SIMD, Google Benchmark) |
+| [Kotlin](languages/kotlin.md) | Kotlin/JVM (inline functions, sequences, value classes, coroutine overhead) |
+| [PHP](languages/php.md) | PHP (OPcache/JIT, eager loading, caching, queue offloading, phpbench) |
+| [Ruby](languages/ruby.md) | Ruby/Rails (eager loading, batch processing, caching, stackprof) |
 | [Frontend](languages/frontend.md) | Web frontends (JS/TS bundle, rendering, network) |
 
 > **Contributing:** After completing a perf optimization session, extract generalizable patterns
