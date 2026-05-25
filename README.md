@@ -38,11 +38,12 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **42 Rules** — covering security, reliability, architecture, maintainability, language idioms, and DevOps.
-*   🛠️ **8 Skills** — specialized capabilities for debugging, design, performance optimization, and more.
-*   🔄 **11 Workflows** — end-to-end development processes from research to ship.
+*   🛠️ **44 Skills** — specialized capabilities for debugging, design, performance optimization, language idioms, and more.
+*   🔄 **12 Workflows** — end-to-end development processes from research to ship.
+*   🤖 **15 Agent Personas** — specialized sub-agents for multi-agent orchestration (architect, backend-engineer, security-engineer, etc.).
 *   🏗️ **Two-Tier Rule System** — always-on mandates + contextual principles for zero-noise enforcement.
 
-> **💡 Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only what you need, modify anything, or build your own workflows. It's a toolkit, not a framework.
+> **💡 Everything is modular.** Rules, skills, agents, and workflows work independently — you don't need everything to benefit. Use only what you need, modify anything, or build your own. It's a toolkit, not a framework.
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -393,43 +394,116 @@ The power of the setup comes from its extensive collection of rules covering eve
 *   **[Code Completion Mandate](.agents/rules/code-completion-mandate.md)**: Automated quality checks before every delivery.
 *   **[Rule Priority](.agents/rules/rule-priority.md)**: Conflict resolution when rules contradict each other.
 
-### Specialized Skills
+### Specialized Skills (44)
 
+#### 🔧 Core Engineering Skills
 *   **[Debugging Protocol](.agents/skills/debugging-protocol/SKILL.md)**: Systematic approach to solving errors.
-*   **[Frontend Design](.agents/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
-*   **[Mobile Design](.agents/skills/mobile-design/SKILL.md)**: Production-grade mobile interfaces for Flutter and React Native.
 *   **[Sequential Thinking](.agents/skills/sequential-thinking/SKILL.md)**: A tool for breaking down complex problems, an adaptation from [Sequential Thinking MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking)
 *   **[Code Review](.agents/skills/code-review/SKILL.md)**: Structured code review protocol against the full rule set.
 *   **[Guardrails](.agents/skills/guardrails/SKILL.md)**: Pre-flight checklist and post-implementation self-review.
 *   **[ADR (Architecture Decision Records)](.agents/skills/adr/SKILL.md)**: Document significant architectural decisions with context and trade-offs.
-*   **[Performance Optimization](.agents/skills/perf-optimization/SKILL.md)**: Profile-driven performance optimization with Go pprof, frontend Lighthouse, and bundle analysis tooling.
+*   **[Performance Optimization](.agents/skills/perf-optimization/SKILL.md)**: Profile-driven optimization with Go pprof, frontend Lighthouse, and bundle analysis tooling.
+*   **[Refactoring Patterns](.agents/skills/refactoring-patterns/SKILL.md)**: Code smell taxonomy, safe transformation techniques, and metrics tracking.
+*   **[Research Methodology](.agents/skills/research-methodology/SKILL.md)**: Structured research protocol for investigating technologies and patterns.
 
-### Development Workflows
+#### 🎨 Design & UI Skills
+*   **[Frontend Design](.agents/skills/frontend-design/SKILL.md)**: Guidelines for creating visually appealing UIs, based on [Anthropic Frontend-Design Skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
+*   **[Mobile Design](.agents/skills/mobile-design/SKILL.md)**: Production-grade mobile interfaces for Flutter and React Native.
+
+#### 🔀 Multi-Agent Orchestration Skills
+*   **[Parallel Dispatch Decomposition](.agents/skills/parallel-dispatch-decomposition/SKILL.md)**: MECE task decomposition into scope cards for parallel sub-agent execution.
+*   **[Parallel Dispatch DAG](.agents/skills/parallel-dispatch-dag/SKILL.md)**: Directed acyclic graph construction and topological sort for safe dispatch ordering.
+*   **[Parallel Dispatch Ownership](.agents/skills/parallel-dispatch-ownership/SKILL.md)**: MECE file boundary enforcement to prevent merge conflicts between parallel agents.
+*   **[Parallel Dispatch Merge](.agents/skills/parallel-dispatch-merge/SKILL.md)**: Sequential merge protocol with quality gates for integrating parallel worktree branches.
+
+#### 🌐 Language & Framework Idioms (22)
+
+Language-specific patterns, tooling, and conventions for ecosystems beyond the core rules:
+
+| Skill | Ecosystem |
+|---|---|
+| [Angular](.agents/skills/angular-idioms/SKILL.md) | Angular components, DI, RxJS |
+| [C++](.agents/skills/cpp-idioms/SKILL.md) | Modern C++ (RAII, smart pointers) |
+| [C#](.agents/skills/csharp-idioms/SKILL.md) | .NET, async/await, LINQ |
+| [Django](.agents/skills/django-idioms/SKILL.md) | Django ORM, views, middleware |
+| [.NET](.agents/skills/dotnet-idioms/SKILL.md) | ASP.NET Core, Entity Framework |
+| [Elixir](.agents/skills/elixir-idioms/SKILL.md) | OTP, GenServer, supervision |
+| [Java](.agents/skills/java-idioms/SKILL.md) | Streams, records, Spring patterns |
+| [JavaScript](.agents/skills/javascript-idioms/SKILL.md) | ES2024+, async patterns |
+| [Kotlin](.agents/skills/kotlin-idioms/SKILL.md) | Coroutines, sealed classes |
+| [Laravel](.agents/skills/laravel-idioms/SKILL.md) | Eloquent, middleware, queues |
+| [Next.js](.agents/skills/nextjs-idioms/SKILL.md) | App Router, RSC, ISR |
+| [PHP](.agents/skills/php-idioms/SKILL.md) | PHP 8+, type declarations |
+| [Rails](.agents/skills/rails-idioms/SKILL.md) | ActiveRecord, conventions |
+| [React](.agents/skills/react-idioms/SKILL.md) | Hooks, Suspense, Server Components |
+| [Ruby](.agents/skills/ruby-idioms/SKILL.md) | Blocks, modules, RSpec |
+| [Spring Boot](.agents/skills/spring-boot-idioms/SKILL.md) | Spring DI, JPA, WebFlux |
+| [SQL](.agents/skills/sql-idioms/SKILL.md) | Query optimization, indexes |
+| [Swift](.agents/skills/swift-idioms/SKILL.md) | SwiftUI, Combine, async/await |
+
+#### 🏢 Domain Skills
+*   **[API Documentation](.agents/skills/api-documentation/SKILL.md)**: OpenAPI 3.1 specs, request/response examples, versioning.
+*   **[Browser Automation](.agents/skills/browser-automation/SKILL.md)**: Playwright MCP-first automation for E2E testing and UI review.
+*   **[Chaos Testing](.agents/skills/chaos-testing/SKILL.md)**: Controlled failure injection and resilience verification.
+*   **[CLI Development](.agents/skills/cli-development/SKILL.md)**: CLI tool design, argument parsing, and distribution.
+*   **[Data Engineering](.agents/skills/data-engineering/SKILL.md)**: ETL/ELT patterns, data quality, and orchestration.
+*   **[Embedded Systems](.agents/skills/embedded-systems/SKILL.md)**: Real-time patterns, RTOS, and hardware abstraction.
+*   **[Incident Response](.agents/skills/incident-response/SKILL.md)**: Severity classification, triage, diagnosis, and postmortem.
+*   **[ML Engineering](.agents/skills/ml-engineering/SKILL.md)**: ML pipelines, feature engineering, and MLOps.
+*   **[Payment Integration](.agents/skills/payment-integration/SKILL.md)**: PCI DSS compliance, tokenization, and webhook reliability.
+*   **[Supply Chain Security](.agents/skills/supply-chain-security/SKILL.md)**: SBOM generation, CVE scanning, and license compliance.
+
+### Agent Personas (15)
+
+Agent personas are specialized sub-agents designed for multi-agent orchestration. Each agent has an exclusive domain, clear boundaries, and never crosses into another agent's territory — enforcing MECE at the architecture level.
+
+#### Layers
+
+| Layer | Agents | Purpose |
+|---|---|---|
+| **Research** | `scout` | Codebase exploration, pattern discovery, technology research |
+| **Design** | `architect` + optional `ux-reviewer`, `database-expert`, `security-engineer` | System design, ADRs, API contracts |
+| **Build** | `backend-engineer`, `frontend-engineer`, `mobile-engineer`, `database-expert`, `devops-engineer`, `technical-writer`, `test-automation-engineer`, `performance-engineer`, `refactoring-specialist` | Implementation with isolated worktrees |
+| **Review** | `qa-analyst`, `security-engineer`, `ux-reviewer`, `incident-responder` | Quality gates, security audits, UX review |
+
+See the [workflow-team](.agents/workflows/workflow-team.md) workflow for the full dispatch protocol, including parallel dispatch with MECE file ownership and DAG-based execution ordering.
+
+### Development Workflows (12)
 
 The setup includes opinionated, end-to-end workflows that chain rules and skills into structured development processes.
 
-#### 🏭 Feature Workflow (`/orchestrator`)
+#### 🏭 Feature Workflow — Single Agent (`/workflow-solo`)
 
-The primary workflow for building features. Phases execute sequentially — **no skipping**.
+The primary workflow for a single agent executing all phases sequentially — **no skipping**.
 
 ```
 Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → Ship
 ```
 
-| Phase        | Workflow                                            | Purpose                                                                                                                 |
-| ------------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 1. Research  | [`/1-research`](.agents/workflows/1-research.md)   | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
-| 2. Implement | [`/2-implement`](.agents/workflows/2-implement.md) | TDD cycle: Red → Green → Refactor                                                                                       |
-| 3. Integrate | [`/3-integrate`](.agents/workflows/3-integrate.md) | Integration tests with Testcontainers                                                                                   |
-| 3.5. E2E     | [`/e2e-test`](.agents/workflows/e2e-test.md)       | End-to-end validation with Playwright                                                                                   |
-| 4. Verify    | [`/4-verify`](.agents/workflows/4-verify.md)       | Full lint, test, and build validation                                                                                   |
-| 5. Ship      | [`/5-commit`](.agents/workflows/5-commit.md)       | Git commit with conventional format                                                                                     |
+| Phase        | Phase File                                                     | Purpose                                                                                                                 |
+| ------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1. Research  | [`phase-research`](.agents/workflows/phase-research.md)       | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
+| 2. Implement | [`phase-implement`](.agents/workflows/phase-implement.md)     | TDD cycle: Red → Green → Refactor                                                                                       |
+| 3. Integrate | [`phase-integrate`](.agents/workflows/phase-integrate.md)     | Integration tests with Testcontainers                                                                                   |
+| 3.5. E2E     | [`phase-e2e`](.agents/workflows/phase-e2e.md)                 | End-to-end validation with Playwright                                                                                   |
+| 4. Verify    | [`phase-verify`](.agents/workflows/phase-verify.md)           | Full lint, test, and build validation                                                                                   |
+| 5. Ship      | [`phase-commit`](.agents/workflows/phase-commit.md)           | Git commit with conventional format                                                                                     |
+
+#### 🤖 Multi-Agent Orchestration (`/workflow-team`)
+
+The pipeline manager workflow for dispatching specialized sub-agents across layers. Supports parallel execution via git worktrees with MECE file ownership.
+
+```
+SCOUT → DESIGN → PRE-MORTEM → BUILD (parallel) → REVIEW (parallel) → REMEDIATE → VERIFY
+```
+
+Includes 12 workflow templates (A-L) for common scenarios: full features, bug fixes, audits, mobile features, security hardening, infrastructure, documentation sprints, incident response, and technical debt.
 
 #### 🔧 Specialized Workflows
 
 | Workflow                                        | When to Use                                          |
 | ----------------------------------------------- | ---------------------------------------------------- |
-| [`/quick-fix`](.agents/workflows/quick-fix.md) | Bug fixes with known root cause (<50 lines)          |
+| [`/bugfix`](.agents/workflows/bugfix.md) | Bug fixes — from hotfixes to complex debugging sessions |
 | [`/refactor`](.agents/workflows/refactor.md)   | Safely restructure code while preserving behavior    |
 | [`/audit`](.agents/workflows/audit.md)         | Code review and quality inspection (no new features) |
 | [`/perf-optimize`](.agents/workflows/perf-optimize.md) | Profile-driven performance optimization              |
@@ -439,41 +513,50 @@ Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → 
 
 ```
 .agents/
+├── agents/            # 15 agent personas (multi-agent orchestration)
+│   ├── architect.md
+│   ├── backend-engineer.md
+│   ├── frontend-engineer.md
+│   ├── scout.md
+│   ├── qa-analyst.md
+│   └── ...            # 10 more specialized agents
 ├── rules/             # 42 rules (mandates + principles + language idioms)
 │   ├── rugged-software-constitution.md
 │   ├── security-mandate.md
 │   ├── rule-priority.md
 │   └── ...            
-├── skills/            # 8 specialized skills
-│   ├── debugging-protocol/
+├── skills/            # 44 specialized skills
+│   ├── debugging-protocol/      # Core engineering
 │   ├── frontend-design/
-│   ├── mobile-design/
-│   ├── sequential-thinking/
 │   ├── code-review/
-│   ├── guardrails/
-│   ├── adr/
-│   └── perf-optimization/
-└── workflows/         # 11 development workflows
-    ├── orchestrator.md
-    ├── 1-research.md
-    ├── 2-implement.md
-    ├── 3-integrate.md
-    ├── 4-verify.md
-    ├── 5-commit.md
-    ├── quick-fix.md
-    ├── refactor.md
-    ├── audit.md
-    ├── perf-optimize.md
-    └── e2e-test.md
+│   ├── parallel-dispatch-*/     # Multi-agent orchestration (4 skills)
+│   ├── java-idioms/             # Language & framework idioms (22 skills)
+│   ├── react-idioms/
+│   ├── incident-response/       # Domain skills
+│   └── ...            
+└── workflows/         # 12 development workflows
+    ├── workflow-solo.md          # Composite: single-agent feature workflow
+    ├── workflow-team.md          # Composite: multi-agent pipeline manager
+    ├── phase-research.md         # Phase: understand context
+    ├── phase-implement.md        # Phase: TDD cycle
+    ├── phase-integrate.md        # Phase: integration tests
+    ├── phase-verify.md           # Phase: full validation
+    ├── phase-commit.md           # Phase: git commit
+    ├── phase-e2e.md              # Phase: E2E testing
+    ├── bugfix.md                 # Standalone: bug fixes
+    ├── refactor.md               # Standalone: code restructuring
+    ├── audit.md                  # Standalone: code review
+    └── perf-optimize.md          # Standalone: performance tuning
 ```
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (8 skills shipped).
-- [x] Add development workflows for structured feature delivery (11 workflows shipped).
-- [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust, Python).
+- [x] Include more specialized skills to aid development process (44 skills shipped).
+- [x] Add development workflows for structured feature delivery (12 workflows shipped).
+- [x] Add language-specific idiom and pattern rules (Go, TypeScript, Vue, Flutter, Rust, Python + 22 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
+- [x] Add multi-agent orchestration with 15 specialized agent personas and parallel dispatch.
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [x] Publish comprehensive documentation site (GitHub Pages).
 
@@ -503,7 +586,7 @@ This setup supports different project structures:
 | **Microservices**       | Adapt `project-structure.md` per service, add service mesh rules |
 | **Mobile (Flutter/RN)** | Adapt frontend rules, add mobile-specific accessibility/testing  |
 
-**To adapt:** Edit `project-structure.md`, the relevant idiom file, and `4-verify.md` to match your project layout.
+**To adapt:** Edit `project-structure.md`, the relevant idiom file, and `phase-verify.md` to match your project layout.
 
 <!-- CONTRIBUTING -->
 ## Contributing

@@ -91,7 +91,7 @@ Once installed, the setup activates automatically:
 | **Mandates**   | Always loaded  | Agent always validates code, adds logging, follows security rules                           |
 | **Principles** | Contextual     | Agent applies database rules when writing queries, CI/CD rules when editing pipelines, etc. |
 | **Skills**     | On demand      | Agent uses debugging protocol when stuck, guardrails before/after writing code              |
-| **Workflows**  | Slash commands | Use `/orchestrator` for features, `/quick-fix` for bugs, `/audit` for reviews               |
+| **Workflows**  | Slash commands | Use `/workflow-solo` for features, `/bugfix` for bugs, `/audit` for reviews               |
 
 {: .note }
 > **Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only the rules you want, build your own workflows, or skip workflows entirely. The setup is a toolkit, not a framework.
@@ -103,7 +103,7 @@ Once installed, the setup activates automatically:
 Start building a feature with the structured workflow:
 
 ```
-/orchestrator
+/workflow-solo
 ```
 
 This chains the full development lifecycle:
@@ -118,7 +118,7 @@ This chains the full development lifecycle:
 For a small bug fix:
 
 ```
-/quick-fix
+/bugfix
 ```
 
 This skips research and integration, going straight to: Diagnose → Fix + Test → Verify → Ship.

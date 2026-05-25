@@ -92,8 +92,9 @@ ${color.bold}EXAMPLES${color.reset}
 
 ${color.bold}WHAT GETS INSTALLED${color.reset}
   ${icons.book}  42 Rules    — Security, architecture, language idioms, DevOps standards
-  ${icons.tool}  7 Skills    — Debugging, design, code review, and more
-  ${icons.cycle}  10 Workflows — End-to-end development processes
+  ${icons.tool}  44 Skills   — Debugging, design, code review, language idioms, and more
+  ${icons.cycle}  12 Workflows — End-to-end development processes
+  🤖  15 Agents   — Specialized personas for multi-agent orchestration
 
 ${color.dim}https://github.com/${REPO_OWNER}/${REPO_NAME}${color.reset}
 `);
@@ -284,6 +285,7 @@ function printSuccess(targetDir) {
   const rulesDir = path.join(agentDir, 'rules');
   const skillsDir = path.join(agentDir, 'skills');
   const workflowsDir = path.join(agentDir, 'workflows');
+  const agentsDir = path.join(agentDir, 'agents');
 
   const rulesCount = fs.existsSync(rulesDir)
     ? fs.readdirSync(rulesDir).filter((f) => f.endsWith('.md')).length
@@ -294,6 +296,9 @@ function printSuccess(targetDir) {
   const workflowsCount = fs.existsSync(workflowsDir)
     ? fs.readdirSync(workflowsDir).filter((f) => f.endsWith('.md')).length
     : 0;
+  const agentsCount = fs.existsSync(agentsDir)
+    ? fs.readdirSync(agentsDir).filter((f) => f.endsWith('.md')).length
+    : 0;
   const totalFiles = countFiles(agentDir);
 
   console.log(`
@@ -302,16 +307,18 @@ ${color.green}${color.bold}  Installation complete! ${icons.rocket}${color.reset
   ${icons.check} ${color.bold}${totalFiles} files${color.reset} installed to ${color.cyan}${path.relative(process.cwd(), agentDir) || AGENT_DIR}/${color.reset}
 
   ${icons.book}  ${color.bold}${rulesCount}${color.reset} Rules      ${color.dim}Security, architecture, testing standards${color.reset}
-  ${icons.tool}  ${color.bold}${skillsCount}${color.reset} Skills     ${color.dim}Debugging, design, code review${color.reset}
+  ${icons.tool}  ${color.bold}${skillsCount}${color.reset} Skills     ${color.dim}Debugging, design, code review, language idioms${color.reset}
   ${icons.cycle}  ${color.bold}${workflowsCount}${color.reset} Workflows  ${color.dim}End-to-end dev processes${color.reset}
+  🤖  ${color.bold}${agentsCount}${color.reset} Agents     ${color.dim}Specialized multi-agent personas${color.reset}
 
   ${icons.arrow} ${color.dim}Your AI agent will automatically pick up the${color.reset}
     ${color.dim}${AGENT_DIR}/ directory. No additional configuration needed.${color.reset}
 
   💡 ${color.bold}Quick start${color.reset} — open a chat with your agent and try:
-     ${color.cyan}/orchestrator${color.reset}   ${color.dim}Build a feature end-to-end${color.reset}
+     ${color.cyan}/workflow-solo${color.reset}  ${color.dim}Build a feature end-to-end (single agent)${color.reset}
+     ${color.cyan}/workflow-team${color.reset}  ${color.dim}Build with multi-agent orchestration${color.reset}
      ${color.cyan}/audit${color.reset}          ${color.dim}Review code quality${color.reset}
-     ${color.cyan}/quick-fix${color.reset}      ${color.dim}Fix a bug fast${color.reset}
+     ${color.cyan}/bugfix${color.reset}      ${color.dim}Fix a bug fast${color.reset}
      ${color.dim}Rules and skills are modular — use with or without workflows.${color.reset}
 
   ${icons.shield}  ${color.dim}Learn more: ${color.cyan}https://github.com/${REPO_OWNER}/${REPO_NAME}${color.reset}

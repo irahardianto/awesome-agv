@@ -7,7 +7,7 @@ nav_order: 5
 # Workflows Reference
 {: .no_toc }
 
-All 11 development workflows — from feature delivery to code audits.
+All 12 development workflows — from feature delivery to code audits.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -23,24 +23,24 @@ All 11 development workflows — from feature delivery to code audits.
 
 Workflows are structured, multi-phase development processes defined in `.agents/workflows/`. They chain rules and skills together into repeatable, quality-enforced development cycles.
 
-Each workflow is invoked as a **slash command** (e.g., `/orchestrator`, `/quick-fix`) and guides the agent through specific phases with completion criteria at each step.
+Each workflow is invoked as a **slash command** (e.g., `/workflow-solo`, `/bugfix`) and guides the agent through specific phases with completion criteria at each step.
 
 ### Choosing the Right Workflow
 
 | Situation                      | Workflow                            |
 | ------------------------------ | ----------------------------------- |
-| Building a new feature         | `/orchestrator`                     |
-| Fixing a known bug (<50 lines) | `/quick-fix`                        |
+| Building a new feature         | `/workflow-solo`                     |
+| Fixing a bug                   | `/bugfix`                           |
 | Restructuring code             | `/refactor`                         |
 | Reviewing code quality         | `/audit`                            |
 | Optimizing performance         | `/perf-optimize`                    |
-| Running a single phase         | `/1-research`, `/2-implement`, etc. |
+| Multi-agent orchestration      | `/workflow-team`                            |
 
 ---
 
-## 🏭 Feature Workflow (`/orchestrator`)
+## 🏭 Feature Workflow — Single Agent (`/workflow-solo`)
 
-**File:** `.agents/workflows/orchestrator.md`
+**File:** `.agents/workflows/workflow-solo.md`
 
 The primary workflow for building features. Treats the development lifecycle as a **state machine** — no phase can be skipped.
 
@@ -78,9 +78,9 @@ If a phase fails:
 
 ---
 
-## Phase 1: Research (`/1-research`)
+## Phase 1: Research
 
-**File:** `.agents/workflows/1-research.md`
+**File:** `.agents/workflows/phase-research.md`
 
 Understand the request context and gather knowledge before writing any code.
 
@@ -101,9 +101,9 @@ Understand the request context and gather knowledge before writing any code.
 
 ---
 
-## Phase 2: Implement (`/2-implement`)
+## Phase 2: Implement
 
-**File:** `.agents/workflows/2-implement.md`
+**File:** `.agents/workflows/phase-implement.md`
 
 Write production code following Test-Driven Development (TDD).
 
@@ -124,9 +124,9 @@ Write production code following Test-Driven Development (TDD).
 
 ---
 
-## Phase 3: Integrate (`/3-integrate`)
+## Phase 3: Integrate
 
-**File:** `.agents/workflows/3-integrate.md`
+**File:** `.agents/workflows/phase-integrate.md`
 
 Test adapter implementations with real infrastructure using Testcontainers.
 
@@ -143,9 +143,9 @@ Test adapter implementations with real infrastructure using Testcontainers.
 
 ---
 
-## Phase 3.5: E2E Test (`/e2e-test`)
+## Phase 3.5: E2E Test
 
-**File:** `.agents/workflows/e2e-test.md`
+**File:** `.agents/workflows/phase-e2e.md`
 
 Validate complete user journeys through the full system using Playwright MCP.
 
@@ -167,9 +167,9 @@ Validate complete user journeys through the full system using Playwright MCP.
 
 ---
 
-## Phase 4: Verify (`/4-verify`)
+## Phase 4: Verify
 
-**File:** `.agents/workflows/4-verify.md`
+**File:** `.agents/workflows/phase-verify.md`
 
 Run all linters, static analysis, and tests to ensure code quality.
 
@@ -203,9 +203,9 @@ pnpm run build
 
 ---
 
-## Phase 5: Ship (`/5-commit`)
+## Phase 5: Ship
 
-**File:** `.agents/workflows/5-commit.md`
+**File:** `.agents/workflows/phase-commit.md`
 
 Commit completed work with proper conventional commit format.
 
@@ -228,22 +228,23 @@ Commit completed work with proper conventional commit format.
 
 ---
 
-## 🔧 Quick-Fix Workflow (`/quick-fix`)
+## 🔧 Bug-Fix Workflow (`/bugfix`)
 
-**File:** `.agents/workflows/quick-fix.md`
+**File:** `.agents/workflows/bugfix.md`
 
-Fast-track bug fixes and small changes (<50 lines) that don't require full research or integration phases.
+Fix bugs of any size — from hotfixes to complex debugging sessions — without the overhead of a full feature workflow.
 
 ### When to Use
-- Bug fixes with a known root cause
-- Small, isolated changes
+- Bug fixes (any size, any complexity)
 - Hotfixes for production issues
 - Addressing review findings from `/audit`
+- Regression fixes after deployments
+- Flaky test fixes
 
 ### Phases
-1. **Diagnose** — identify the bug, locate affected code, optionally use Debugging Protocol skill
-2. **Fix + Test (TDD)** — write failing test, apply fix, verify existing tests pass
-3. **Verify + Ship** — full validation suite, commit with `fix` type
+1. **Diagnose** — identify the bug, locate affected code, assess blast radius. Use **Debugging Protocol** for non-obvious causes, **Sequential Thinking** for multi-hypothesis evaluation
+2. **Fix + Test (TDD)** — write failing test, apply fix, verify existing tests pass, update integration tests if boundaries touched
+3. **Verify + Ship** — full validation suite, E2E if UI was touched, commit with `fix` type
 
 ---
 
@@ -314,9 +315,9 @@ A **menu of dimensions** — activate only those that apply to the project, and 
 | Finding Type       | Example                        | Follow-Up                           |
 | ------------------ | ------------------------------ | ----------------------------------- |
 | Nit / minor        | "Rename `x` to `userCount`"    | Fix directly                        |
-| Small isolated fix | "Add input validation"         | `/quick-fix` in new conversation    |
+| Small isolated fix | "Add input validation"         | `/bugfix` in new conversation    |
 | Structural change  | "Storage not behind interface" | `/refactor` in new conversation     |
-| Missing capability | "No auth on admin routes"      | `/orchestrator` in new conversation |
+| Missing capability | "No auth on admin routes"      | `/workflow-solo` in new conversation |
 
 ### Best Practice
 Run audits in a **fresh conversation** (not the one that wrote the code) to avoid confirmation bias.

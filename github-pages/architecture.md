@@ -146,8 +146,8 @@ When rules conflict, the priority system resolves them:
 │  Workflows                                  │
 │  (Orchestrate the development lifecycle)    │
 │                                             │
-│  /orchestrator → /1-research → /2-implement │
-│  → /3-integrate → /4-verify → /5-commit     │
+│  /workflow-solo → phase-research → phase-implement │
+│  → phase-integrate → phase-verify → phase-commit     │
 ├─────────────────────────────────────────────┤
 │  Skills                                      │
 │  (Activated within workflows on demand)      │

@@ -94,7 +94,7 @@ internal/
 
 **Adaptation steps:**
 1. Edit `project-structure.md` — remove `apps/backend/` prefix
-2. Edit `4-verify.md` — update paths in validation commands
+2. Edit `phase-verify.md` — update paths in validation commands
 3. Remove frontend-related rules if not needed
 
 ---
@@ -122,7 +122,7 @@ src/
 
 **Adaptation steps:**
 1. Edit `project-structure.md` — remove `apps/frontend/` prefix
-2. Edit `4-verify.md` — remove backend validation commands
+2. Edit `phase-verify.md` — remove backend validation commands
 3. Remove backend-specific rules if not needed (database design, etc.)
 
 ---
@@ -269,13 +269,13 @@ pytest --cov=src
 ### Solo Developer
 
 The full setup works well for solo developers. Consider:
-- Use `/quick-fix` for most changes (faster than full `/orchestrator`)
+- Use `/bugfix` for most changes (faster than full `/workflow-solo`)
 - Skip E2E tests unless building a user-facing feature
 - Use `/audit` periodically instead of on every commit
 
 ### Small Team (2-5)
 
-- Use `/orchestrator` for all features
+- Use `/workflow-solo` for all features
 - Use `/audit` for cross-review (one person's agent reviews another's code)
 - ADRs are critical — they preserve decisions across team members
 - Research logs prevent re-research by different team members
@@ -335,6 +335,6 @@ When adapting, these are the only files you typically need to change:
 | `project-structure.md`          | Directory layout, app paths                 |
 | `project-structure-{lang}.md`   | Language-specific directory layout          |
 | `{lang}-idioms-and-patterns.md` | Language patterns, tooling, conventions     |
-| `4-verify.md`                   | Validation commands for your languages      |
+| `phase-verify.md`                   | Validation commands for your languages      |
 | `code-completion-mandate.md`    | Quality commands (delegates to idiom files) |
 | Add/remove rule files           | Rules for your specific needs               |

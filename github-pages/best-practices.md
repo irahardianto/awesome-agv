@@ -27,10 +27,10 @@ Each conversation should have a single, focused purpose:
 
 | Task                  | Conversation                                      |
 | --------------------- | ------------------------------------------------- |
-| Building a feature    | New conversation with `/orchestrator`             |
-| Fixing a bug          | New conversation with `/quick-fix`                |
+| Building a feature    | New conversation with `/workflow-solo`             |
+| Fixing a bug          | New conversation with `/bugfix`                |
 | Reviewing code        | New conversation with `/audit`                    |
-| Fixing audit findings | New conversation with `/quick-fix` or `/refactor` |
+| Fixing audit findings | New conversation with `/bugfix` or `/refactor` |
 
 **Why?** Fresh conversations avoid confirmation bias. An agent reviewing code it just wrote will be less effective than one seeing it for the first time.
 
@@ -50,11 +50,11 @@ The agent can read the file directly — no need to copy-paste findings.
 
 ```
 Is this a new feature?
-├── Yes → /orchestrator
+├── Yes → /workflow-solo
 └── No
     ├── Is it a bug fix?
-    │   ├── Known root cause, <50 lines? → /quick-fix
-    │   └── Complex or unknown root cause? → /orchestrator (with debugging)
+    │   ├── Bug fix? → /bugfix
+    │   └── Complex or unknown root cause? → /workflow-solo (with debugging)
     ├── Is it restructuring?
     │   ├── Specific goal? → /refactor
     │   └── "Find what to improve"? → /audit first, then /refactor
@@ -63,7 +63,7 @@ Is this a new feature?
 
 ### Don't Skip the Research Phase
 
-The Research phase (`/1-research`) exists because:
+The Research phase (`/phase-research`) exists because:
 - AI agents produce better code when they understand the full context
 - Documentation search prevents relying on stale training data
 - Research logs create institutional knowledge for future conversations
@@ -130,9 +130,9 @@ Skills are not auto-activated — they're procedural guides that the agent follo
 
 Some workflows automatically suggest skills:
 
-- `/orchestrator` Phase 1 → **Sequential Thinking** for complex decisions
-- `/orchestrator` Phase 2 → **Guardrails** (pre-flight + self-review)
-- `/orchestrator` Phase 2 → **Debugging Protocol** if tests fail unexpectedly
+- `/workflow-solo` Phase 1 → **Sequential Thinking** for complex decisions
+- `/workflow-solo` Phase 2 → **Guardrails** (pre-flight + self-review)
+- `/workflow-solo` Phase 2 → **Debugging Protocol** if tests fail unexpectedly
 - `/audit` Phase 1 → **Code Review** (always)
 - `/refactor` Phase 1 → **Sequential Thinking** for multi-step refactoring
 
@@ -217,9 +217,8 @@ services/
 Don't override `always_on` rules without understanding the consequences. Security and logging mandates exist for critical reasons.
 
 ### 2. Skipping Phases for Speed
-The `/orchestrator` workflow forbids phase-skipping. If a phase feels unnecessary, use a specialized workflow instead:
-- No integration needed? Use `/quick-fix` (skips integration phase)
-- No research needed? Use `/quick-fix` (skips research phase)
+The `/workflow-solo` workflow forbids phase-skipping. If a phase feels unnecessary, use a specialized workflow instead:
+- Bug fix, not a new feature? Use `/bugfix` (lean 3-phase flow without research overhead)
 
 ### 3. Mixing Concerns in Conversations
 One conversation = one workflow = one purpose. Don't audit and fix in the same conversation.
