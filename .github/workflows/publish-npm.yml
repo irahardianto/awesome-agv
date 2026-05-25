@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for npm provenance
+      id-token: write # Required for OIDC Trusted Publishing
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,7 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          registry-url: "https://registry.npmjs.org"
+          # NOTE: Do NOT set registry-url here. It creates an .npmrc with
+          # _authToken=${NODE_AUTH_TOKEN} which conflicts with OIDC auth.
+          # npm defaults to registry.npmjs.org.
+
+      - name: Upgrade npm to latest (>=11.5.1 required for Trusted Publishing)
+        run: npm install -g npm@latest
+
+      - name: Verify npm version
+        run: npm --version
 
       - name: Set version from git tag
         run: |
@@ -30,6 +38,6 @@ jobs:
       - name: Copy README for npm package
         run: cp README.md cli/README.md
 
-      - name: Publish to npm with provenance (Trusted Publishing)
+      - name: Publish to npm (Trusted Publishing via OIDC)
         run: npm publish --provenance --access public
         working-directory: ./cli
