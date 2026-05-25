@@ -1,5 +1,5 @@
 ---
-description: End-to-end testing with Playwright MCP
+description: "Phase — not invoked directly. Used by /workflow-solo. E2E: end-to-end testing with Playwright MCP"
 ---
 
 # E2E Testing Workflow

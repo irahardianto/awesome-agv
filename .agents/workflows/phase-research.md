@@ -1,5 +1,5 @@
 ---
-description: Research phase - understand context and gather knowledge
+description: "Phase \u2014 not invoked directly. Used by /workflow-solo. Research: understand context and gather knowledge"
 ---
 
 # Phase 1: Research
@@ -112,4 +112,4 @@ If no documentation search tool yields results:
 - [ ] Architecture decisions documented as ADRs (if applicable)
 
 ## Next Phase
-Proceed to **Phase 2: Implement** (`/2-implement`)
+Proceed to **Phase 2: Implement** (`phase-implement.md`)

@@ -15,8 +15,8 @@ Inspect existing code quality and produce structured findings. This workflow doe
 - After addressing review findings, to verify the fixes
 
 ## When NOT to Use
-- When writing new features (use `/orchestrator`)
-- When fixing known bugs (use `/quick-fix`)
+- When writing new features (use `/workflow-solo`)
+- When fixing known bugs (use `/bugfix`)
 - When restructuring code (use `/refactor`)
 
 ## Pre-Audit Checklist
@@ -139,7 +139,7 @@ At the start of this phase you MUST state:
 ### Phase 2: Automated Verification
 **Set Mode:** Use `task_boundary` to set mode to **VERIFICATION**
 
-Run the full validation suite (same as `/4-verify`):
+Run the full validation suite (same as `phase-verify.md`):
 1. Linters and static analysis
 2. Full test suite
 3. Build check
@@ -207,9 +207,9 @@ After the audit produces findings, choose the right workflow based on finding ty
 | Finding Type                                                                        | Example                              | Workflow                              |
 | ----------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------- |
 | **Nit / minor** (naming, formatting, missing comment)                               | "Rename `x` to `userCount`"          | Fix in this conversation directly     |
-| **Small isolated fix** (missing log, error handling, validation)                    | "Add input validation on handler"    | `/quick-fix` in a new conversation    |
+| **Small isolated fix** (missing log, error handling, validation)                    | "Add input validation on handler"    | `/bugfix` in a new conversation    |
 | **Structural change** (wrong abstraction, missing interface, pattern inconsistency) | "Storage not behind interface"       | `/refactor` in a new conversation     |
-| **Missing capability** (new endpoint, feature, auth check)                          | "No auth middleware on admin routes" | `/orchestrator` in a new conversation |
+| **Missing capability** (new endpoint, feature, auth check)                          | "No auth middleware on admin routes" | `/workflow-solo` in a new conversation |
 
 ### Using Findings in Other Contexts
 When starting a fix workflow in a new conversation, reference the persisted report:

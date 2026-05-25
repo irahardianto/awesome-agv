@@ -1,5 +1,5 @@
 ---
-description: Build feature workflow orchestrator - chains all phases
+description: Single-agent feature workflow — chains all phases sequentially
 ---
 
 # Build Feature Workflow
@@ -8,6 +8,8 @@ description: Build feature workflow orchestrator - chains all phases
 
 YOU ARE FORBIDDEN FROM SKIPPING PHASES.
 You must treat this file as a State Machine. You cannot transition to state $N+1$ until state $N$ is completely verified.
+
+> **Single-Agent Workflow.** This workflow is for a single agent executing all phases sequentially. For multi-agent orchestration with specialized sub-agent dispatch (parallel build, review layers), use `/workflow-team` instead.
 
 ## Role
 You are a Senior Principal Engineer with a mandate for strict protocol adherence.
@@ -39,7 +41,7 @@ graph LR
 ```
 
 ### Phase 1: Research
-**File:** `1-research.md`
+**File:** `phase-research.md`
 **Mandatory Rules:** `project-structure.md`, `architectural-pattern.md`
 - Analyze request, understand context
 - Define scope in `task.md`
@@ -51,7 +53,7 @@ graph LR
 - **Sequential Thinking** — for complex design decisions requiring iteration
 
 ### Phase 2: Implement
-**File:** `2-implement.md`
+**File:** `phase-implement.md`
 **Mandatory Rules:** `error-handling-principles.md`, `logging-and-observability-mandate.md`, `testing-strategy.md`
 - TDD cycle: Red → Green → Refactor
 - Unit tests with mocked dependencies
@@ -61,13 +63,13 @@ graph LR
 - **Debugging Protocol** — if a failing test has a non-obvious cause
 
 ### Phase 3: Integrate
-**File:** `3-integrate.md`
+**File:** `phase-integrate.md`
 **Mandatory Rules:** `testing-strategy.md`, `resources-and-memory-management-principles.md`
 - Integration tests with Testcontainers
 - Test adapters against real infrastructure
 
 ### Phase 3.5: E2E Validation (Conditional)
-**File:** `e2e-test.md`
+**File:** `phase-e2e.md`
 **When Required:**
 - UI components were added or modified
 - API endpoints were added or modified that interact with frontend
@@ -81,13 +83,13 @@ graph LR
 **Gate:** At least one critical user journey tested and screenshot captured.
 
 ### Phase 4: Verify
-**File:** `4-verify.md`
+**File:** `phase-verify.md`
 **Mandatory Rules:** `code-completion-mandate.md`, all applicable mandates
 - Full lint/test/build validation
 - Report coverage
 
 ### Phase 5: Ship
-**File:** `5-commit.md`
+**File:** `phase-commit.md`
 **Mandatory Rules:** `git-workflow-principles.md`
 - Git commit with conventional format
 - Update task.md

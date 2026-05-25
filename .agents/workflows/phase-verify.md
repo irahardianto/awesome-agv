@@ -1,5 +1,5 @@
 ---
-description: Verify phase - run full validation suite
+description: "Phase — not invoked directly. Used by /workflow-solo. Verify: run full validation suite"
 ---
 
 # Phase 4: Verify
@@ -84,4 +84,4 @@ pnpm run test -- --coverage
 Mark task as `[x]` in task.md (verification passed = task complete).
 
 ## Next Phase
-Proceed to **Phase 5: Ship** (`/5-commit`)
+Proceed to **Phase 5: Ship** (`phase-commit.md`)

@@ -1,5 +1,5 @@
 ---
-description: Git commit with conventional format
+description: "Phase — not invoked directly. Used by /workflow-solo. Ship: git commit with conventional format"
 ---
 
 # Ship: Commit

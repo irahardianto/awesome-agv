@@ -1,5 +1,5 @@
 ---
-description: Implement phase - TDD cycle for writing code
+description: "Phase — not invoked directly. Used by /workflow-solo. Implement: TDD cycle for writing code"
 ---
 
 # Phase 2: Implement
@@ -98,4 +98,4 @@ pnpm run test -- --coverage
 
 
 ## Next Phase
-Proceed to **Phase 3: Integrate** (`/3-integrate`)
+Proceed to **Phase 3: Integrate** (`phase-integrate.md`)

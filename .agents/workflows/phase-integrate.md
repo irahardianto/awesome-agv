@@ -1,5 +1,5 @@
 ---
-description: Integrate phase - test adapters with real infrastructure
+description: "Phase — not invoked directly. Used by /workflow-solo. Integrate: test adapters with real infrastructure"
 ---
 
 # Phase 3: Integrate
@@ -92,4 +92,4 @@ go test -v ./...
 - [ ] Database queries verified against real PostgreSQL
 
 ## Next Phase
-Proceed to **Phase 4: Verify** (`/4-verify`)
+Proceed to **Phase 4: Verify** (`phase-verify.md`)
