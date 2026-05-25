@@ -33,6 +33,7 @@ The authoritative commands for each language live in the corresponding idiom fil
 | **Vue 3**            | @vue-idioms-and-patterns.md        | § Linting and Type Checking      |
 | **Flutter / Dart**   | @flutter-idioms-and-patterns.md    | § Linting and Formatting         |
 | **Rust**             | @rust-idioms-and-patterns.md       | § Clippy and Formatting          |
+| **Python**           | @python-idioms-and-patterns.md     | § Formatting and Static Analysis |
 
 ### Failure Protocol
 
