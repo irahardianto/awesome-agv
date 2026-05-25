@@ -114,9 +114,17 @@ Load the anti-pattern checklist for the language(s) under review:
 | Language | Anti-Patterns |
 |---|---|
 | **Go** | `languages/go.md` |
-| **TypeScript** | `languages/typescript.md` *(placeholder — create when needed)* |
-| **Flutter/Dart** | `languages/flutter.md` *(placeholder — create when needed)* |
-| **Rust** | `languages/rust.md` *(placeholder — create when needed)* |
+| **TypeScript** | `languages/typescript.md` |
+| **Python** | `languages/python.md` |
+| **Rust** | `languages/rust.md` |
+| **Java** | `languages/java.md` |
+| **C#** | `languages/csharp.md` |
+| **Swift** | `languages/swift.md` |
+| **Flutter/Dart** | `languages/flutter.md` |
+| **C++** | `languages/cpp.md` |
+| **Kotlin** | `languages/kotlin.md` |
+| **PHP** | `languages/php.md` |
+| **Ruby** | `languages/ruby.md` |
 
 > Anti-patterns listed in language files are **auto-fail** — they require no judgment call. If the pattern exists in the code, it is a finding.
 
