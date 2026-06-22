@@ -24,7 +24,9 @@ Load from `.agents/skills/` as needed: research-methodology, sql-idioms
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: database-design-principles,
-performance-optimization-principles, logging-and-observability-principles
+performance-optimization-principles
+
+Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
 
 ## Boundaries (DO NOT CROSS)
 No application code. No API handlers. No frontend/mobile. No CI/CD. No security audits.

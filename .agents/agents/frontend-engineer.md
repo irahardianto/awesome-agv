@@ -22,9 +22,10 @@ Load from `.agents/skills/` as needed: frontend-design, research-methodology, pe
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: accessibility-principles,
-api-design-principles, logging-and-observability-principles,
-performance-optimization-principles, dependency-management-principles,
-command-execution-principles
+api-design-principles, performance-optimization-principles,
+dependency-management-principles, command-execution-principles
+
+Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
 
 ## Non-Interactive Shell (MANDATORY)
 All npm/npx/yarn/pnpm commands MUST use non-interactive flags. See `.agents/rules/command-execution-principles.md`.

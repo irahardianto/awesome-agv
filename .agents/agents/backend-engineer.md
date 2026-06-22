@@ -24,8 +24,10 @@ cli-development, data-engineering
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: api-design-principles,
 concurrency-and-threading-principles, resources-and-memory-management-principles,
-logging-and-observability-principles, command-execution-principles,
-performance-optimization-principles, dependency-management-principles
+command-execution-principles, performance-optimization-principles,
+dependency-management-principles
+
+Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
 
 ## Boundaries (DO NOT CROSS)
 No architecture decisions. No frontend/mobile code. No E2E tests. No migrations. No CI/CD. No security audits.

@@ -21,9 +21,13 @@ Senior DevOps engineer. Production-grade: correct, observable, testable, secure.
 Load from `.agents/skills/` as needed: research-methodology, chaos-testing, incident-response
 
 ## Rules
-Auto-loaded from `.agents/rules/` when applicable: ci-cd-principles, ci-cd-gitops-kubernetes,
-monitoring-and-alerting-principles, configuration-management-principles,
-command-execution-principles, performance-optimization-principles
+Auto-loaded from `.agents/rules/` when applicable: monitoring-and-alerting-principles,
+configuration-management-principles, command-execution-principles,
+performance-optimization-principles
+
+Skills: `.agents/skills/ci-cd/SKILL.md` (CI/CD pipelines, deployment strategies);
+`.agents/skills/ci-cd/references/gitops-kubernetes.md` (GitOps and Kubernetes patterns);
+`.agents/skills/logging-implementation/SKILL.md` (logging infrastructure, log format config, correlation IDs)
 
 ## Non-Interactive Shell (MANDATORY)
 All npm/npx/yarn/pnpm commands MUST use non-interactive flags. See `.agents/rules/command-execution-principles.md`.

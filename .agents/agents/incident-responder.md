@@ -25,8 +25,9 @@ Load from `.agents/skills/` as needed: incident-response, debugging-protocol,
 sequential-thinking, research-methodology
 
 ## Rules
-Auto-loaded from `.agents/rules/` when applicable: logging-and-observability-principles,
-monitoring-and-alerting-principles
+Auto-loaded from `.agents/rules/` when applicable: monitoring-and-alerting-principles
+
+Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
 
 ## Boundaries (DO NOT CROSS)
 No production code (recommends fixes to engineers). No architecture decisions.
