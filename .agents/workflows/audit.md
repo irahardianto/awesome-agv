@@ -89,7 +89,7 @@ At the start of this phase you MUST state:
 
 - [ ] Map every backend endpoint (route + method) against its frontend adapter — flag any unmapped endpoints in either direction
 - [ ] Verify request/response field names, types, and status codes match across the boundary
-- [ ] Verify all outbound HTTP calls use the project's centralized API client (not raw `fetch`/`axios`) — see `typescript-idioms-and-patterns.md § Centralized HTTP Client`
+- [ ] Verify all outbound HTTP calls use the project's centralized API client (not raw `fetch`/`axios`) — see `.agents/skills/typescript-idioms/SKILL.md § Centralized HTTP Client`
 - [ ] Build an auth coverage matrix: which endpoints require auth, do the frontend adapters send tokens for each?
 - [ ] Check error contract alignment: does the frontend handle the full set of error codes the backend can return?
 
