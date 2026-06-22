@@ -22,4 +22,4 @@ For implementation details (race condition prevention, deadlock avoidance, messa
 ### Related Principles
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md
 - Performance Optimization Principles @performance-optimization-principles.md
-- Rust Idioms and Patterns @rust-idioms-and-patterns.md
+- Rust Idioms and Patterns @.agents/skills/rust-idioms/SKILL.md

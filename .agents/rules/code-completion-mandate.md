@@ -24,16 +24,16 @@ Every code generation task follows this workflow:
 
 ### Language-Specific Quality Commands
 
-The authoritative commands for each language live in the corresponding idiom file — this keeps the work of maintaining them close to the language expertise. Load the relevant file to get the exact commands to run:
+The authoritative commands for each language live in the corresponding idiom skill. Load the relevant skill to get the exact commands to run:
 
-| Language             | Idiom File                         | Commands Section                 |
-| -------------------- | ---------------------------------- | -------------------------------- |
-| **Go**               | @go-idioms-and-patterns.md         | § Formatting and Static Analysis |
-| **TypeScript / Vue** | @typescript-idioms-and-patterns.md | § Formatting and Static Analysis |
-| **Vue 3**            | @vue-idioms-and-patterns.md        | § Linting and Type Checking      |
-| **Flutter / Dart**   | @flutter-idioms-and-patterns.md    | § Linting and Formatting         |
-| **Rust**             | @rust-idioms-and-patterns.md       | § Clippy and Formatting          |
-| **Python**           | @python-idioms-and-patterns.md     | § Formatting and Static Analysis |
+| Language             | Skill                                        | Commands Section                 |
+| -------------------- | -------------------------------------------- | -------------------------------- |
+| **Go**               | `.agents/skills/go-idioms/SKILL.md`          | § Formatting and Static Analysis |
+| **TypeScript / Vue** | `.agents/skills/typescript-idioms/SKILL.md`  | § Formatting and Static Analysis |
+| **Vue 3**            | `.agents/skills/vue-idioms/SKILL.md`         | § Linting and Type Checking      |
+| **Flutter / Dart**   | `.agents/skills/flutter-idioms/SKILL.md`     | § Linting and Formatting         |
+| **Rust**             | `.agents/skills/rust-idioms/SKILL.md`        | § Clippy and Formatting          |
+| **Python**           | `.agents/skills/python-idioms/SKILL.md`      | § Formatting and Static Analysis |
 
 ### Failure Protocol
 

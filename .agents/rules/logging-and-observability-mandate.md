@@ -4,13 +4,9 @@ trigger: always_on
 
 ## Logging and Observability Mandate
 
-### Observability Overview
+### Scope
 
-Observability is built on **three pillars** — this mandate governs Logs. For Metrics and Health Checks, see Monitoring and Alerting Principles @monitoring-and-alerting-principles.md.
-
-1. **Logs** — *What happened* (events, errors, state changes) — governed by this file
-2. **Metrics** — *How much / how many* (quantitative measurements, RED/USE) — see `monitoring-and-alerting-principles.md`
-3. **Traces** — *How did it happen* (request flow through system) — platform-level concern (OpenTelemetry, Jaeger)
+This mandate governs **Logs only**. For Metrics and Health Checks, see `monitoring-and-alerting-principles.md`. For distributed traces, see your observability platform (OpenTelemetry).
 
 ### Universal Requirement: All Operations Must Be Logged
 
@@ -49,10 +45,10 @@ Prefer middleware, decorators, or framework interceptors for automatic operation
 
 ### Implementation Guide
 
-For log levels, structured logging patterns, language-specific implementations, security considerations, and code examples, see Logging and Observability Principles @logging-and-observability-principles.md.
+For log levels, structured logging patterns, language-specific implementations, security considerations, and code examples, see the `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md.
 
 ### Related Principles
-- Logging and Observability Principles @logging-and-observability-principles.md
+- `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md
 - Monitoring and Alerting Principles @monitoring-and-alerting-principles.md
 - Error Handling Principles @error-handling-principles.md
 - API Design Principles @api-design-principles.md

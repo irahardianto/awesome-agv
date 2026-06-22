@@ -80,7 +80,7 @@ are the same. The specific client library belongs in project-level configuration
 
 ### Related Principles
 - Logging and Observability Mandate @logging-and-observability-mandate.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md
 - Error Handling Principles @error-handling-principles.md
 - Resource and Memory Management Principles @resources-and-memory-management-principles.md
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md

@@ -46,6 +46,6 @@ description: When implementing authentication, authorization, input validation, 
 - Error Handling Principles @error-handling-principles.md
 - API Design Principles @api-design-principles.md
 - Logging and Observability Mandate @logging-and-observability-mandate.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md
 - Configuration Management Principles @configuration-management-principles.md
 - Command Execution Principles @command-execution-principles.md

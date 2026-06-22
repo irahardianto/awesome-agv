@@ -84,8 +84,8 @@ description: When writing tests, organizing test files, implementing test double
   - **Java:** `*Test.java` (Unit), `*IT.java` (Integration)
   - **Rust:** `#[cfg(test)] mod tests` inline in each `.rs` file (Unit), `tests/` directory at crate root (Integration)
   > You must strictly follow the convention for the target language. Do not mix `test` and `spec` suffixes in the same application context.
-  > **Language-specific overrides:** Some ecosystems have different test location conventions. When a language-specific project structure file exists (e.g., `project-structure-flutter-mobile.md`, `project-structure-rust-cargo.md`), its test location rules take precedence over the co-location default. See `architectural-pattern.md` § Test co-location for the authoritative rule.
-  > **Rust exception:** Rust unit tests are **inline** (`#[cfg(test)] mod tests` at the bottom of each `.rs` file), not separate files. This is the official Rust convention — it enables testing private functions and is how `cargo test` discovers unit tests. Integration tests go in `tests/` at the crate root, compiled as separate crates. See `rust-idioms-and-patterns.md` for details.
+  > **Language-specific overrides:** Some ecosystems have different test location conventions. For Flutter, see the flutter-idioms skill's project-structure reference. For Rust, see the rust-idioms skill's project-structure reference. Their test location rules take precedence over the co-location default. See `architectural-pattern.md` § Test co-location for the authoritative rule.
+  > **Rust exception:** Rust unit tests are **inline** (`#[cfg(test)] mod tests` at the bottom of each `.rs` file), not separate files. This is the official Rust convention — it enables testing private functions and is how `cargo test` discovers unit tests. Integration tests go in `tests/` at the crate root, compiled as separate crates. See the `rust-idioms` skill for details.
 
 **2. End-to-End Tests (Separate)**
 - **Rule:** Place in a dedicated `e2e/` folder
@@ -99,34 +99,7 @@ description: When writing tests, organizing test files, implementing test double
     - `user-registration-api.e2e.test.ts`       # Full API flow: HTTP → DB
     - `user-registration-ui.e2e.test.ts`        # Full-stack: Browser → Backend → DB
 
-**Using Playwright MCP for UI E2E Tests:**
-
-When running E2E tests interactively (during development or verification), use Playwright MCP:
-
-```
-# Navigate to the page
-mcp_playwright_browser_navigate(url="http://localhost:5173/login")
-
-# Capture accessible state (better than screenshot for assertions)
-mcp_playwright_browser_snapshot()
-
-# Interact with elements by ref from snapshot
-mcp_playwright_browser_type(ref="<ref>", text="test@example.com")
-mcp_playwright_browser_click(ref="<ref>")
-
-# Wait for results
-mcp_playwright_browser_wait_for(text="Welcome")
-
-# Capture snapshot for walkthrough documentation (captures full accessibility tree)
-mcp_playwright_browser_snapshot(filename="login-success.md")
-```
-
-**E2E Test Requirements:**
-- Capture a snapshot (`mcp_playwright_browser_snapshot`) at each major step
-- Save snapshots to walkthrough as proof of functionality
-- If visual proof is needed, use `browser_subagent` with `RecordingName` to produce a recorded video artifact
-- Test happy path AND at least one error path
-- Clean up test data after test (or use unique identifiers)
+**For interactive E2E testing (development or verification), see the `browser-automation` skill** — it covers Playwright MCP navigation, snapshot capture, element interaction, and E2E requirements.
 
 **Key Principles:**
 - **Unit/Integration tests**: Co-located with implementation

@@ -102,9 +102,9 @@ production:
   password: <%= ENV['PROD_DB_PASSWORD'] %>
 ```
 
-> **Note:** Feature flag configuration is a distinct, PRD-gated concern — not routine application configuration. See Feature Flags Principles @feature-flags-principles.md for when and how feature flags are used.
+> **Note:** Feature flag configuration is a distinct, PRD-gated concern — not routine application configuration. See the `feature-flags` skill @.agents/skills/feature-flags/SKILL.md for when and how feature flags are used.
 
 ### Related Principles
 - Security Mandate @security-mandate.md
 - Security Principles @security-principles.md
-- Feature Flags Principles @feature-flags-principles.md
+- `feature-flags` skill @.agents/skills/feature-flags/SKILL.md
