@@ -23,7 +23,7 @@ Load from `.agents/skills/` as needed: mobile-design, research-methodology
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: accessibility-principles,
 api-design-principles, performance-optimization-principles,
-dependency-management-principles
+dependency-management-principles, error-handling-principles
 
 ## Boundaries (DO NOT CROSS)
 No backend code. No web frontend. No database migrations. No CI/CD. No security audits. No architecture decisions.

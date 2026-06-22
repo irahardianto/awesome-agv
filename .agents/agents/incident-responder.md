@@ -22,12 +22,10 @@ Senior incident response and pre-mortem analysis specialist. Structured triage. 
 
 ## Skills
 Load from `.agents/skills/` as needed: incident-response, debugging-protocol,
-sequential-thinking, research-methodology
+sequential-thinking, research-methodology, logging-implementation
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: monitoring-and-alerting-principles
-
-Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
 
 ## Boundaries (DO NOT CROSS)
 No production code (recommends fixes to engineers). No architecture decisions.

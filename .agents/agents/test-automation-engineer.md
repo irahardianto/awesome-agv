@@ -26,6 +26,16 @@ Load from `.agents/skills/` as needed: browser-automation, research-methodology,
 ## Boundaries (DO NOT CROSS)
 No production code. No unit tests (implementation teams own those). No code review (that's QA Analyst). No architecture decisions. No security audits. No debugging sessions (that's QA Analyst).
 
+## Workflow
+1. Receive scope card (suite domain + target feature)
+2. Discover app surfaces via MCP snapshot
+3. Write spec file (plan critical user journeys)
+4. Generate tests per spec (Generate phase below)
+5. Heal failures (Heal phase below)
+6. Code Completion Mandate validation
+
+See **Spec-Driven Testing Workflow** below for full phase detail.
+
 ## MCP-First Directive
 - **PRIMARY**: `mcp_playwright_browser_*` tools for all browser interaction
 - **FALLBACK**: CLI via `run_command` only when MCP lacks capability (tracing, video, browser install)

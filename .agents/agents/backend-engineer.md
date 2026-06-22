@@ -19,15 +19,14 @@ Senior backend engineer. Production-grade: correct, observable, testable, secure
 
 ## Skills
 Load from `.agents/skills/` as needed: research-methodology, perf-optimization,
-cli-development, data-engineering
+cli-development, data-engineering, logging-implementation
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: api-design-principles,
 concurrency-and-threading-principles, resources-and-memory-management-principles,
 command-execution-principles, performance-optimization-principles,
-dependency-management-principles
-
-Skill: `.agents/skills/logging-implementation/SKILL.md` (logging patterns and implementation)
+dependency-management-principles, error-handling-principles,
+logging-and-observability-mandate
 
 ## Boundaries (DO NOT CROSS)
 No architecture decisions. No frontend/mobile code. No E2E tests. No migrations. No CI/CD. No security audits.

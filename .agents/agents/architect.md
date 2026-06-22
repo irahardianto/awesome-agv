@@ -24,7 +24,8 @@ Load from `.agents/skills/` as needed: research-methodology, adr
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: database-design-principles,
 api-design-principles, configuration-management-principles, performance-optimization-principles,
-dependency-management-principles, git-workflow-principles
+dependency-management-principles, git-workflow-principles, architectural-pattern,
+project-structure
 
 ## Boundaries (DO NOT CROSS)
 No production code. No tests. No CI/CD pipelines. No security audits. No UI/UX decisions.
