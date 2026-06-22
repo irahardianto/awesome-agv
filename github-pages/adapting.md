@@ -194,7 +194,7 @@ Awesome AGV ships with **opinionated idiom files** for each supported language. 
 
 ### Go (Default Backend)
 
-Dedicated files: `go-idioms-and-patterns.md`, `project-structure-go-backend.md`
+Dedicated skill: `.agents/skills/go-idioms/SKILL.md`
 
 The rules are heavily optimized for Go with vanilla stdlib patterns. Covers error handling, interfaces, goroutines, naming, and testing.
 
@@ -209,7 +209,7 @@ go test -race ./...
 
 ### TypeScript / Vue (Default Frontend)
 
-Dedicated files: `typescript-idioms-and-patterns.md`, `vue-idioms-and-patterns.md`, `project-structure-vue-frontend.md`
+Dedicated skills: `.agents/skills/typescript-idioms/SKILL.md`, `.agents/skills/vue-idioms/SKILL.md`
 
 First-class support for TypeScript strict mode with Vue 3 Composition API, Pinia stores, and Vitest.
 
@@ -222,7 +222,7 @@ pnpm run test
 
 ### Flutter / Riverpod (Default Mobile)
 
-Dedicated files: `flutter-idioms-and-patterns.md`, `project-structure-flutter-mobile.md`
+Dedicated skill: `.agents/skills/flutter-idioms/SKILL.md`
 
 Riverpod state management, freezed immutable models, go_router navigation, and const widget optimization.
 
@@ -235,7 +235,7 @@ flutter test
 
 ### Rust (Default Systems)
 
-Dedicated files: `rust-idioms-and-patterns.md`, `project-structure-rust-cargo.md`
+Dedicated skill: `.agents/skills/rust-idioms/SKILL.md`
 
 Ownership patterns, `thiserror`/`anyhow` error handling, async with `tokio`, and clippy pedantic mode.
 
@@ -249,7 +249,7 @@ cargo audit
 
 ### Python (Default Scripting/AI)
 
-Dedicated files: `python-idioms-and-patterns.md`, `project-structure-python-backend.md`
+Dedicated skill: `.agents/skills/python-idioms/SKILL.md`
 
 Python backend patterns: `typing.Protocol` for interfaces, `pytest` fixtures, `Pydantic` models, virtual environments, and strict type checking.
 
@@ -326,7 +326,7 @@ If a rule doesn't apply to your project, you can safely delete it:
 | ------------------ | -------------------------------------------- |
 | Has no frontend    | `accessibility-principles.md`                |
 | Has no database    | `database-design-principles.md`              |
-| Has no CI/CD       | `ci-cd-principles.md`                        |
+| Has no CI/CD       | Delete or don't load `.agents/skills/ci-cd/` |
 | Is not a monorepo  | Adjust `project-structure.md` (don't delete) |
 
 **Never remove:**
@@ -343,13 +343,13 @@ These form the foundation that makes the entire system work.
 
 The idiom files are modular — you can swap or replace them to match your project's technology choices. Here's what to edit for common framework swaps:
 
-| If You Want To...                   | Files to Edit or Replace                                                                                 |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Swap Vue for React**              | Replace `vue-idioms-and-patterns.md` with a React idiom file, update `project-structure-vue-frontend.md` |
-| **Swap Riverpod for BLoC/Cubit**    | Edit `flutter-idioms-and-patterns.md` — replace Riverpod sections with BLoC patterns                     |
-| **Swap Go for Java/Node**           | Replace `go-idioms-and-patterns.md` and `project-structure-go-backend.md`                                |
-| **Swap tokio for async-std (Rust)** | Edit `rust-idioms-and-patterns.md` — replace tokio patterns with async-std equivalents                   |
-| **Add a new language entirely**     | Create `{lang}-idioms-and-patterns.md`, add to `code-idioms-and-conventions.md` table                    |
+| If You Want To...                   | Files to Edit or Replace                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Swap Vue for React**              | Edit `.agents/skills/vue-idioms/SKILL.md` or add a React idiom skill, update references in agent profiles          |
+| **Swap Riverpod for BLoC/Cubit**    | Edit `.agents/skills/flutter-idioms/SKILL.md` — replace Riverpod sections with BLoC patterns                       |
+| **Swap Go for Java/Node**           | Add a new idiom skill, update `.agents/rules/code-idioms-and-conventions.md` table to load it                      |
+| **Swap tokio for async-std (Rust)** | Edit `.agents/skills/rust-idioms/SKILL.md` — replace tokio patterns with async-std equivalents                     |
+| **Add a new language entirely**     | Create `.agents/skills/{lang}-idioms/SKILL.md`, add a row to the `code-idioms-and-conventions.md` skill table      |
 
 **Key principle:** The idiom files only affect the agent's *coding style and tooling*. The universal rules (security, testability, architecture) remain unchanged regardless of your stack.
 
@@ -359,11 +359,11 @@ The idiom files are modular — you can swap or replace them to match your proje
 
 When adapting, these are the only files you typically need to change:
 
-| File                            | What to Edit                                |
-| ------------------------------- | ------------------------------------------- |
-| `project-structure.md`          | Directory layout, app paths                 |
-| `project-structure-{lang}.md`   | Language-specific directory layout          |
-| `{lang}-idioms-and-patterns.md` | Language patterns, tooling, conventions     |
-| `phase-verify.md`                   | Validation commands for your languages      |
-| `code-completion-mandate.md`    | Quality commands (delegates to idiom files) |
-| Add/remove rule files           | Rules for your specific needs               |
+| File                                     | What to Edit                                |
+| ---------------------------------------- | ------------------------------------------- |
+| `project-structure.md`                   | Directory layout, app paths                 |
+| `.agents/skills/{lang}-idioms/SKILL.md`  | Language patterns, tooling, conventions     |
+| `.agents/skills/{lang}-idioms/references/project-structure.md` | Language-specific directory layout |
+| `phase-verify.md`                        | Validation commands for your languages      |
+| `code-completion-mandate.md`             | Quality commands (delegates to idiom files) |
+| Add/remove rule files                    | Rules for your specific needs               |

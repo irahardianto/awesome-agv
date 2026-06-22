@@ -7,7 +7,7 @@ nav_order: 4
 # Skills Reference
 {: .no_toc }
 
-All 43 specialized skills that extend your agent's capabilities.
+All 50 specialized skills that extend your agent's capabilities.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -312,49 +312,91 @@ Guidelines for creating distinctive, production-grade mobile interfaces for Flut
 
 ---
 
-## Multi-Agent Skills (4)
+## Multi-Agent Skills (1)
 
-These skills power the `/workflow-team` multi-agent orchestration. They ensure parallel sub-agents can work on the same codebase without file conflicts.
+This skill powers the `/workflow-team` multi-agent orchestration. It ensures parallel sub-agents can work on the same codebase without file conflicts.
 
-### Parallel Dispatch Decomposition
+### Parallel Dispatch
 
-**File:** `.agents/skills/parallel-dispatch-decomposition/SKILL.md`
+**File:** `.agents/skills/parallel-dispatch/SKILL.md`
 
-Decomposes broad tasks into MECE (Mutually Exclusive, Collectively Exhaustive), parallelizable sub-tasks with explicit scope cards.
+MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
 
 **When to Use:**
-- Splitting a feature into parallel work streams for multiple agents
-- Ensuring no file overlap between parallel writers
+- Before dispatching multiple instances of the same agent type within a primitive
+- When any agent (at any depth) needs to parallelize its own workload across sub-subagents
+- When re-planning after a sub-task failure
+
+**Sections:**
+1. **Decomposition** — MECE scope card production, recursive decomposition, cap check
+2. **Ownership** — One-writer-per-file invariant, three zones (exclusive write, shared read, contracts layer)
+3. **Execution** — DAG levels, merge ordering, conflict classification
+4. **Read-Only Agents** — MECE scoping for coverage guarantees
 
 ---
 
-### Parallel Dispatch DAG
+## Architecture & Infrastructure Skills (4)
 
-**File:** `.agents/skills/parallel-dispatch-dag/SKILL.md`
+Cross-cutting skills loaded via rule references — they apply to all languages and load regardless of file type.
 
-Constructs, validates, and traverses a Directed Acyclic Graph (DAG) from scope cards for safe level-based parallel dispatch. Determines execution order via topological sort. Detects cycles and invalid dependencies.
+### Testability Patterns
 
----
+**File:** `.agents/skills/testability-patterns/SKILL.md`
 
-### Parallel Dispatch Ownership
+Implementation examples for the three testability rules: I/O isolation, pure logic extraction, and dependency direction. Code examples across Go, TypeScript, Python, Rust, and Dart.
 
-**File:** `.agents/skills/parallel-dispatch-ownership/SKILL.md`
-
-Enforces MECE file boundaries for parallel write-agents. Validates that no two writers share file access. Manages the contracts layer (shared reads) and integration sub-task patterns.
+*Loaded via reference from `architectural-pattern.md` — not triggered by file patterns.*
 
 ---
 
-### Parallel Dispatch Merge
+### Logging Implementation
 
-**File:** `.agents/skills/parallel-dispatch-merge/SKILL.md`
+**File:** `.agents/skills/logging-implementation/SKILL.md`
 
-Safe, sequential merge protocol for integrating N parallel worktree branches back into main. Defines merge ordering, quality gates between merges, conflict classification, and worktree naming convention.
+Structured logging patterns, log levels, mandatory context fields (correlationId, userId, duration), PII scrubbing, and per-language library choices (Go slog, TypeScript pino, Python structlog).
+
+*Loaded via reference from `logging-and-observability-mandate.md` — not triggered by file patterns.*
 
 ---
 
-## Language & Framework Idioms (18)
+### CI/CD
 
-Language-specific patterns, tooling, and conventions for ecosystems beyond the core rules. Each skill follows the same structure: idioms, error handling, testing, anti-patterns, and formatting/linting commands.
+**File:** `.agents/skills/ci-cd/SKILL.md`
+
+Pipeline design, multi-stage Docker builds, image scanning, SBOM attestation (Cosign keyless), and environment promotion. Layered by complexity — Level 0 (all projects), Level 1 (containerized), Level 2 (Kubernetes). GitOps and Kubernetes patterns in `references/gitops-kubernetes.md`.
+
+*Auto-loads on Dockerfile, `.github/workflows/*`, Jenkinsfile, `*.gitlab-ci.yml`.*
+
+---
+
+### Feature Flags
+
+**File:** `.agents/skills/feature-flags/SKILL.md`
+
+Release flags, ops kill switches, experiment flags, and permission gating. Includes lifecycle rules (90-day max for release flags), flag evaluation patterns, and CI/CD checklist.
+
+**PRD-gated** — load only when PRD or technical architecture explicitly requires gradual rollout, A/B testing, or kill switches.
+
+*Auto-loads on `feature*flag*`, `feature*toggle*` file patterns.*
+
+---
+
+## Language & Framework Idioms (24)
+
+Language-specific patterns, tooling, and conventions. Each skill follows the same structure: idioms, error handling, testing, anti-patterns, and formatting/linting commands.
+
+**Core stacks (auto-load via `paths:` triggers):**
+
+| Skill | Ecosystem | Auto-loads on |
+| --- | --- | --- |
+| [Go Idioms](.agents/skills/go-idioms/SKILL.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `**/*.go`, `**/go.mod` |
+| [TypeScript Idioms](.agents/skills/typescript-idioms/SKILL.md) | Strict mode, type narrowing, Zod, vitest | `**/*.ts`, `**/*.tsx` |
+| [Vue Idioms](.agents/skills/vue-idioms/SKILL.md) | Vue 3 Composition API, Pinia (Setup Store), composables | `**/*.vue`, `**/store/**/*.ts` |
+| [Flutter Idioms](.agents/skills/flutter-idioms/SKILL.md) | Riverpod 3, freezed, go_router, const widgets | `**/*.dart`, `**/pubspec.yaml` |
+| [Rust Idioms](.agents/skills/rust-idioms/SKILL.md) | Ownership, tokio, thiserror/anyhow, clippy pedantic | `**/*.rs`, `**/Cargo.toml` |
+| [Python Idioms](.agents/skills/python-idioms/SKILL.md) | Type hints, Protocols, ruff, mypy strict, pytest | `**/*.py`, `**/pyproject.toml` |
+
+**Community language skills (18 additional ecosystems):**
 
 | Skill | Ecosystem |
 | --- | --- |
@@ -378,7 +420,7 @@ Language-specific patterns, tooling, and conventions for ecosystems beyond the c
 | **Swift** (`.agents/skills/swift-idioms/SKILL.md`) | SwiftUI, Combine, async/await |
 
 {: .note }
-> The core rules already include idiom files for **Go**, **TypeScript**, **Vue 3**, **Flutter/Dart**, **Rust**, and **Python**. These 18 skills extend coverage to additional ecosystems.
+> These 18 community skills extend coverage beyond the 6 core language stacks (Go, TypeScript, Vue 3, Flutter/Dart, Rust, Python) which auto-load via the rule system.
 
 ---
 

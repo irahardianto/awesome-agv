@@ -7,7 +7,7 @@ nav_order: 7
 # Rule System Architecture
 {: .no_toc }
 
-How the two-tier rule system is designed and why it works.
+How the three-tier loading system is designed and why it works.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -23,7 +23,12 @@ How the two-tier rule system is designed and why it works.
 
 AI coding agents have a fundamental problem: **context window is finite**. Loading 40+ detailed rule files into every session would consume precious context and overwhelm the model with irrelevant guidance.
 
-Awesome AGV solves this with a **two-tier rule system** inspired by how operating systems handle kernel-mode vs user-mode code — critical operations always run with full privileges, while everything else activates on demand.
+Awesome AGV solves this with a **three-tier loading system** inspired by how operating systems handle kernel-mode vs user-mode code — critical operations always run with full privileges, while everything else activates on demand.
+
+The three tiers are:
+1. **Mandates** — always-on, loaded every session
+2. **Principles** — contextual rules, agent-activated
+3. **Skills** — procedural capabilities, loaded by agent or workflow when needed
 
 ---
 
@@ -48,6 +53,7 @@ Mandates are **non-negotiable constraints** loaded in every session. They repres
 | Code Idioms & Conventions       | Idiomatic code for target language                      |
 | Project Structure               | Feature-based layout (single source of truth)           |
 | Rule Priority                   | Conflict resolution                                     |
+| Documentation Principles        | When and how to document code                           |
 
 ### Why These Are Always-On
 
@@ -78,24 +84,13 @@ Principles are **detailed guidance** activated only when the agent determines th
 | Command Execution                  | Shell scripts, external processes          |
 | Testing Strategy                   | Writing tests, test organization           |
 | Dependency Management              | Package management, version pinning        |
-| Documentation Principles           | Comments, docs, READMEs                    |
-| Logging & Observability Principles | Implementation guide for logging           |
+| Logging & Observability Principles | Implementation guide (via skill)           |
 | Accessibility Principles           | WCAG, semantic HTML, ARIA                  |
 | Git Workflow Principles            | Commits, branches, PRs                     |
-| CI/CD Principles                   | Pipelines, Docker, GitHub Actions          |
-| Go Idioms & Patterns               | Go-specific patterns, tooling, testing     |
-| TypeScript Idioms & Patterns       | Type system, strict mode, async patterns   |
-| Vue Idioms & Patterns              | Composition API, Pinia stores, composables |
-| Flutter Idioms & Patterns          | Riverpod, freezed models, go_router        |
-| Rust Idioms & Patterns             | Ownership, error handling, async/tokio     |
-| Python Idioms & Patterns           | Type hints, Protocols, pytest, ruff/mypy   |
-| Project Structure — Go Backend     | Go-specific directory layout               |
-| Project Structure — Vue Frontend   | Vue/React frontend layout                  |
-| Project Structure — Flutter Mobile | Flutter/RN mobile app layout               |
-| Project Structure — Rust/Cargo     | Rust workspace and crate layout            |
-| Project Structure — Python Backend | Python service and API layout              |
-| Feature Flags Principles           | Flag types, lifecycle, rollout (PRD-gated) |
-| CI/CD GitOps Kubernetes            | ArgoCD, K8s deployment (PRD-gated)         |
+
+{: .note }
+> **Language idioms, project layouts, CI/CD, and Feature Flags are Tier 3 Skills — not Tier 2 Principles.**
+> They were migrated from `.agents/rules/` to `.agents/skills/` to reduce context window pressure and improve modularity. See the [Skills Reference](/awesome-agv/skills) for details.
 
 ### How Context Activation Works
 
@@ -142,36 +137,37 @@ When rules conflict, the priority system resolves them:
 ## Relationship Between Components
 
 ```
-┌─────────────────────────────────────────────┐
+┌───────────────────────────────────────────┐
 │  Workflows                                  │
 │  (Orchestrate the development lifecycle)    │
 │                                             │
-│  /workflow-solo → phase-research → phase-implement │
-│  → phase-integrate → phase-verify → phase-commit     │
-├─────────────────────────────────────────────┤
-│  Skills                                      │
-│  (Activated within workflows on demand)      │
-│                                              │
-│  Debugging Protocol, Code Review,            │
-│  Sequential Thinking, Guardrails, ADR,       │
-│  Perf Optimization, Frontend/Mobile Design   │
-├──────────────────────────────────────────────┤
-│  Principles (Tier 2)                         │
-│  (Contextual rules activated per task)       │
-│                                              │
-│  Database Design, CI/CD, Security Principles │
-├──────────────────────────────────────────────┤
-│  Mandates (Tier 1)                           │
-│  (Always-on, non-negotiable constraints)     │
-│                                              │
-│  Security Mandate, Code Completion Mandate,  │
-│  Logging Mandate, Core Design Principles     │
-└──────────────────────────────────────────────┘
+│  /workflow-solo → phases → ship            │
+│  /workflow-team → agents → primitives       │
+├───────────────────────────────────────────┤
+│  Tier 3: Skills (50)                        │
+│  (Procedural capabilities, on demand)       │
+│                                             │
+│  Language Idioms (24), parallel-dispatch,   │
+│  debugging-protocol, code-review, adr,      │
+│  ci-cd, feature-flags, perf-optimization... │
+├───────────────────────────────────────────┤
+│  Tier 2: Principles (16)                    │
+│  (Contextual rules, agent-activated)        │
+│                                             │
+│  Security Principles, Database Design,      │
+│  Testing Strategy, API Design...            │
+├───────────────────────────────────────────┤
+│  Tier 1: Mandates (12)                      │
+│  (Always-on, non-negotiable constraints)    │
+│                                             │
+│  Security Mandate, Code Completion Mandate, │
+│  Logging Mandate, Core Design Principles    │
+└───────────────────────────────────────────┘
 ```
 
-- **Mandates** form the foundation — always active
-- **Principles** sit above, activated by context
-- **Skills** are procedural capabilities used by workflows
+- **Mandates (Tier 1)** form the foundation — always active
+- **Principles (Tier 2)** sit above, activated by context
+- **Skills (Tier 3)** are procedural capabilities: language idioms, CI/CD patterns, parallel dispatch, debugging protocols, and more
 - **Workflows** orchestrate everything into structured development cycles
 
 ---

@@ -26,10 +26,10 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 
 | Component     | Count | Purpose                                                                           |
 | ------------- | ----- | --------------------------------------------------------------------------------- |
-| **Rules**     | 42    | Security, reliability, architecture, maintainability, language idioms, and DevOps |
-| **Skills**    | 43    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
+| **Rules**     | 27    | Security, reliability, architecture, and maintainability |
+| **Skills**    | 50    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
 | **Workflows** | 12    | End-to-end development processes from research to ship                             |
-| **Agents**    | 15    | Specialized personas for multi-agent orchestration (architect, scout, qa-analyst, etc.) |
+| **Agents**    | 16    | Specialized personas for multi-agent orchestration (tech-lead, architect, scout, qa-analyst, etc.) |
 
 ## Core Philosophy
 
@@ -43,9 +43,9 @@ The setup embodies three commitments from the [Rugged Software Constitution](htt
 
 ## How It Works
 
-The setup uses a **two-tier rule system** to minimize noise while maximizing coverage:
+The setup uses a **three-tier loading system** to minimize noise while maximizing coverage:
 
-### Mandates (Always-On)
+### Tier 1: Mandates (Always-On)
 Non-negotiable constraints loaded in every session. These fire regardless of context:
 - Security Mandate
 - Rugged Software Constitution
@@ -53,13 +53,19 @@ Non-negotiable constraints loaded in every session. These fire regardless of con
 - Logging & Observability Mandate
 - Concurrency & Threading Mandate
 
-### Principles (Contextual)
+### Tier 2: Principles (Contextual)
 Detailed guidance activated only when the agent is working on relevant areas:
 - Database rules activate when writing queries
 - CI/CD rules activate when editing pipelines
 - Accessibility rules activate when building UIs
 
-This means the agent isn't overwhelmed with 42 rules on every task — it gets the critical mandates always, and the contextual principles only when they matter.
+### Tier 3: Skills (On-Demand)
+Procedural capabilities loaded by the agent or workflow when needed:
+- Language idioms (Go, TypeScript, Vue, Flutter, Rust, Python + 18 more)
+- Debugging protocol, code review, guardrails
+- CI/CD patterns, feature flags, parallel dispatch
+
+This means the agent isn't overwhelmed with 27 rules on every task — it gets the critical mandates always, contextual principles when relevant, and specialized skills exactly when needed.
 
 ## Opinionated Defaults
 
@@ -93,9 +99,9 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 
 ```
 .agents/
-├── rules/             # 42 rules (mandates + principles + language idioms)
-├── agents/            # 15 agent personas
-├── skills/            # 43 specialized skills
+├── rules/             # 27 rules (mandates + principles)
+├── agents/            # 16 agent personas
+├── skills/            # 50 specialized skills
 └── workflows/         # 12 development workflows
 ```
 
@@ -103,10 +109,10 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 
 Explore each component in detail:
 
-- [**Rules Reference**](/awesome-agv/rules) — All 42 rules organized by category
-- [**Skills Reference**](/awesome-agv/skills) — All 43 specialized skills
+- [**Rules Reference**](/awesome-agv/rules) — All 27 rules organized by category
+- [**Skills Reference**](/awesome-agv/skills) — All 50 specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — All 12 development workflows
-- [**Agent Personas**](/awesome-agv/agents) — 15 specialized agent personas for multi-agent orchestration
+- [**Agent Personas**](/awesome-agv/agents) — 16 specialized agent personas for multi-agent orchestration
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

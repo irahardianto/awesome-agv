@@ -7,7 +7,7 @@ nav_order: 3
 # Rules Reference
 {: .no_toc }
 
-All 42 rules organized by category, with trigger types and descriptions.
+All 27 rules organized by category, with trigger types and descriptions.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -225,50 +225,14 @@ model_decision
 
 Principles for running external commands and shell scripts securely — preventing injection, handling exit codes, and managing process lifecycles.
 
-### Project Structure — Go Backend
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `project-structure-go-backend.md`
-
-Go-specific directory layout for backend services, including `cmd/`, `internal/`, and feature-based organization.
-
-### Project Structure — Vue Frontend
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `project-structure-vue-frontend.md`
-
-Vue/React frontend directory layout with feature-based organization: components, stores, API, and services.
-
-### Project Structure — Flutter Mobile
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `project-structure-flutter-mobile.md`
-
-Flutter and React Native mobile app layout: screens, widgets, state management, and repository pattern.
-
-### Project Structure — Rust/Cargo
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `project-structure-rust-cargo.md`
-
-Rust workspace and crate layout: `src/`, `tests/`, `benches/`, and multi-crate workspace organization.
-
-### Project Structure — Python Backend
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `project-structure-python-backend.md`
-
-Python backend layout: `src/` package with feature-based modules, `tests/` mirroring source, Poetry/uv dependency management, and `alembic/` for migrations.
+{: .note }
+> **Language-specific project layouts are now in Skills.**
+> Go, TypeScript/Vue, Flutter, Rust, and Python directory layouts live in their respective skill files:
+> - Go: `.agents/skills/go-idioms/references/project-structure.md`
+> - Vue/React: `.agents/skills/vue-idioms/references/project-structure.md`
+> - Flutter: `.agents/skills/flutter-idioms/references/project-structure.md`
+> - Rust: `.agents/skills/rust-idioms/references/project-structure.md`
+> - Python: `.agents/skills/python-idioms/references/project-structure.md`
 
 ---
 
@@ -294,59 +258,9 @@ always_on
 
 Write idiomatic code for the target language. Follow community conventions, use language built-ins, avoid cross-language anti-patterns. Delegates to dedicated language idiom files for ecosystem-specific guidance.
 
-### Go Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `go-idioms-and-patterns.md`
-
-Go-specific patterns: error handling with `%w`, small interfaces, goroutines and channels, error-checked resource cleanup (defers), `//nolint:errcheck` ban, naming conventions, table-driven tests, and `gofumpt`/`staticcheck`/`gosec` tooling.
-
-### TypeScript Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `typescript-idioms-and-patterns.md`
-
-TypeScript type system idioms: strict mode, discriminated unions, `unknown` over `any`, `readonly`, runtime validation with Zod, centralized HTTP client enforcement (no raw `fetch`/`axios` bypass), `Promise.all` patterns, and Vitest testing.
-
-### Vue Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `vue-idioms-and-patterns.md`
-
-Vue 3 Composition API patterns: `<script setup>`, `ref` vs `reactive`, Pinia Setup Stores, composables, route transition patterns (CSS `@layer` × SPA conflicts), `defineProps`/`defineEmits` with TypeScript, and `createTestingPinia` for tests.
-
-### Flutter Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `flutter-idioms-and-patterns.md`
-
-Flutter/Dart patterns: `const` constructors, widget decomposition, immutable models with `freezed`, Riverpod state management (provider types, `ref.watch` vs `ref.read`), `go_router` navigation, and `flutter analyze` tooling.
-
-### Rust Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `rust-idioms-and-patterns.md`
-
-Rust ownership and borrowing, error handling with `thiserror`/`anyhow`, async with `tokio`, unsafe code policy, idiomatic patterns (builder, newtype, typestate), and `cargo clippy` configuration.
-
-### Python Idioms & Patterns
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `python-idioms-and-patterns.md`
-
-Python type hints, `typing.Protocol` for interfaces, `pytest` fixtures and parametrize, `ruff` for linting/formatting, `mypy --strict` for type checking, `bandit` for security, virtual environments, and Pydantic models.
+{: .note }
+> **Language idioms are now Skills, not Rules.**
+> The Go, TypeScript, Vue, Flutter, Rust, and Python idiom files have been consolidated into dedicated skill directories under `.agents/skills/`. Load them via the `code-idioms-and-conventions.md` rule which delegates to the appropriate skill. See the [Skills Reference](/awesome-agv/skills#language--framework-idioms-24) for the full list.
 
 ### Testing Strategy
 {: .d-inline-block }
@@ -378,15 +292,6 @@ model_decision
 **File:** `documentation-principles.md`
 
 Self-documenting code, when to comment (WHY, not WHAT), and documentation levels from inline comments to architecture docs.
-
-### Logging & Observability Principles
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `logging-and-observability-principles.md`
-
-Complete implementation guide: log levels, structured logging patterns, language-specific implementations (Go, TypeScript, Python), security considerations, and performance best practices.
 
 ### Logging & Observability Mandate
 {: .d-inline-block }
@@ -421,32 +326,14 @@ Conventional commits format, branch naming, commit hygiene, PR size guidelines (
 
 Rules that ensure the development pipeline is reliable and automated.
 
-### CI/CD Principles
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `ci-cd-principles.md`
-
-Pipeline design (lint → build → test → deploy), Dockerfile multi-stage builds, Docker Compose patterns, GitHub Actions templates, and environment promotion strategy.
-
-### CI/CD GitOps Kubernetes
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `ci-cd-gitops-kubernetes.md`
-
-ArgoCD GitOps patterns, Kubernetes deployment strategies, Helm chart conventions, and infrastructure-as-code principles. **PRD-gated** — only applies when explicitly required by the technical architecture document.
-
-### Feature Flags Principles
-{: .d-inline-block }
-model_decision
-{: .label .label-blue }
-
-**File:** `feature-flags-principles.md`
-
-Flag types (release, experiment, ops, permission), lifecycle management, rollout strategies, and cleanup policies. **PRD-gated** — only applies when explicitly required by the PRD.
+{: .note }
+> **CI/CD, GitOps, and Feature Flags are now Skills, not Rules.**
+> These topics were migrated to dedicated skill directories:
+> - CI/CD Pipelines: `.agents/skills/ci-cd/SKILL.md`
+> - GitOps/Kubernetes: `.agents/skills/ci-cd/references/gitops-kubernetes.md`
+> - Feature Flags: `.agents/skills/feature-flags/SKILL.md`
+>
+> See the [Skills Reference](/awesome-agv/skills#architecture--infrastructure-skills-4) for details.
 
 ### Code Completion Mandate
 {: .d-inline-block }

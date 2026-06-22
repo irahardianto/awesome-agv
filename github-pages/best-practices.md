@@ -100,11 +100,11 @@ Choose the right trigger for custom rules:
 
 ### Customizing Language-Specific Rules
 
-Awesome AGV already includes dedicated idiom files for Go, TypeScript, Vue, Flutter, Rust, and Python. To customize:
+Awesome AGV already includes dedicated idiom skills for Go, TypeScript, Vue, Flutter, Rust, and Python. To customize:
 
-1. **Edit the existing idiom file** — e.g., `go-idioms-and-patterns.md` to add team-specific conventions
-2. **Replace an idiom file** — swap `vue-idioms-and-patterns.md` for a React file if you use React
-3. **Add a new language** — create `.agents/rules/{lang}-idioms-and-patterns.md` with `trigger: model_decision`
+1. **Edit the existing idiom skill** — e.g., `.agents/skills/go-idioms/SKILL.md` to add team-specific conventions
+2. **Replace an idiom skill** — add a React skill directory if you use React instead of Vue
+3. **Add a new language** — create `.agents/skills/{lang}-idioms/SKILL.md` with appropriate sections
 4. **Register in** `code-idioms-and-conventions.md` — add a row to the language table so the agent knows when to activate it
 
 See [Adapting — Changing the Default Framework](/awesome-agv/adapting#changing-the-default-framework) for a full guide.

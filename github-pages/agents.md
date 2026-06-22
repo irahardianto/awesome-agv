@@ -7,7 +7,7 @@ nav_order: 6
 # Agent Personas
 {: .no_toc }
 
-15 specialized agent personas for multi-agent orchestration via `/workflow-team`.
+16 specialized agent personas for multi-agent orchestration via `/workflow-team`.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -35,10 +35,13 @@ Personas are consumed by the `/workflow-team` pipeline manager, which dispatches
 
 ## Layer Architecture
 
-Agents are organized into four layers:
+Agents are organized into five layers:
 
 ```
 ┌─────────────────────────────────────────────────────┐
+│  Orchestration Layer                                │
+│  @tech-lead                                         │
+├─────────────────────────────────────────────────────┤
 │  Research Layer (Read-only)                         │
 │  @scout                                             │
 ├─────────────────────────────────────────────────────┤
@@ -57,6 +60,22 @@ Agents are organized into four layers:
 │  @ux-reviewer, @incident-responder                  │
 └─────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Orchestration Layer
+
+### Tech Lead
+
+**File:** `.agents/agents/tech-lead.md`
+
+Anchor persona for multi-agent orchestration. Elicits requirements, composes workflow primitives, enforces standards, and owns all quality gates. **Present at every pipeline stage.**
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Codebase integrity, architectural alignment, contract validation, merge/conflict resolution |
+| **Boundaries** | No production code, no tests — pure orchestration and quality gating |
+| **Skills** | code-review, guardrails, sequential-thinking |
 
 ---
 

@@ -38,9 +38,9 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **27 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
-*   🛠️ **53 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
+*   🛠️ **50 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
 *   🔄 **12 Workflows** — end-to-end development processes from research to ship.
-*   🤖 **15 Agent Personas** — specialized sub-agents for multi-agent orchestration (architect, backend-engineer, security-engineer, etc.).
+*   🤖 **16 Agent Personas** — specialized sub-agents for multi-agent orchestration (tech-lead, architect, backend-engineer, security-engineer, etc.).
 *   🏗️ **Three-Tier Loading System** — always-on mandates + contextual principles + on-demand skills for zero-noise enforcement.
 
 > **💡 Everything is modular.** Rules, skills, agents, and workflows work independently — you don't need everything to benefit. Use only what you need, modify anything, or build your own. It's a toolkit, not a framework.
@@ -290,7 +290,7 @@ Activated by the model only when relevant — zero overhead when not applicable.
 *   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA, semantic HTML, keyboard navigation
 *   **[Git Workflow Principles](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, PR hygiene
 
-### Specialized Skills (53)
+### Specialized Skills (50)
 
 Skills are deep expertise modules loaded on demand — agents only pay the token cost when the skill is relevant.
 
@@ -317,10 +317,7 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 *   **[Mobile Design](.agents/skills/mobile-design/SKILL.md)**: Platform-native mobile interfaces for Flutter and React Native
 
 #### 🔀 Multi-Agent Orchestration Skills
-*   **[Parallel Dispatch Decomposition](.agents/skills/parallel-dispatch-decomposition/SKILL.md)**: MECE task decomposition into scope cards for parallel sub-agent execution
-*   **[Parallel Dispatch DAG](.agents/skills/parallel-dispatch-dag/SKILL.md)**: DAG construction and topological sort for safe dispatch ordering
-*   **[Parallel Dispatch Ownership](.agents/skills/parallel-dispatch-ownership/SKILL.md)**: MECE file boundary enforcement to prevent merge conflicts between parallel agents
-*   **[Parallel Dispatch Merge](.agents/skills/parallel-dispatch-merge/SKILL.md)**: Sequential merge protocol with quality gates for integrating parallel worktree branches
+*   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
 
 #### 🌐 Language & Framework Idioms (24)
 
@@ -372,7 +369,7 @@ Language-specific patterns, tooling, project layout, and quality commands. Each 
 *   **[Payment Integration](.agents/skills/payment-integration/SKILL.md)**: PCI DSS compliance, tokenization, and webhook reliability
 *   **[Supply Chain Security](.agents/skills/supply-chain-security/SKILL.md)**: SBOM generation, CVE scanning, and license compliance
 
-### Agent Personas (15)
+### Agent Personas (16)
 
 Agent personas are specialized sub-agents designed for multi-agent orchestration. Each agent has an exclusive domain, clear boundaries, and never crosses into another agent's territory — enforcing MECE at the architecture level.
 
@@ -380,12 +377,13 @@ Agent personas are specialized sub-agents designed for multi-agent orchestration
 
 | Layer | Agents | Purpose |
 |---|---|---|
+| **Orchestration** | `tech-lead` | Anchor persona: elicits requirements, composes primitives, enforces standards, owns all quality gates |
 | **Research** | `scout` | Codebase exploration, pattern discovery, technology research |
 | **Design** | `architect` + optional `ux-reviewer`, `database-expert`, `security-engineer` | System design, ADRs, API contracts |
 | **Build** | `backend-engineer`, `frontend-engineer`, `mobile-engineer`, `database-expert`, `devops-engineer`, `technical-writer`, `test-automation-engineer`, `performance-engineer`, `refactoring-specialist` | Implementation with isolated worktrees |
 | **Review** | `qa-analyst`, `security-engineer`, `ux-reviewer`, `incident-responder` | Quality gates, security audits, UX review |
 
-See the [workflow-team](.agents/workflows/workflow-team.md) workflow for the full dispatch protocol, including parallel dispatch with MECE file ownership and DAG-based execution ordering.
+See the [workflow-team](.agents/workflows/workflow-team.md) workflow for the full dispatch protocol, including recursive parallel dispatch with MECE file ownership and DAG-based execution ordering.
 
 ### Development Workflows (12)
 
@@ -416,7 +414,7 @@ The pipeline manager workflow for dispatching specialized sub-agents across laye
 SCOUT → DESIGN → PRE-MORTEM → BUILD (parallel) → REVIEW (parallel) → REMEDIATE → VERIFY
 ```
 
-Includes 12 workflow templates (A-L) for common scenarios: full features, bug fixes, audits, mobile features, security hardening, infrastructure, documentation sprints, incident response, and technical debt.
+Includes 11 workflow templates (A-K) for common scenarios: full features, bug fixes, audits, mobile features, security hardening, infrastructure, documentation sprints, incident response, and technical debt.
 
 #### 🔧 Specialized Workflows
 
@@ -432,7 +430,8 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 
 ```
 .agents/
-├── agents/            # 15 agent personas (multi-agent orchestration)
+├── agents/            # 16 agent personas (multi-agent orchestration)
+│   ├── tech-lead.md             # Orchestration anchor — elicits, composes, gates
 │   ├── architect.md
 │   ├── backend-engineer.md
 │   ├── frontend-engineer.md
@@ -447,7 +446,7 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 │   ├── architectural-pattern.md          # always_on: I/O isolation, testability
 │   ├── rule-priority.md                  # always_on: conflict resolution
 │   └── ...            # 7 more always-on + 15 contextual principles
-├── skills/            # 53 specialized skills — loaded on demand, not always
+├── skills/            # 50 specialized skills — loaded on demand, not always
 │   ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
 │   ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
 │   ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts
@@ -461,7 +460,7 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 │   ├── debugging-protocol/      # Core engineering (reference-loaded)
 │   ├── code-review/
 │   ├── guardrails/
-│   ├── parallel-dispatch-*/     # Multi-agent orchestration (4 skills)
+│   ├── parallel-dispatch/       # Multi-agent orchestration — consolidated safety invariants
 │   ├── angular-idioms/          # Community language skills (18 ecosystems)
 │   ├── react-idioms/
 │   ├── java-idioms/
@@ -485,11 +484,11 @@ Includes 12 workflow templates (A-L) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (53 skills shipped).
+- [x] Include more specialized skills to aid development process (50 skills shipped).
 - [x] Add development workflows for structured feature delivery (12 workflows shipped).
 - [x] Add language-specific idiom skills (Go, TypeScript, Vue, Flutter, Rust, Python + 18 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
-- [x] Add multi-agent orchestration with 15 specialized agent personas and parallel dispatch.
+- [x] Add multi-agent orchestration with 16 specialized agent personas (including tech-lead anchor) and consolidated parallel dispatch.
 - [x] Distill rules to decisions-only: strip generic knowledge, keep project-specific overrides (27 rules, -68% from peak).
 - [x] Migrate language idioms from rules to on-demand skills — only load when relevant to the task.
 - [ ] Add automated validation scripts to check if an agent is following the constitution.

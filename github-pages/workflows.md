@@ -366,9 +366,15 @@ Dispatches specialized sub-agents across layers (research, design, build, review
 - Scenarios needing specialized review (security audit + QA + UX review)
 - Large features that can be decomposed into independent work streams
 
-### Agent Roster (15 Personas)
+### Agent Roster (16 Personas)
 
-Agents are organized into four layers with strict boundaries:
+Agents are organized into five layers with strict boundaries:
+
+#### Orchestration Layer
+
+| Agent | Domain |
+| --- | --- |
+| `@tech-lead` | Codebase integrity, architectural alignment, contract validation, merge/conflict resolution |
 
 #### Research Layer (Read-only)
 
@@ -440,15 +446,14 @@ Workflows are built from composable primitives — each a stage in the pipeline:
 | **H: Documentation** | SCOUT → DOCUMENT → REVIEW |
 | **I: Incident Response** | INCIDENT → REMEDIATE → REVIEW → VERIFY → DOCUMENT |
 | **J: Tech Debt** | SCOUT → REFACTOR → REVIEW → VERIFY |
-| **K: Security + Perf Audit** | SCOUT → REVIEW → REMEDIATE → REVIEW → VERIFY |
-| **L: Pre-Mortem** | DESIGN → PRE-MORTEM → DOCUMENT |
+| **K: Pre-Mortem** | DESIGN → PRE-MORTEM → DOCUMENT |
 
 ### Parallel Execution
 
 Two types of parallelism are supported:
 
 - **Cross-domain**: Different agent types in parallel (e.g., `@backend-engineer` + `@frontend-engineer`). Always safe — disjoint domains.
-- **Intra-domain**: Multiple instances of the same agent type (e.g., `@backend-engineer[auth]` + `@backend-engineer[tasks]`). Requires MECE decomposition via parallel-dispatch skills.
+- **Intra-domain**: Multiple instances of the same agent type (e.g., `@backend-engineer[auth]` + `@backend-engineer[tasks]`). Load `parallel-dispatch` skill — it defines decomposition, ownership, DAG execution, and merge protocol.
 
 ```
 # Single instance
@@ -467,7 +472,7 @@ BUILD agents work in isolated Git worktrees to prevent conflicts:
 # Setup (before dispatch)
 git worktree add .wt/<agent-name>-<scope> -b wt/<agent-name>-<scope>-$(date +%s) HEAD
 
-# Merge (in dependency order, per parallel-dispatch-merge skill)
+# Merge (in dependency order, per parallel-dispatch skill)
 git merge --squash wt/<agent-name>-<scope>-<ts>
 git commit -m "<type>(<scope>): <description>"
 
