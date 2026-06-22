@@ -169,5 +169,5 @@ Analysts: {agent list}
 
 ## Related
 - Debugging Protocol @.agents/skills/debugging-protocol/SKILL.md
-- Logging and Observability Principles @.agents/rules/logging-and-observability-principles.md
+- Logging Implementation @.agents/skills/logging-implementation/SKILL.md
 - Monitoring and Alerting Principles @.agents/rules/monitoring-and-alerting-principles.md

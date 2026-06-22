@@ -251,7 +251,7 @@ grep -rn 'let\|var' --include='*.spec.ts' | grep -v 'const\|inside\|function'
 ---
 
 ## Related
-- TypeScript Idioms and Patterns @typescript-idioms-and-patterns.md
-- Vue Idioms and Patterns @vue-idioms-and-patterns.md
+- TypeScript Idioms and Patterns @.agents/skills/typescript-idioms/SKILL.md
+- Vue Idioms and Patterns @.agents/skills/vue-idioms/SKILL.md
 - Frontend Debugging @frontend.md (CSS, rendering, browser-specific issues)
 - Error Handling Principles @error-handling-principles.md

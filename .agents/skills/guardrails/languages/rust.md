@@ -169,7 +169,7 @@ pub async fn create_task(&self, req: CreateTaskRequest) -> Result<Task, TaskErro
 ---
 
 ## References
-- Rust Idioms and Patterns @rust-idioms-and-patterns.md
+- Rust Idioms and Patterns @.agents/skills/rust-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md
 - Resources and Memory Management Principles @resources-and-memory-management-principles.md

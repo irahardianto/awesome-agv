@@ -72,5 +72,5 @@ Data Collection → Feature Engineering → Training → Evaluation → Deployme
 
 ## Related
 - Data Engineering @.agents/skills/data-engineering/SKILL.md
-- Python Idioms @.agents/rules/python-idioms-and-patterns.md
+- Python Idioms @.agents/skills/python-idioms/SKILL.md
 - Performance Optimization Principles @.agents/rules/performance-optimization-principles.md

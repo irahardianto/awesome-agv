@@ -205,6 +205,6 @@ npx autocannon -c 100 -d 30 -p 10 http://localhost:3000/api/tasks
 ---
 
 ## Related
-- TypeScript Idioms @typescript-idioms-and-patterns.md
+- TypeScript Idioms @.agents/skills/typescript-idioms/SKILL.md
 - Frontend Performance @frontend.md (browser-side optimization)
 - Performance Optimization SKILL @../SKILL.md

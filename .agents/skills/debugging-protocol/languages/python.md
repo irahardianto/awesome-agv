@@ -232,6 +232,6 @@ pytest -vv --tb=long tests/test_feature.py
 ---
 
 ## Related
-- Python Idioms and Patterns @python-idioms-and-patterns.md
+- Python Idioms and Patterns @.agents/skills/python-idioms/SKILL.md
 - Performance Optimization (Python) @perf-optimization/languages/python.md
 - Error Handling Principles @error-handling-principles.md

@@ -239,6 +239,6 @@ flutter build apk --analyze-size
 ---
 
 ## Related
-- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md
+- Flutter Idioms and Patterns @.agents/skills/flutter-idioms/SKILL.md
 - Performance Optimization SKILL @../SKILL.md
 - Resources and Memory Management @resources-and-memory-management-principles.md

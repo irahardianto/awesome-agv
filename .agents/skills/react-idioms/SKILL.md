@@ -8,7 +8,7 @@ paths:
 
 React 18+ rewards composition, hooks, and server components. Idiomatic React = functional, performant, accessible.
 
-> Scope: React-specific patterns. For TypeScript: `@.agents/rules/typescript-idioms-and-patterns.md`. For general frontend: `@.agents/skills/frontend-design/SKILL.md`.
+> Scope: React-specific patterns. For TypeScript: `@.agents/skills/typescript-idioms/SKILL.md`. For general frontend: `@.agents/skills/frontend-design/SKILL.md`.
 
 ### Component Patterns
 
@@ -226,6 +226,6 @@ test('calls onComplete when button clicked', async () => {
 | TypeScript | Type checking | `npx tsc --noEmit` |
 
 ### Related
-- TypeScript Idioms @.agents/rules/typescript-idioms-and-patterns.md
+- TypeScript Idioms @.agents/skills/typescript-idioms/SKILL.md
 - Frontend Design @.agents/skills/frontend-design/SKILL.md
 - Accessibility Principles @.agents/rules/accessibility-principles.md

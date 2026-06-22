@@ -237,6 +237,6 @@ flutter run
 ---
 
 ## Related
-- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md
+- Flutter Idioms and Patterns @.agents/skills/flutter-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
 - Resources and Memory Management @resources-and-memory-management-principles.md

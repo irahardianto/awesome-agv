@@ -90,4 +90,4 @@ public async Task<Task> GetTaskAsync(string id, CancellationToken ct = default)
 - C# Idioms @.agents/skills/csharp-idioms/SKILL.md
 - .NET Idioms @.agents/skills/dotnet-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

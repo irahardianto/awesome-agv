@@ -10,7 +10,7 @@ paths:
 
 Django rewards convention, the ORM, and "batteries included" design. Idiomatic Django = DRY, model-centric, well-tested.
 
-> Scope: Django-specific patterns. For Python: `@.agents/rules/python-idioms-and-patterns.md`.
+> Scope: Django-specific patterns. For Python: `@.agents/skills/python-idioms/SKILL.md`.
 
 ### Models
 
@@ -81,5 +81,5 @@ Django rewards convention, the ORM, and "batteries included" design. Idiomatic D
 | `bandit` | Security | `bandit -r .` |
 
 ### Related
-- Python Idioms @.agents/rules/python-idioms-and-patterns.md
+- Python Idioms @.agents/skills/python-idioms/SKILL.md
 - Database Design Principles @.agents/rules/database-design-principles.md

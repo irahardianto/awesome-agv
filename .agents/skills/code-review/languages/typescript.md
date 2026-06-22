@@ -156,8 +156,8 @@ const tasks = await apiClient.get<Task[]>("/tasks");
 ---
 
 ## References
-- TypeScript Idioms and Patterns @typescript-idioms-and-patterns.md
-- Vue Idioms and Patterns @vue-idioms-and-patterns.md
+- TypeScript Idioms and Patterns @.agents/skills/typescript-idioms/SKILL.md
+- Vue Idioms and Patterns @.agents/skills/vue-idioms/SKILL.md
 - Security Principles @security-principles.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

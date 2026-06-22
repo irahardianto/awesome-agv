@@ -7,7 +7,7 @@ paths:
 
 C# rewards type safety, LINQ expressiveness, and async-first design. Modern C# (10+/.NET 6+) favors records, nullable reference types, and minimal APIs. Idiomatic C# = clean, async-aware, framework-integrated.
 
-> Scope: C# coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/rules/logging-and-observability-principles.md`.
+> Scope: C# coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/skills/logging-implementation/SKILL.md`.
 
 ### Modern C# Features (10+)
 

@@ -165,7 +165,7 @@ logger.info("user_login", extra={"user_id": user_id, "ip": ip})
 ---
 
 ## References
-- Python Idioms and Patterns @python-idioms-and-patterns.md
+- Python Idioms and Patterns @.agents/skills/python-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md
 - Resources and Memory Management Principles @resources-and-memory-management-principles.md

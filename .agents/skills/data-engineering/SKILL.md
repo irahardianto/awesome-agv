@@ -77,4 +77,4 @@ Source → Validate (schema, nulls, types) → Transform → Validate (business 
 ## Related
 - Database Design Principles @.agents/rules/database-design-principles.md
 - SQL Idioms @.agents/skills/sql-idioms/SKILL.md
-- Logging and Observability Principles @.agents/rules/logging-and-observability-principles.md
+- Logging Implementation @.agents/skills/logging-implementation/SKILL.md

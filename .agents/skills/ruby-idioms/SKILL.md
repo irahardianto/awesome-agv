@@ -8,7 +8,7 @@ paths:
 
 Ruby rewards expressiveness, convention, and developer happiness. Modern Ruby (3.x) favors pattern matching, Ractor for concurrency, and strict typing via Sorbet/RBS. Idiomatic Ruby = readable, tested, convention-following.
 
-> Scope: Ruby coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/rules/logging-and-observability-principles.md`.
+> Scope: Ruby coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/skills/logging-implementation/SKILL.md`.
 
 ### Modern Ruby Features (3.x)
 

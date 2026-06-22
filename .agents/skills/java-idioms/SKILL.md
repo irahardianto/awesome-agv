@@ -7,7 +7,7 @@ paths:
 
 Java rewards clarity, type safety, and robust ecosystem tooling. Modern Java (17+ LTS) favors records, sealed classes, and pattern matching. Idiomatic Java = clean, readable, framework-aware.
 
-> Scope: Java coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/rules/logging-and-observability-principles.md`.
+> Scope: Java coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/skills/logging-implementation/SKILL.md`.
 
 ### Modern Java Features (17+ LTS)
 
@@ -164,4 +164,4 @@ Must pass zero warnings/errors before commit. See .agents/rules/code-completion-
 - Testing Strategy .agents/rules/testing-strategy.md
 - Error Handling Principles .agents/rules/error-handling-principles.md
 - Dependency Management Principles @.agents/rules/dependency-management-principles.md
-- Logging and Observability Principles @.agents/rules/logging-and-observability-principles.md
+- Logging Implementation @.agents/skills/logging-implementation/SKILL.md

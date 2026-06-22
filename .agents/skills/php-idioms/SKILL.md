@@ -7,7 +7,7 @@ paths:
 
 Modern PHP (8.x) rewards type safety, immutability, and framework-agnostic design. Lean into typed properties, enums, and readonly classes. Idiomatic PHP = strict types, PSR-compliant, well-tested.
 
-> Scope: PHP coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/rules/logging-and-observability-principles.md`.
+> Scope: PHP coding idioms. Test naming: .agents/rules/testing-strategy.md. Logging: `@.agents/skills/logging-implementation/SKILL.md`.
 
 ### Modern PHP Features (8.x)
 

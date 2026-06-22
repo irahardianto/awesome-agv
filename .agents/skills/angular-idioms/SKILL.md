@@ -8,7 +8,7 @@ paths:
 
 Angular (17+) rewards signals, standalone components, and reactive patterns. Idiomatic Angular = typed, modular, RxJS-aware.
 
-> Scope: Angular-specific patterns. For TypeScript: `@.agents/rules/typescript-idioms-and-patterns.md`.
+> Scope: Angular-specific patterns. For TypeScript: `@.agents/skills/typescript-idioms/SKILL.md`.
 
 ### Standalone Components (Default)
 
@@ -220,6 +220,6 @@ tasks = toSignal(this.taskService.getTasks(), { initialValue: [] });
 | `strict` mode | Type checking | `"strict": true` in tsconfig.json |
 
 ### Related
-- TypeScript Idioms @.agents/rules/typescript-idioms-and-patterns.md
+- TypeScript Idioms @.agents/skills/typescript-idioms/SKILL.md
 - Frontend Design @.agents/skills/frontend-design/SKILL.md
 - Accessibility Principles @.agents/rules/accessibility-principles.md

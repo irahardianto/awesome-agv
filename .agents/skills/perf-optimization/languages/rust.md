@@ -292,6 +292,6 @@ cargo bench -- --output-format bencher 2>&1 | tee bench.txt
 ---
 
 ## Related Principles
-- Rust Idioms and Patterns @rust-idioms-and-patterns.md
+- Rust Idioms and Patterns @.agents/skills/rust-idioms/SKILL.md
 - Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
 - Performance Optimization Principles @performance-optimization-principles.md

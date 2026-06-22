@@ -607,3 +607,38 @@ fields: [
 | E2E tests for all business logic | E2E for critical paths only — unit/integration for the rest |
 | Hardcoded credentials | `process.env.*` always |
 | Committing `.auth/` files | Add `playwright/.auth/` to `.gitignore` |
+
+---
+
+## E2E Testing with Playwright MCP (Interactive Development)
+
+When running E2E tests interactively (during development or verification), use Playwright MCP directly:
+
+```
+# Navigate to the page
+mcp_playwright_browser_navigate(url="http://localhost:5173/login")
+
+# Capture accessible state (better than screenshot for assertions)
+mcp_playwright_browser_snapshot()
+
+# Interact with elements by ref from snapshot
+mcp_playwright_browser_type(ref="<ref>", text="test@example.com")
+mcp_playwright_browser_click(ref="<ref>")
+
+# Wait for results
+mcp_playwright_browser_wait_for(text="Welcome")
+
+# Capture snapshot for walkthrough documentation
+mcp_playwright_browser_snapshot(filename="login-success.md")
+```
+
+### MCP E2E Requirements
+
+- Capture a snapshot (`mcp_playwright_browser_snapshot`) at each major step
+- Save snapshots to walkthrough as proof of functionality
+- If visual proof is needed, use `browser_subagent` with `RecordingName` to produce a recorded video artifact
+- Test happy path AND at least one error path
+- Clean up test data after test (or use unique identifiers per test run)
+
+> For E2E test file organization and directory structure, see the `testing-strategy` rule.
+

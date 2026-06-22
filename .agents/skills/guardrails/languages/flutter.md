@@ -117,7 +117,7 @@ try {
 ---
 
 ## References
-- Flutter Idioms and Patterns @flutter-idioms-and-patterns.md
+- Flutter Idioms and Patterns @.agents/skills/flutter-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
 - Resources and Memory Management Principles @resources-and-memory-management-principles.md
 - Testing Strategy @testing-strategy.md

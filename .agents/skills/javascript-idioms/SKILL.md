@@ -9,7 +9,7 @@ paths:
 
 Modern JavaScript (ES2024+) rewards modules, async/await, and functional patterns. Idiomatic JS = strict mode, modular, well-tested. When TypeScript is available, prefer it — see `typescript-idioms`.
 
-> Scope: Plain JavaScript idioms. For TypeScript-specific patterns, load `@.agents/rules/typescript-idioms-and-patterns.md`.
+> Scope: Plain JavaScript idioms. For TypeScript-specific patterns, load `@.agents/skills/typescript-idioms/SKILL.md`.
 
 ### Modern Features
 
@@ -96,6 +96,6 @@ Vitest or Jest. Testing Library for DOM.
 | `npm audit` | CVE scanning | `npm audit` |
 
 ### Related
-- TypeScript Idioms @.agents/rules/typescript-idioms-and-patterns.md
+- TypeScript Idioms @.agents/skills/typescript-idioms/SKILL.md
 - Code Idioms and Conventions .agents/rules/code-idioms-and-conventions.md
 - Testing Strategy .agents/rules/testing-strategy.md

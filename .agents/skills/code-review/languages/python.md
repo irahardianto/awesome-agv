@@ -138,7 +138,7 @@ async def fetch_report(url: str) -> Report:
 ---
 
 ## References
-- Python Idioms and Patterns @python-idioms-and-patterns.md
+- Python Idioms and Patterns @.agents/skills/python-idioms/SKILL.md
 - Security Principles @security-principles.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

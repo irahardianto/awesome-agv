@@ -9,7 +9,7 @@ paths:
 
 Next.js (14+) rewards App Router, Server Components, and Server Actions. Idiomatic Next.js = server-first, streaming, edge-ready.
 
-> Scope: Next.js-specific patterns. For React: `@.agents/skills/react-idioms/SKILL.md`. For TypeScript: `@.agents/rules/typescript-idioms-and-patterns.md`.
+> Scope: Next.js-specific patterns. For React: `@.agents/skills/react-idioms/SKILL.md`. For TypeScript: `@.agents/skills/typescript-idioms/SKILL.md`.
 
 ### App Router (Default)
 
@@ -234,6 +234,6 @@ Next.js (14+) rewards App Router, Server Components, and Server Actions. Idiomat
 
 ### Related
 - React Idioms @.agents/skills/react-idioms/SKILL.md
-- TypeScript Idioms @.agents/rules/typescript-idioms-and-patterns.md
+- TypeScript Idioms @.agents/skills/typescript-idioms/SKILL.md
 - Frontend Design @.agents/skills/frontend-design/SKILL.md
 - Accessibility Principles @.agents/rules/accessibility-principles.md

@@ -134,5 +134,5 @@ public record TaskResponse(String id, String title, Priority priority) {}
 ## References
 - Java Idioms @.agents/skills/java-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md
 - Architectural Patterns @architectural-pattern.md

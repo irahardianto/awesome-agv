@@ -267,7 +267,7 @@ go test -race -count=100 -failfast ./internal/features/task/...
 ---
 
 ## Related
-- Go Idioms and Patterns @go-idioms-and-patterns.md
+- Go Idioms and Patterns @.agents/skills/go-idioms/SKILL.md
 - Performance Optimization (Go) @perf-optimization/languages/go.md
 - Error Handling Principles @error-handling-principles.md
 - Resources and Memory Management @resources-and-memory-management-principles.md

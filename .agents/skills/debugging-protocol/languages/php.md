@@ -184,4 +184,4 @@ Model::preventLazyLoading(!app()->isProduction());
 - PHP Idioms @.agents/skills/php-idioms/SKILL.md
 - Laravel Idioms @.agents/skills/laravel-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

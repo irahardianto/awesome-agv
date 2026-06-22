@@ -91,4 +91,4 @@ try (var conn = dataSource.getConnection();
 - Java Idioms @.agents/skills/java-idioms/SKILL.md
 - Error Handling Principles @error-handling-principles.md
 - Resources and Memory Management Principles @resources-and-memory-management-principles.md
-- Logging and Observability Principles @logging-and-observability-principles.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

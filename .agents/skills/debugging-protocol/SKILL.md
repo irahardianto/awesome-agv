@@ -100,5 +100,5 @@ The `languages/` directory contains **modular, language-specific debugging guide
 ## Rule Compliance
 When debugging, verify against:
 - Error Handling Principles @error-handling-principles.md (proper error propagation)
-- Logging and Observability Principles @logging-and-observability-principles.md (structured logging for diagnostics)
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md (structured logging for diagnostics)
 - Testing Strategy @testing-strategy.md (regression test for the fix)
