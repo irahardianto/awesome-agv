@@ -44,19 +44,3 @@ Follow **WCAG 2.1 Level AA** as the baseline for all user-facing interfaces.
 - Required fields are indicated both visually and programmatically (`required` attribute)
 - Form validation errors are announced to screen readers
 
-### Accessibility Checklist
-
-- [ ] All interactive elements reachable via keyboard?
-- [ ] Focus indicators visible on all interactive elements?
-- [ ] Semantic HTML elements used (no `<div>` buttons)?
-- [ ] Heading hierarchy is correct (h1 → h2 → h3)?
-- [ ] Color contrast meets AA standards (4.5:1)?
-- [ ] Color is not the sole indicator of meaning?
-- [ ] Images have appropriate alt text?
-- [ ] Form inputs have associated labels?
-- [ ] ARIA used correctly (native first)?
-
-### Related Principles
-- Core Design Principles @core-design-principles.md
-- Security Principles @security-principles.md (XSS prevention in user content)
-- Testing Strategy @testing-strategy.md (accessibility testing)

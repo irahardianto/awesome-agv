@@ -82,8 +82,3 @@ description: When implementing concurrent, parallel, or multi-threaded code (asy
 - Write unit tests with controlled concurrency (deterministic execution)  
 - Test timeout scenarios and resource exhaustion  
 - Test thread pool full, queue full scenarios
-
-### Related Principles
-- Resource and Memory Management Principles @resources-and-memory-management-principles.md
-- Error Handling Principles @error-handling-principles.md
-- Testing Strategy @testing-strategy.md

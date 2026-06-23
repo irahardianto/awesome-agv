@@ -75,8 +75,3 @@ description: When serializing, deserializing, or validating data formats (JSON, 
 - YAML: Disable unsafe constructors  
 - Python pickle: Never deserialize untrusted data
 
-### Related Principles
-- Error Handling Principles @error-handling-principles.md
-- Security Mandate @security-mandate.md
-- Security Principles @security-principles.md
-- API Design Principles @api-design-principles.md

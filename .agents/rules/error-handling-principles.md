@@ -54,20 +54,3 @@ description: When implementing error handling, working with error types, or desi
 }
 ```
 
-### Error Handling Checklist
-
-- [ ] Are all error paths explicitly handled (no empty catch blocks)?  
-- [ ] Do errors include correlation IDs for debugging?  
-- [ ] Are sensitive details sanitized before returning to client?  
-- [ ] Are resources cleaned up in all error scenarios?  
-- [ ] Are errors logged at appropriate levels (warn for 4xx, error for 5xx)?  
-- [ ] Are error tests written (negative test cases)?  
-- [ ] Is error handling consistent across application?
-
-### Related Principles
-- API Design Principles @api-design-principles.md - API Error Response Format section
-- Logging and Observability Mandate @logging-and-observability-mandate.md
-- Security Mandate @security-mandate.md
-- Security Principles @security-principles.md
-- Testing Strategy @testing-strategy.md
-- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md

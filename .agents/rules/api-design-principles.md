@@ -13,14 +13,6 @@ description: When implementing REST/HTTP APIs (endpoints, handlers, middleware, 
 - Hierarchical relationships: `/api/{version}/users/:userId/orders`  
 - Avoid verbs in URLs: `/api/{version}/getUser` ❌ → `/api/{version}/users/:id` ✅
 
-**HTTP Methods:**
-
-- GET: Read/retrieve resource (safe, idempotent, cacheable)  
-- POST: Create new resource (not idempotent)  
-- PUT: Replace entire resource (idempotent)  
-- PATCH: Partial update (idempotent)  
-- DELETE: Remove resource (idempotent)
-
 **Versioning:**
 
 - URL path versioning: `/api/{version}/users` e.g.`/api/v1/users` (explicit, clear)
@@ -118,10 +110,3 @@ All API errors must follow a consistent envelope structure, matching the success
   }
 }
 ```
-
-### Related Principles
-- Error Handling Principles @error-handling-principles.md
-- Security Mandate @security-mandate.md
-- Security Principles @security-principles.md
-- Logging and Observability Mandate @logging-and-observability-mandate.md
-- Data Serialization and Interchange Principles @data-serialization-and-interchange-principles.md

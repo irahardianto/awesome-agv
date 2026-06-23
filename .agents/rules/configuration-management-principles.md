@@ -70,41 +70,10 @@ Hybrid Approach (config files + .env files): define the structure of configurati
 - `.env.template` - Consist of credentials and secrets with blank value (SHOULD commit to git)  
 - `.env.development` - Local development credentials and secrets (SHOULD NOT commit to git)  
 
-**Example `.env.development`:**
-```
-DEV_DB_HOST=123.45.67.89
-DEV_DB_USERNAME=prod_user
-DEV_DB_PASSWORD=a_very_secure_production_password
-```
-
 **Feature files:** Description: Settings are grouped into files based on what they do (database, auth, etc.). This keeps your configuration organized. When to Use: Use this as your primary method for organizing non-secret settings. It’s the best way to keep your configuration clean and scalable as your application grows.
 
 - `config/database.yaml` - Database settings  
 - `config/redis.yaml` - Cache settings  
 - `config/auth.yaml` - Authentication settings
 
-**Example `config/database.yaml`:**
-```
-default: &default
-  adapter: postgresql
-  pool: 5
-development:
-  <<: *default
-  host: localhost
-  database: myapp_dev
-  username: <%= ENV['DEV_DB_USERNAME'] %> # Placeholder for a secret
-  password: <%= ENV['DEV_DB_PASSWORD'] %>
-production:
-  <<: *default
-  host: <%= ENV['PROD_DB_HOST'] %>
-  database: myapp_prod
-  username: <%= ENV['PROD_DB_USERNAME'] %>
-  password: <%= ENV['PROD_DB_PASSWORD'] %>
-```
-
 > **Note:** Feature flag configuration is a distinct, PRD-gated concern — not routine application configuration. See the `feature-flags` skill @.agents/skills/feature-flags/SKILL.md for when and how feature flags are used.
-
-### Related Principles
-- Security Mandate @security-mandate.md
-- Security Principles @security-principles.md
-- `feature-flags` skill @.agents/skills/feature-flags/SKILL.md

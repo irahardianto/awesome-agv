@@ -73,16 +73,3 @@ chore/update-deps
 - **Release branches:** Merge commit (preserve history)
 - **Hotfixes:** Cherry-pick to affected branches
 
-### Git Workflow Checklist
-
-- [ ] Branch named with correct type prefix?
-- [ ] All commits follow conventional format?
-- [ ] No debug code or secrets committed?
-- [ ] All tests pass before committing?
-- [ ] PR is <400 lines (or justified if larger)?
-- [ ] Commit messages explain why, not just what?
-
-### Related Principles
-- Code Completion Mandate @code-completion-mandate.md
-- Testing Strategy @testing-strategy.md
-- Security Mandate @security-mandate.md

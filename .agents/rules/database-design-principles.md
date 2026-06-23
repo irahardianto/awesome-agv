@@ -53,18 +53,3 @@ description: When designing database schemas, writing migrations, creating queri
 - Handle deadlocks with retry logic
 - Never hold transactions open during user interaction or external API calls
 
-### Database Design Checklist
-
-- [ ] Schema follows naming conventions?
-- [ ] All tables have `id`, `created_at`, `updated_at`?
-- [ ] Foreign keys have proper constraints and indexes?
-- [ ] Queries are parameterized (no SQL injection)?
-- [ ] Indexes exist for frequent query patterns?
-- [ ] Migrations are reversible?
-- [ ] Transactions are short and focused?
-- [ ] N+1 queries avoided?
-
-### Related Principles
-- Security Principles @security-principles.md (SQL injection prevention)
-- Performance Optimization Principles @performance-optimization-principles.md (query performance)
-- Error Handling Principles @error-handling-principles.md (transaction error handling)

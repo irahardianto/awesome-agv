@@ -67,20 +67,3 @@ This rule is tool-agnostic. Whether the project uses Datadog, LGTM stack, Sentry
 New Relic, or CloudWatch — the code patterns (health checks, metrics, error tracking)
 are the same. The specific client library belongs in project-level configuration.
 
-### Monitoring Checklist
-
-- [ ] Health check endpoints implemented (/health and /ready)?
-- [ ] Liveness probe has no dependency checks?
-- [ ] Readiness probe checks all critical dependencies?
-- [ ] Key operations instrumented with RED/USE metrics?
-- [ ] No high-cardinality metric labels?
-- [ ] Unhandled exceptions captured with context?
-- [ ] Circuit breakers on external dependencies?
-- [ ] Timeouts on all external calls?
-
-### Related Principles
-- Logging and Observability Mandate @logging-and-observability-mandate.md
-- `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md
-- Error Handling Principles @error-handling-principles.md
-- Resource and Memory Management Principles @resources-and-memory-management-principles.md
-- Concurrency and Threading Principles @concurrency-and-threading-principles.md

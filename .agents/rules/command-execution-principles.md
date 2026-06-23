@@ -62,17 +62,3 @@ description: When executing external commands, shell scripts, or system processe
 4. **Last resort**: pipe `yes |` if no non-interactive flag exists
 
 Running an interactive command that blocks the agent is a **critical failure**.
-
-### Command Execution Checklist
-
-- [ ] Is user input sanitized/validated before use in commands?
-- [ ] Are arguments passed as lists (not shell string concatenation)?
-- [ ] Are commands running with minimum necessary permissions?
-- [ ] Are exit codes checked and errors handled?
-- [ ] Are timeouts set for long-running commands?
-- [ ] Is stderr captured and logged?
-- [ ] Are commands non-interactive (no prompts that block agent execution)?
-
-### Related Principles
-- Security Mandate @security-mandate.md
-- Security Principles @security-principles.md
