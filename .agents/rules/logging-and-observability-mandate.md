@@ -46,9 +46,3 @@ Prefer middleware, decorators, or framework interceptors for automatic operation
 ### Implementation Guide
 
 For log levels, structured logging patterns, language-specific implementations, security considerations, and code examples, see the `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md.
-
-### Related Principles
-- `logging-implementation` skill @.agents/skills/logging-implementation/SKILL.md
-- Monitoring and Alerting Principles @monitoring-and-alerting-principles.md
-- Error Handling Principles @error-handling-principles.md
-- API Design Principles @api-design-principles.md

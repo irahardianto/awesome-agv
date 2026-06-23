@@ -18,7 +18,3 @@ Generate defensibility, not just functionality. Assume hostile environment, chan
 - **Every input is malformed/malicious until validated** at the system boundary.
 - **Defense in depth.** UI validation is never sufficient alone — validate at every layer boundary (API, service, database).
 
-### Related Principles
-- Security Mandate @security-mandate.md
-- Error Handling Principles @error-handling-principles.md
-- Architectural Patterns @architectural-pattern.md

@@ -49,6 +49,17 @@ Use this structure for Go backend applications. The vertical slice principle app
 - Tests live alongside the code they test (`_test.go` suffix)
 - `go.mod` at the root — single module for the entire application
 
+### Multiple Entry Points
+
+```
+cmd/
+  api/main.go         # HTTP server entry point
+  cli/main.go         # CLI tool entry point
+  worker/main.go      # Background worker entry point
+```
+
+Each entry point under `cmd/` is a separate binary. All share the same internal packages.
+
 ### Related Principles
 - Project Structure @.agents/rules/project-structure.md (core philosophy)
 - Go Idioms and Patterns @../SKILL.md (coding idioms, error handling, naming)

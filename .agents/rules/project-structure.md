@@ -38,47 +38,16 @@ Each layout follows the universal philosophy above. Load the relevant layout whe
 
 ### Adapting for Different Project Types
 
-| Project Type            | What to Change                                                                                    |
-| ----------------------- | ------------------------------------------------------------------------------------------------- |
-| **Monorepo** (default)  | Use as-is — `apps/backend/`, `apps/frontend/`, `apps/mobile/`                                     |
-| **Single backend**      | Flatten to root: `cmd/`, `internal/` (Go) or `src/` (Rust) at project root                        |
-| **Single frontend**     | Flatten to root: `src/` at project root (no `apps/` wrapper)                                      |
-| **Single mobile**       | Flatten to root: `lib/` at project root (no `apps/` wrapper)                                      |
-| **Single Rust binary**  | Flatten to root: `src/`, `tests/`, `benches/` at project root with `Cargo.toml`                   |
-| **Rust library**        | Flatten to root: `src/`, `examples/`, `tests/` at project root with `Cargo.toml` (lib target)     |
-| **Rust workspace**      | `crates/` at root with workspace `Cargo.toml` — each crate follows single-crate layout internally |
-| **Microservices**       | One directory per service under `apps/` (each with own `go.mod`/`Cargo.toml`/`Dockerfile`)        |
-| **Full-stack + mobile** | Use all relevant layout files under `apps/`                                                       |
+| Project Type | Structure |
+|---|---|
+| **Monorepo** (default) | `apps/backend/`, `apps/frontend/`, `apps/mobile/` |
+| **Single app** | Flatten to root — no `apps/` wrapper. Internal feature structure stays the same. |
+| **Microservices** | One directory per service under `apps/`, each with own build config and Dockerfile. |
+| **Full-stack + mobile** | Combine relevant layouts under `apps/` |
+
+For language-specific adaptations (Go, Rust, Python, etc.), see the relevant idiom skill's `references/project-structure.md`.
 
 **Single-app projects** don't need the `apps/` directory — put the language-specific root directories directly at the project root. The internal structure (features, platform, etc.) stays the same.
 
-**Multiple entry points (CLI, workers, etc.):**
-
-Go:
-```
-cmd/
-  api/main.go         # HTTP server entry point
-  cli/main.go         # CLI tool entry point
-  worker/main.go      # Background worker entry point
-```
-
-Rust:
-```
-src/
-  bin/
-    api.rs            # HTTP server entry point
-    cli.rs            # CLI tool entry point
-    worker.rs         # Background worker entry point
-  lib.rs              # Shared library code
-```
-
-**Microservices notes:**
-- Each service is its own directory under `apps/` with its own `go.mod`/`Cargo.toml` and `Dockerfile`
-- Each service follows the same layout internally (see language-specific files)
-- Add `shared/` at root for cross-service contracts (protobuf, shared types) — keep this minimal
-- Services communicate via API calls or message queues, never direct imports
-
-### Related Principles
-- Code Organization Principles @code-organization-principles.md
-- Architectural Patterns — Testability-First Design @architectural-pattern.md
+**Multiple entry points and microservices:** See the relevant language idiom skill for entry point conventions and service layout.
 

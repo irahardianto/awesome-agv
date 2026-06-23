@@ -14,6 +14,3 @@ trigger: always_on
 4. **Defense in depth:** Multiple layers of security, never rely on a single control
 
 **When implementing security-sensitive features (auth, validation, queries), see Security Principles @security-principles.md for detailed implementation guidance.**
-
-### Related Principles
-- Security Principles @security-principles.md

@@ -26,6 +26,3 @@ trigger: always_on
 4. **README:** Setup, usage, examples  
 5. **Architecture docs:** System design, component interactions, use valid mermaid diagram
 
-### Related Principles
-- Core Design Principles @core-design-principles.md
-- Code Organization Principles @code-organization-principles.md

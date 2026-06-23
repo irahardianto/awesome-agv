@@ -18,25 +18,7 @@ Extract calculations, validations, and transformations into pure functions (inpu
 #### Rule 3: Dependency Direction
 Dependencies point inward toward business logic. Infrastructure implements interfaces defined by the business layer — never the reverse.
 
-```
-┌──────────────────────────────────────┐
-│  Infrastructure Layer                │
-│  (DB, HTTP, Files, External APIs)    │
-│  Depends on ↓                        │
-└──────────────────────────────────────┘
-↓
-┌──────────────────────────────────────┐
-│  Contracts/Interfaces Layer          │
-│  (Abstract ports — no implementation)│
-│  Depends on ↓                        │
-└──────────────────────────────────────┘
-↓
-┌──────────────────────────────────────┐
-│  Business Logic Layer                │
-│  (Pure functions, domain rules)      │
-│  NO dependencies on infrastructure   │
-└──────────────────────────────────────┘
-```
+**Dependency direction:** Infrastructure → Contracts/Interfaces → Business Logic (each layer depends only on the layer below it; dependencies always point inward toward pure business logic).
 
 **Never:** Business logic imports database driver, domain entities import HTTP framework, core calculations import config files.
 
@@ -69,19 +51,3 @@ Dependencies point inward toward business logic. Infrastructure implements inter
 
 > For code examples in Go, TypeScript, Python, Rust, and Dart, see the `testability-patterns` skill.
 > For test pyramid ratios, naming conventions, and tooling, see `testing-strategy` rule.
-
-### Enforcement Checklist
-
-Before marking code complete, verify:
-- [ ] Can I run unit tests without starting database/external services?
-- [ ] Are all I/O operations behind an abstraction?
-- [ ] Is business logic pure (no side effects)?
-- [ ] Do integration tests exist for all adapters?
-- [ ] Does pattern match existing codebase (>80% consistency)?
-
-### Related Principles
-- Core Design Principles @core-design-principles.md
-- Testing Strategy @testing-strategy.md
-- Code Organization Principles @code-organization-principles.md
-- Project Structure @project-structure.md
-- Database Design Principles @database-design-principles.md

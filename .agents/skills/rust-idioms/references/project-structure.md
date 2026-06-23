@@ -206,6 +206,23 @@ crates/pathfinder-search/
       mod.rs                # Shared test fixtures and helpers
 ```
 
+### Multiple Entry Points
+
+```
+src/
+  bin/
+    api.rs            # HTTP server entry point
+    cli.rs            # CLI tool entry point
+    worker.rs         # Background worker entry point
+  lib.rs              # Shared library code
+```
+
+Each file under `src/bin/` compiles to a separate binary. All share `lib.rs`.
+
+### Microservices
+
+Each service is its own directory under `apps/` with its own `Cargo.toml` and `Dockerfile`. Each service follows the same internal layout. Add `shared/` at root for cross-service contracts (protobuf, shared types) — keep this minimal. Services communicate via API calls or message queues, never direct imports.
+
 ### Related Principles
 - Project Structure @.agents/rules/project-structure.md (core philosophy)
 - Rust Idioms and Patterns ../SKILL.md

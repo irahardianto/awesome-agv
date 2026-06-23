@@ -32,8 +32,3 @@ Features interact by importing each other's **public API (Service/service layer)
 ### Avoid Circular Dependencies
 
 If module A imports B and B imports A, extract shared code to a third module C. Circular dependencies indicate poor boundary definition — restructure before proceeding.
-
-### Related Principles
-- Core Design Principles @core-design-principles.md
-- Project Structure @project-structure.md
-- Architectural Patterns @architectural-pattern.md
