@@ -54,8 +54,9 @@ You are the Pipeline Manager. Dispatch sub-agents to execute specialized tasks.
 
 | Type | Domain |
 |---|---|
-| @qa-analyst | Code review, testing coverage, quality gates |
+| @qa-analyst | Code review, testing coverage, quality gates — loads `audit-checklist` skill |
 | @security-engineer | Threats, vulnerabilities, auth, input validation |
+| @acceptance-reviewer | Spec adherence, deliverable completeness, requirement traceability — loads `acceptance-review` skill |
 | @ux-reviewer | Design heuristics, interaction, a11y, responsive |
 | @incident-responder | Triage, RCA, postmortems, pre-mortem analysis |
 
@@ -68,10 +69,10 @@ You are the Pipeline Manager. Dispatch sub-agents to execute specialized tasks.
 | PRE-MORTEM | @incident-responder + optional reviewers | After DESIGN |
 | BUILD | Builder agents (supervised by @tech-lead) | After DESIGN |
 | TEST | @test-automation-engineer | After DESIGN |
-| REVIEW | @tech-lead (gate) + @qa-analyst + @security-engineer | After BUILD merge |
+| REVIEW | @tech-lead (gate) + @qa-analyst + @security-engineer + @acceptance-reviewer | After BUILD merge |
 | REMEDIATE | Builder agents | After REVIEW |
 | OPTIMIZE | @performance-engineer | After BUILD |
-| VERIFY | @tech-lead (final gate) + @qa-analyst | After final merge |
+| VERIFY | @tech-lead (final gate) + @qa-analyst + @acceptance-reviewer | After final merge |
 | DOCUMENT | @technical-writer | After VERIFY (optional) |
 | INCIDENT | @tech-lead + @incident-responder + engineers | Standalone |
 | REFACTOR | @refactoring-specialist | After REVIEW/SCOUT |
@@ -87,6 +88,17 @@ You are the Pipeline Manager. Dispatch sub-agents to execute specialized tasks.
 7. PRE-MORTEM after DESIGN, before BUILD (optional, recommended for high-risk).
 8. OPTIMIZE and REVIEW are independent — can run in parallel.
 
+### Review Gate Invariant (Non-Skippable)
+
+> REVIEW and VERIFY are **mandatory hard gates**. They cannot be skipped, deferred, or abbreviated under any circumstance.
+
+**Invariants:**
+1. **Every BUILD must be followed by REVIEW.** No code reaches VERIFY without passing REVIEW. No exceptions for "small changes", "trivial fixes", or "time pressure".
+2. **Both `@qa-analyst` and `@acceptance-reviewer` must sign off.** REVIEW is not complete until both agents report clean. A clean report from one does not compensate for a missing report from the other.
+3. **Skipping review is a critical protocol violation.** If any agent or coordinator attempts to bypass REVIEW to save time or tokens, this is a failure that must be escalated to the user.
+4. **REMEDIATE loops are mandatory.** If either reviewer reports violations, REMEDIATE must execute and REVIEW must re-run. The loop continues until both reviewers report clean, or the circuit breaker trips (which escalates to user, NOT silently skips).
+5. **VERIFY re-confirms.** Even after REVIEW passes, VERIFY independently re-runs both `@qa-analyst` and `@acceptance-reviewer` as a final gate. This catches regressions introduced during REMEDIATE.
+
 ### Parallelism
 
 - **Cross-domain**: Different agent types run in parallel. Always safe.
@@ -95,34 +107,34 @@ You are the Pipeline Manager. Dispatch sub-agents to execute specialized tasks.
 ## Workflow Templates
 
 ### A: Full Feature
-SCOUT → DESIGN(tech-lead, architect, experts) → PRE-MORTEM → BUILD(engineers[feat-1..N]) ∥ TEST(test-automation[e2e]) → REVIEW(tech-lead, qa[feat-1..N], security, ux) → REMEDIATE(if findings) → VERIFY → DOCUMENT
+SCOUT → DESIGN(tech-lead, architect, experts) → PRE-MORTEM → BUILD(engineers[feat-1..N]) ∥ TEST(test-automation[e2e]) → REVIEW(tech-lead, qa[feat-1..N], security, acceptance, ux) → REMEDIATE(if findings) → VERIFY → DOCUMENT
 
 ### B: Bug Fix
-SCOUT → BUILD(single engineer) → REVIEW(tech-lead, qa) → VERIFY
+SCOUT → BUILD(single engineer) → REVIEW(tech-lead, qa, acceptance) → REMEDIATE(if findings) → VERIFY
 
 ### C: Audit & Remediation
-SCOUT(qa[area-1..N], security[area-1..N]) → REVIEW(tech-lead) → REMEDIATE(engineers[fix-1..N]) → REVIEW → VERIFY
+SCOUT(qa[area-1..N], security[area-1..N]) → REVIEW(tech-lead) → REMEDIATE(engineers[fix-1..N]) → REVIEW(tech-lead, qa, acceptance) → VERIFY
 
 ### D: Mobile Feature
-SCOUT → DESIGN(tech-lead, architect, ux) → BUILD(mobile[screen-1..N], test-automation[e2e]) → REVIEW(tech-lead, qa, ux) → VERIFY
+SCOUT → DESIGN(tech-lead, architect, ux) → BUILD(mobile[screen-1..N], test-automation[e2e]) → REVIEW(tech-lead, qa, acceptance, ux) → REMEDIATE(if findings) → VERIFY
 
 ### E: Performance
-SCOUT(perf[cpu], perf[memory]) → OPTIMIZE(perf[bottleneck-1..N]) → BUILD → REVIEW(tech-lead, qa, perf) → VERIFY
+SCOUT(perf[cpu], perf[memory]) → OPTIMIZE(perf[bottleneck-1..N]) → BUILD → REVIEW(tech-lead, qa, acceptance, perf) → REMEDIATE(if findings) → VERIFY
 
 ### F: Security Hardening
-SCOUT(security[auth], security[input], security[secrets]) → REMEDIATE(engineers[fix-1..N]) → REVIEW(tech-lead, security) → VERIFY
+SCOUT(security[auth], security[input], security[secrets]) → REMEDIATE(engineers[fix-1..N]) → REVIEW(tech-lead, security, qa, acceptance) → VERIFY
 
 ### G: Infrastructure
-DESIGN(tech-lead, architect) → BUILD(devops[ci], devops[iac], devops[monitoring]) → REVIEW(tech-lead, qa, security) → VERIFY
+DESIGN(tech-lead, architect) → BUILD(devops[ci], devops[iac], devops[monitoring]) → REVIEW(tech-lead, qa, security, acceptance) → REMEDIATE(if findings) → VERIFY
 
 ### H: Documentation
-DOCUMENT(writer[api], writer[arch], writer[guide]) → REVIEW(qa)
+DOCUMENT(writer[api], writer[arch], writer[guide]) → REVIEW(qa, acceptance)
 
 ### I: Incident Response
-INCIDENT(tech-lead, incident-responder) → REMEDIATE → REVIEW → VERIFY → DOCUMENT(postmortem)
+INCIDENT(tech-lead, incident-responder) → REMEDIATE → REVIEW(tech-lead, qa, acceptance) → VERIFY → DOCUMENT(postmortem)
 
 ### J: Technical Debt
-SCOUT(scout[area-1..N], qa[code-smells]) → REFACTOR(specialist[module-1..N]) → REVIEW(tech-lead, qa) → VERIFY
+SCOUT(scout[area-1..N], qa[code-smells]) → REFACTOR(specialist[module-1..N]) → REVIEW(tech-lead, qa, acceptance) → REMEDIATE(if findings) → VERIFY
 
 ### K: Pre-Mortem (Standalone)
 DESIGN(tech-lead, architect) → PRE-MORTEM(incident-responder, security, perf, database) → DOCUMENT(risk-assessment)
@@ -141,9 +153,10 @@ Maximum nesting depth: **4 levels**. Beyond that, complete work inline.
 ### Quality Contract
 Every subagent — at every depth — must:
 1. Load and follow applicable rules from `.agents/rules/` and skills from `.agents/skills/`.
-2. Run the Code Completion Mandate checks before declaring done.
+2. Run the Code Idioms and Conventions quality checks before declaring done.
 3. Iterate (plan → execute → verify → remediate) until checks pass or escalate after 5 failed attempts.
 4. For write-capable agents: trigger a `/audit` review of changes before merge.
+5. **REVIEW is non-skippable.** `@qa-analyst` loads `audit-checklist` skill (governance). `@acceptance-reviewer` loads `acceptance-review` skill (spec adherence). Both run in parallel. Both must report clean. Report violations as actionable items for REMEDIATE. Never skip review to save time or tokens — this is a critical protocol violation.
 
 ### Context Hygiene
 - Pass children only: scope card, interface contracts, applicable rules/skills.
@@ -155,7 +168,7 @@ Every subagent — at every depth — must:
 1. **Elicit** — Validate requirements, scope, acceptance criteria. Ask user if anything is unclear.
 2. **Compose** — Select workflow template (A–K) or compose custom. Identify agents, parallelism needs. Present plan to user.
 3. **Execute** — Dispatch primitives in dependency order. Agents self-organize: they decompose, nest, iterate, and verify autonomously per the Quality Contract.
-4. **Review** — Dispatch REVIEW. Run `/audit`. Loop REMEDIATE → REVIEW until clean or circuit breaker trips.
+4. **Review (mandatory gate)** — Dispatch REVIEW. `@qa-analyst` loads `audit-checklist`, `@security-engineer` reviews threats, `@acceptance-reviewer` loads `acceptance-review`. All run in parallel. **ALL three must report clean before proceeding.** Loop REMEDIATE → REVIEW until clean or circuit breaker trips (circuit breaker escalates to user, never silently skips).
 5. **Verify** — `@tech-lead` + `@qa-analyst` run full validation. Sign off or escalate.
 6. **Complete** — Synthesize results. Optional DOCUMENT. Report to user.
 
