@@ -84,7 +84,7 @@ graph LR
 
 ### Phase 4: Verify
 **File:** `phase-verify.md`
-**Mandatory Rules:** `code-completion-mandate.md`, all applicable mandates
+**Mandatory Rules:** `code-idioms-and-conventions.md`, all applicable mandates
 - Full lint/test/build validation
 - Report coverage
 

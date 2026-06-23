@@ -376,7 +376,7 @@ When using `<Transition>` or `<RouterView>` with transition effects, CSS framewo
 | `eslint-plugin-vue` | Vue-specific lint rules     |
 | `prettier`          | Canonical formatting        |
 
-See `code-completion-mandate.md` for exact commands.
+See `code-idioms-and-conventions.md` for exact commands.
 
 ---
 

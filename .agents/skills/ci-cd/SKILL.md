@@ -354,7 +354,7 @@ dev → staging → production
 
 ### Related Principles
 
-- Code Completion Mandate @code-completion-mandate.md (validation before ship)
+- Code Idioms and Conventions @code-idioms-and-conventions.md (validation before ship)
 - Security Mandate @security-mandate.md (secrets management)
 - Security Principles @security-principles.md (image scanning, SBOM)
 - Git Workflow Principles @git-workflow-principles.md (branch strategy)

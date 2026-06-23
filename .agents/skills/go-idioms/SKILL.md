@@ -286,7 +286,7 @@ Go favors simplicity, explicitness, and readability. The language is intentional
 
 ### Formatting and Static Analysis
 
-All of the following **must pass with zero warnings/errors** before any commit. See `code-completion-mandate.md` for the full checklist.
+All of the following **must pass with zero warnings/errors** before any commit. See `code-idioms-and-conventions.md` for the full checklist.
 
 | Tool                    | Purpose                  | Command              |
 | ----------------------- | ------------------------ | -------------------- |

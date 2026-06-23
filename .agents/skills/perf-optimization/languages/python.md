@@ -301,5 +301,5 @@ python -m timeit -n 10000 -s "import numpy; data = numpy.arange(1000)" "data * 2
 
 ## Related Principles
 - Python Idioms and Patterns @.agents/skills/python-idioms/SKILL.md
-- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
+- Core Design Principles § Concurrency @core-design-principles.md
 - Performance Optimization Principles @performance-optimization-principles.md

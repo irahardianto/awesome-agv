@@ -186,7 +186,7 @@ expect_used = "warn"
 ### Related Principles
 - Error Handling Principles @error-handling-principles.md
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md
-- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
+- Core Design Principles § Concurrency @core-design-principles.md
 - Performance Optimization Principles @performance-optimization-principles.md
 - Resource and Memory Management Principles @resources-and-memory-management-principles.md
 - Security Mandate @security-mandate.md

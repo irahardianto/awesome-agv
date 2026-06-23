@@ -204,7 +204,7 @@ Python uses Protocols and constructor injection to achieve the same testability 
 
 ### Async / Await
 
-> For general async principles (when to add concurrency), see `concurrency-and-threading-mandate.md`. This section covers Python-specific async idioms.
+> For general async principles (when to add concurrency), see `core-design-principles.md` § Concurrency. This section covers Python-specific async idioms.
 
 1. **Choose one async paradigm and stay consistent** — do not mix `asyncio.run` entry points
    ```python
@@ -414,7 +414,7 @@ Follow **PEP 8** rigorously. No exceptions.
 
 ### Formatting and Static Analysis
 
-All of the following **must pass with zero warnings/errors** before any commit. See `code-completion-mandate.md` for the full checklist.
+All of the following **must pass with zero warnings/errors** before any commit. See `code-idioms-and-conventions.md` for the full checklist.
 
 | Tool         | Purpose                           | Command                            |
 | ------------ | --------------------------------- | ---------------------------------- |
@@ -452,7 +452,7 @@ asyncio_mode = "auto"
 - Project Structure — Python Backend references/project-structure.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md
-- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
+- Core Design Principles § Concurrency @core-design-principles.md
 - Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md
 - Security Principles @security-principles.md
 - Dependency Management Principles @dependency-management-principles.md

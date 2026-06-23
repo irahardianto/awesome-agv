@@ -11,7 +11,7 @@ paths:
 
 TypeScript's type system is your documentation, your test, and your specification — all at once. Make the type system encode the invariants of your domain so that invalid states are unrepresentable. Lean into the compiler.
 
-> **Scope:** This file covers TypeScript-specific *type system and language idioms*. For Vue-specific patterns, see `@.agents/skills/vue-idioms/SKILL.md`. For file layout, see `references/project-structure.md in this skill`. For quality commands, see `code-completion-mandate.md`. For logging library, see `@.agents/skills/logging-implementation/SKILL.md`.
+> **Scope:** This file covers TypeScript-specific *type system and language idioms*. For Vue-specific patterns, see `@.agents/skills/vue-idioms/SKILL.md`. For file layout, see `references/project-structure.md in this skill`. For quality commands, see `code-idioms-and-conventions.md`. For logging library, see `@.agents/skills/logging-implementation/SKILL.md`.
 
 ---
 
@@ -139,7 +139,7 @@ These flags catch the majority of runtime errors at compile time. Never disable 
 
 ### Async/Await
 
-> For general async patterns (when to use concurrency), see `concurrency-and-threading-mandate.md`. This section covers TypeScript-specific async idioms.
+> For general async patterns (when to use concurrency), see `core-design-principles.md` § Concurrency. This section covers TypeScript-specific async idioms.
 
 1. **Always `await` or handle returned Promises — no floating promises**
    ```typescript
@@ -289,7 +289,7 @@ const res = await apiFetch('/api/tasks');
 | `prettier`                 | Canonical formatting                    | Non-negotiable                                                    |
 | `npm audit` / `pnpm audit` | Dependency CVE scanning                 | Run in CI; fail on high severity                                  |
 
-See `code-completion-mandate.md` for the exact commands to run before committing.
+See `code-idioms-and-conventions.md` for the exact commands to run before committing.
 
 ---
 
@@ -298,7 +298,7 @@ See `code-completion-mandate.md` for the exact commands to run before committing
 - Vue Idioms and Patterns @.agents/skills/vue-idioms/SKILL.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md
-- Concurrency and Threading Mandate @concurrency-and-threading-mandate.md
+- Core Design Principles § Concurrency @core-design-principles.md
 - Security Principles @security-principles.md
 - Dependency Management Principles @dependency-management-principles.md
 - Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

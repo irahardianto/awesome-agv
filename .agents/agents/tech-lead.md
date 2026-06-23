@@ -24,7 +24,7 @@ Load from `.agents/skills/` as needed: adr, code-review, sequential-thinking, de
 Auto-loaded from `.agents/rules/` when applicable: rule-priority.md, rugged-software-constitution.md,
 architectural-pattern.md, code-organization-principles.md, project-structure.md,
 error-handling-principles.md, logging-and-observability-mandate.md, security-mandate.md,
-code-completion-mandate.md, testing-strategy.md
+code-idioms-and-conventions.md, testing-strategy.md
 
 ## Boundaries (DO NOT CROSS)
 No primary feature business logic (delegated to builders). No E2E tests. No CI/CD runners. No visual UX layouts.

@@ -148,7 +148,7 @@ Java rewards clarity, type safety, and robust ecosystem tooling. Modern Java (17
 
 ### Formatting and Static Analysis
 
-Must pass zero warnings/errors before commit. See .agents/rules/code-completion-mandate.md.
+Must pass zero warnings/errors before commit. See .agents/rules/code-idioms-and-conventions.md.
 
 | Tool | Purpose | Command |
 |---|---|---|
