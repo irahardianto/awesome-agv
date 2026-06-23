@@ -20,8 +20,4 @@ Apply SOLID, DRY, KISS, and Separation of Concerns. Below are **project-specific
 
 **SRP signal.** If explaining what something does requires "and", it likely violates SRP. Split it.
 
-### Related Principles
-- Architectural Patterns @architectural-pattern.md
-- Code Organization Principles @code-organization-principles.md
-- Documentation Principles @documentation-principles.md
-- Accessibility Principles @accessibility-principles.md
+**Concurrency: profile before parallelizing.** Don't add concurrency without measured evidence of a bottleneck. Use async I/O for I/O-bound work, OS threads for CPU-bound work. For implementation details (race conditions, deadlocks, message passing), see `concurrency-and-threading-principles` rule. For language-specific patterns, see the relevant idiom skill.

@@ -10,9 +10,9 @@ When two rules pull in opposite directions, use this priority to decide:
 
 1. **Security Mandate** — always wins. Never compromise security for velocity, simplicity, or convenience.
 2. **Rugged Software Constitution** — foundational philosophy. Code must be defensible.
-3. **Code Completion Mandate** and **Logging and Observability Mandate** — both are always-on enforcement rules. Validation and instrumentation are non-negotiable; neither can be skipped to ship faster.
+3. **Code Idioms and Conventions** (includes completion mandate) and **Logging and Observability Mandate** — both are always-on enforcement rules. Validation and instrumentation are non-negotiable; neither can be skipped to ship faster.
 4. **Testability-First Design** — maintainability enables future improvements.
-5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom skills (`go-idioms`, `typescript-idioms`, `vue-idioms`, `flutter-idioms`, `rust-idioms`, `python-idioms` — all in `.agents/skills/`), `concurrency-and-threading-mandate.md`, and the `ci-cd` skill. When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
+5. **Feature-specific principles** — context-dependent guidance for the task at hand. This includes language-specific idiom skills (`go-idioms`, `typescript-idioms`, `vue-idioms`, `flutter-idioms`, `rust-idioms`, `python-idioms` — all in `.agents/skills/`) and the `ci-cd` skill. When an idiom conflicts with a higher-priority rule (e.g., security or testability), the higher-priority rule always wins.
 6. **PRD-gated principles** — only apply when the PRD or technical architecture document *explicitly requires* the capability. Includes the `feature-flags` skill and the `ci-cd` skill's `references/gitops-kubernetes.md`. Must not be applied based on speculation; agent must confirm requirement before activating.
 7. **YAGNI / KISS** — only when no security, reliability, or maintainability trade-off exists.
 
@@ -33,9 +33,3 @@ When in doubt, ask: *"Which choice makes the code more defensible and maintainab
 
 If both options are equally defensible, choose the simpler one (KISS).
 
-### Related Principles
-- Security Mandate @security-mandate.md
-- Rugged Software Constitution @rugged-software-constitution.md
-- Code Completion Mandate @code-completion-mandate.md
-- Logging and Observability Mandate @logging-and-observability-mandate.md
-- Architectural Patterns — Testability-First Design @architectural-pattern.md
