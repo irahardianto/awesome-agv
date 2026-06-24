@@ -37,8 +37,8 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 
 ### Key Features
 
-*   📏 **27 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
-*   🛠️ **50 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
+*   📏 **25 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
+*   🛠️ **53 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
 *   🔄 **12 Workflows** — end-to-end development processes from research to ship.
 *   🤖 **16 Agent Personas** — specialized sub-agents for multi-agent orchestration (tech-lead, architect, backend-engineer, security-engineer, etc.).
 *   🏗️ **Three-Tier Loading System** — always-on mandates + contextual principles + on-demand skills for zero-noise enforcement.
@@ -134,11 +134,9 @@ graph TD
   accessibility_principles["accessibility-principles.md"]
   api_design_principles["api-design-principles.md"]
   architectural_pattern["architectural-pattern.md"]
-  code_completion_mandate["code-completion-mandate.md"]
   code_idioms_and_conventions["code-idioms-and-conventions.md"]
   code_organization_principles["code-organization-principles.md"]
   command_execution_principles["command-execution-principles.md"]
-  concurrency_and_threading_mandate["concurrency-and-threading-mandate.md"]
   concurrency_and_threading_principles["concurrency-and-threading-principles.md"]
   configuration_management_principles["configuration-management-principles.md"]
   core_design_principles["core-design-principles.md"]
@@ -171,17 +169,15 @@ graph TD
   architectural_pattern --> database_design_principles
   architectural_pattern --> project_structure
   architectural_pattern --> testing_strategy
-  code_completion_mandate --> code_idioms_and_conventions
-  code_completion_mandate --> rugged_software_constitution
-  code_idioms_and_conventions --> code_completion_mandate
+  code_idioms_and_conventions --> rugged_software_constitution
   code_idioms_and_conventions --> core_design_principles
   code_organization_principles --> architectural_pattern
   code_organization_principles --> core_design_principles
   code_organization_principles --> project_structure
   command_execution_principles --> security_mandate
   command_execution_principles --> security_principles
-  concurrency_and_threading_mandate --> concurrency_and_threading_principles
-  concurrency_and_threading_mandate --> performance_optimization_principles
+  core_design_principles --> concurrency_and_threading_principles
+  core_design_principles --> performance_optimization_principles
   concurrency_and_threading_principles --> error_handling_principles
   concurrency_and_threading_principles --> resources_and_memory_management_principles
   concurrency_and_threading_principles --> testing_strategy
@@ -203,12 +199,12 @@ graph TD
   documentation_principles --> code_organization_principles
   documentation_principles --> core_design_principles
   error_handling_principles --> api_design_principles
-  error_handling_principles --> concurrency_and_threading_mandate
+  error_handling_principles --> core_design_principles
   error_handling_principles --> logging_and_observability_mandate
   error_handling_principles --> security_mandate
   error_handling_principles --> security_principles
   error_handling_principles --> testing_strategy
-  git_workflow_principles --> code_completion_mandate
+  git_workflow_principles --> code_idioms_and_conventions
   git_workflow_principles --> security_mandate
   git_workflow_principles --> testing_strategy
   logging_and_observability_mandate --> api_design_principles
@@ -217,12 +213,12 @@ graph TD
   monitoring_and_alerting_principles --> error_handling_principles
   monitoring_and_alerting_principles --> logging_and_observability_mandate
   monitoring_and_alerting_principles --> resources_and_memory_management_principles
-  performance_optimization_principles --> concurrency_and_threading_mandate
+  performance_optimization_principles --> core_design_principles
   performance_optimization_principles --> concurrency_and_threading_principles
   performance_optimization_principles --> resources_and_memory_management_principles
   project_structure --> architectural_pattern
   project_structure --> code_organization_principles
-  resources_and_memory_management_principles --> concurrency_and_threading_mandate
+  resources_and_memory_management_principles --> core_design_principles
   resources_and_memory_management_principles --> concurrency_and_threading_principles
   resources_and_memory_management_principles --> error_handling_principles
   rugged_software_constitution --> architectural_pattern
@@ -230,7 +226,7 @@ graph TD
   rugged_software_constitution --> logging_and_observability_mandate
   rugged_software_constitution --> security_mandate
   rule_priority --> architectural_pattern
-  rule_priority --> code_completion_mandate
+  rule_priority --> code_idioms_and_conventions
   rule_priority --> logging_and_observability_mandate
   rule_priority --> rugged_software_constitution
   rule_priority --> security_mandate
@@ -247,11 +243,11 @@ graph TD
 
 </details>
 
-### Comprehensive Rule Suite (27)
+### Comprehensive Rule Suite (25)
 
 The rules encode **project-specific decisions that override model defaults** — not general knowledge the model already knows. Every line of a rule answers: *"What would this model get wrong without this instruction?"*
 
-#### 🔒 Always-On Mandates (12)
+#### 🔒 Always-On Mandates (10)
 
 Loaded in every session — non-negotiable constraints that fire regardless of what you're working on.
 
@@ -261,13 +257,11 @@ Loaded in every session — non-negotiable constraints that fire regardless of w
 | **[Security Mandate](.agents/rules/security-mandate.md)** | Deny by default, trust no input, fail closed — security always wins over convenience |
 | **[Rule Priority](.agents/rules/rule-priority.md)** | Conflict resolution order: Security → Rugged → Completion/Logging → Testability → Idioms → YAGNI |
 | **[Logging & Observability Mandate](.agents/rules/logging-and-observability-mandate.md)** | Every operation entry point must log start/success/failure with correlationId — no exceptions |
-| **[Code Completion Mandate](.agents/rules/code-completion-mandate.md)** | Validate before deliver: generate → quality-check → remediate → re-check → only then deliver |
 | **[Architectural Pattern](.agents/rules/architectural-pattern.md)** | I/O isolation, pure business logic, dependency inversion — testability-first design |
-| **[Code Idioms & Conventions](.agents/rules/code-idioms-and-conventions.md)** | Routing table: maps every language to its idiom skill; always load the relevant skill |
+| **[Code Idioms & Conventions](.agents/rules/code-idioms-and-conventions.md)** | Language-to-skill routing table + completion workflow: generate → validate → remediate → verify → deliver |
 | **[Code Organization Principles](.agents/rules/code-organization-principles.md)** | Feature-based vertical slices, public API boundaries, no circular dependencies |
-| **[Core Design Principles](.agents/rules/core-design-principles.md)** | Maintainability > UX; Composition > inheritance; Rule of Three for DRY; Maintainability wins YAGNI |
+| **[Core Design Principles](.agents/rules/core-design-principles.md)** | Maintainability > UX; Composition > inheritance; Rule of Three for DRY; profile before parallelizing |
 | **[Project Structure](.agents/rules/project-structure.md)** | Single source of truth for directory layout — organize by feature, not by layer |
-| **[Concurrency & Threading Mandate](.agents/rules/concurrency-and-threading-mandate.md)** | When to use concurrency (I/O-bound vs CPU-bound); when NOT to (profile first) |
 | **[Documentation Principles](.agents/rules/documentation-principles.md)** | Code shows WHAT; comments explain WHY; function docs for API contracts |
 
 #### 🎯 Contextual Principles (15)
@@ -290,7 +284,7 @@ Activated by the model only when relevant — zero overhead when not applicable.
 *   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA, semantic HTML, keyboard navigation
 *   **[Git Workflow Principles](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, PR hygiene
 
-### Specialized Skills (50)
+### Specialized Skills (53)
 
 Skills are deep expertise modules loaded on demand — agents only pay the token cost when the skill is relevant.
 
@@ -318,6 +312,8 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 
 #### 🔀 Multi-Agent Orchestration Skills
 *   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
+*   **[Audit Checklist](.agents/skills/audit-checklist/SKILL.md)**: Consolidated audit checklists for code review and verification — loaded by `/audit` workflow and multi-agent review pipelines.
+*   **[Acceptance Review](.agents/skills/acceptance-review/SKILL.md)**: Spec adherence and deliverable completeness verification — ensures what was delivered matches what was requested.
 
 #### 🌐 Language & Framework Idioms (24)
 
@@ -438,15 +434,15 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── scout.md
 │   ├── qa-analyst.md
 │   └── ...            # 10 more specialized agents
-├── rules/             # 27 rules: 12 always-on mandates + 15 contextual principles
+├── rules/             # 25 rules: 10 always-on mandates + 15 contextual principles
 │   │                  # Each rule = project-specific decisions only (not model knowledge)
 │   ├── rugged-software-constitution.md   # always_on: hostile-environment posture
 │   ├── security-mandate.md               # always_on: deny by default
 │   ├── logging-and-observability-mandate.md  # always_on: all ops must log
 │   ├── architectural-pattern.md          # always_on: I/O isolation, testability
 │   ├── rule-priority.md                  # always_on: conflict resolution
-│   └── ...            # 7 more always-on + 15 contextual principles
-├── skills/            # 50 specialized skills — loaded on demand, not always
+│   └── ...            # 5 more always-on + 15 contextual principles
+├── skills/            # 53 specialized skills — loaded on demand, not always
 │   ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
 │   ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
 │   ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts
@@ -484,12 +480,12 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (50 skills shipped).
+- [x] Include more specialized skills to aid development process (53 skills shipped).
 - [x] Add development workflows for structured feature delivery (12 workflows shipped).
 - [x] Add language-specific idiom skills (Go, TypeScript, Vue, Flutter, Rust, Python + 18 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [x] Add multi-agent orchestration with 16 specialized agent personas (including tech-lead anchor) and consolidated parallel dispatch.
-- [x] Distill rules to decisions-only: strip generic knowledge, keep project-specific overrides (27 rules, -68% from peak).
+- [x] Distill rules to decisions-only: strip generic knowledge, keep project-specific overrides (25 rules, -71% from peak).
 - [x] Migrate language idioms from rules to on-demand skills — only load when relevant to the task.
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [x] Publish comprehensive documentation site (GitHub Pages).
