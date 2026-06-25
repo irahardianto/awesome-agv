@@ -121,7 +121,7 @@ Group scope cards into levels by dependency depth:
 
 All nodes at the same level are independent — dispatch in parallel. Between levels: merge completed branches, run quality gate, then proceed to next level.
 
-If a node fails, it follows the Circuit Breaker in `workflow-team.md`. If failure changes scope, re-decompose the affected sub-tree only — already-completed nodes outside the failure are preserved.
+If a node fails, it follows the Escalation Ladder in the `fault-recovery` skill. If failure changes scope, re-decompose the affected sub-tree only — already-completed nodes outside the failure are preserved.
 
 ### Merge Order
 
@@ -143,7 +143,7 @@ Within a level, merge in this priority:
 
 ## 4. Read-Only Agents
 
-Read-only agents (scout, qa-analyst, security-engineer, ux-reviewer, incident-responder) use MECE scoping for **coverage guarantees**, not conflict prevention:
+Read-only agents (scout, qa-analyst, security-engineer, ux-craftsman, incident-responder) use MECE scoping for **coverage guarantees**, not conflict prevention:
 
 - Each instance covers a disjoint area
 - Union covers 100% of relevant scope
@@ -160,3 +160,54 @@ Read-only agents (scout, qa-analyst, security-engineer, ux-reviewer, incident-re
 | Decomposing without DESIGN output | No contracts → incompatible assumptions | DESIGN before BUILD decomposition |
 | Modifying frozen contracts in BUILD | Downstream agents built against wrong interface | STOP, escalate for DESIGN revision |
 | Skipping MECE validation | Gaps → missed work, overlaps → conflicts | Always validate before dispatch |
+
+## 5. Hierarchical Decomposition
+
+When work spans multiple missions or epics, decompose into coordinator subtrees — not a flat fan-out of executors.
+
+### Decision: Flat vs. Hierarchical
+
+| Signal | Dispatch Model |
+|---|---|
+| ≤5 scope cards, single mission | Flat (direct executor dispatch) |
+| >5 scope cards OR multi-mission | Hierarchical (@mission-lead per mission) |
+| Cross-cutting dependencies between missions | Hierarchical with @tech-lead[integration] |
+
+### Coordinator Pattern
+
+A coordinator agent (@rally-lead, @mission-lead):
+1. Owns a subtree of executors
+2. Loads the `convergence-loop` skill
+3. Has its own briefing.md, progress.md, handoff.md lifecycle
+4. Reports upward to its parent coordinator, not to the root
+5. Never writes code or runs tests — only dispatches, evaluates, and re-plans
+
+### Nesting Budget
+
+| Layer | Role | Max Agents |
+|---|---|---|
+| 1-2 | @overseer + @rally-lead | ≤2 |
+| 3 | @mission-lead instances + @tech-lead[integration] | ≤5 recommended |
+| 4 | Execution teams (scouts, workers, reviewers, adversaries, arbiter) | As needed per mission |
+| 5-6 | Sub-decomposition within workers | As needed |
+| 7+ | Reserved for extreme decomposition | Rare |
+
+Total budget: **10 layers max**. Recommended: **5-7** for typical features.
+
+### Workspace Strategy by Layer
+
+| Layer | Workspace Mode | Rationale |
+|---|---|---|
+| 1-2 | `inherit` | Overseer and rally-lead read the main workspace |
+| 3 | `branch` | Mission isolation — independent failure domains |
+| 4+ (writers) | `share` within mission branch | Parallel executors within a mission share its branch |
+| 4+ (readers) | `inherit` from mission branch | Reviewers read the mission's work |
+
+### Integration Between Missions
+
+After all missions pass their individual arbiter gates:
+1. @rally-lead dispatches @tech-lead[integration] with all mission handoffs
+2. @tech-lead[integration] owns aggregation files (routers, registries, configs)
+3. Integration runs on the main branch, merging mission branches
+4. A final @arbiter runs cross-mission verification before completion
+
