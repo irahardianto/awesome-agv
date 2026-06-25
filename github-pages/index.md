@@ -27,9 +27,9 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 | Component     | Count | Purpose                                                                           |
 | ------------- | ----- | --------------------------------------------------------------------------------- |
 | **Rules**     | 27    | Security, reliability, architecture, and maintainability |
-| **Skills**    | 50    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
+| **Skills**    | 57    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
 | **Workflows** | 12    | End-to-end development processes from research to ship                             |
-| **Agents**    | 16    | Specialized personas for multi-agent orchestration (tech-lead, architect, scout, qa-analyst, etc.) |
+| **Agents**    | 21    | Specialized personas for multi-agent orchestration arranged in a 4-tier hierarchy |
 
 ## Core Philosophy
 
@@ -100,8 +100,8 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 ```
 .agents/
 ├── rules/             # 27 rules (mandates + principles)
-├── agents/            # 16 agent personas
-├── skills/            # 50 specialized skills
+├── agents/            # 21 agent personas
+├── skills/            # 57 specialized skills
 └── workflows/         # 12 development workflows
 ```
 
@@ -110,9 +110,9 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 Explore each component in detail:
 
 - [**Rules Reference**](/awesome-agv/rules) — All 27 rules organized by category
-- [**Skills Reference**](/awesome-agv/skills) — All 50 specialized skills
+- [**Skills Reference**](/awesome-agv/skills) — All 57 specialized skills
 - [**Workflows Reference**](/awesome-agv/workflows) — All 12 development workflows
-- [**Agent Personas**](/awesome-agv/agents) — 16 specialized agent personas for multi-agent orchestration
+- [**Agent Personas**](/awesome-agv/agents) — 21 specialized agent personas for multi-agent orchestration
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

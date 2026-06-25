@@ -388,7 +388,7 @@ Agents are organized into five layers with strict boundaries:
 | --- | --- |
 | `@architect` | System design, ADRs, API contracts, dependency strategy |
 
-Cross-layer participants can join DESIGN when needed: `@ux-reviewer`, `@database-expert`, `@security-engineer`, `@performance-engineer`.
+Cross-layer participants can join DESIGN when needed: `@ux-craftsman`, `@database-expert`, `@security-engineer`, `@performance-engineer`.
 
 #### Builder Layer (Write — run in Git worktrees)
 
@@ -410,7 +410,7 @@ Cross-layer participants can join DESIGN when needed: `@ux-reviewer`, `@database
 | --- | --- |
 | `@qa-analyst` | Code review, testing coverage, quality gates |
 | `@security-engineer` | Threats, vulnerabilities, auth, input validation |
-| `@ux-reviewer` | Design heuristics, interaction, a11y, responsive |
+| `@ux-craftsman` | Design heuristics, interaction, a11y, responsive |
 | `@incident-responder` | Triage, RCA, mitigation, postmortems |
 
 ### Composable Primitives
@@ -481,7 +481,7 @@ git worktree remove .wt/<agent-name>-<scope>
 git branch -D wt/<agent-name>-<scope>-<ts>
 ```
 
-### Circuit Breaker
-- Sub-agent fails → retry ONCE with clarified context
-- Fails again → STOP: `"BLOCKED: {agent_type}[{scope}] failed 2x on {task}. Need human input."`
-- Max 2 attempts per sub-agent per task — non-negotiable
+### Fault Recovery & Self-Succession
+- Sub-agent fails → 5-level escalation ladder (Retry → Replace → Skip → Redistribute → Degrade)
+- Exhaustion → dead-man timers trigger escalation to parent
+- Coordinators self-succeed at 70% context capacity, >3 iterations, or coherence degradation. See `convergence-loop` skill.

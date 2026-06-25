@@ -38,9 +38,9 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **25 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
-*   🛠️ **53 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
+*   🛠️ **57 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
 *   🔄 **12 Workflows** — end-to-end development processes from research to ship.
-*   🤖 **16 Agent Personas** — specialized sub-agents for multi-agent orchestration (tech-lead, architect, backend-engineer, security-engineer, etc.).
+*   🤖 **21 Agent Personas** — specialized sub-agents for multi-agent orchestration arranged in a 4-tier hierarchy.
 *   🏗️ **Three-Tier Loading System** — always-on mandates + contextual principles + on-demand skills for zero-noise enforcement.
 
 > **💡 Everything is modular.** Rules, skills, agents, and workflows work independently — you don't need everything to benefit. Use only what you need, modify anything, or build your own. It's a toolkit, not a framework.
@@ -284,7 +284,7 @@ Activated by the model only when relevant — zero overhead when not applicable.
 *   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA, semantic HTML, keyboard navigation
 *   **[Git Workflow Principles](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, PR hygiene
 
-### Specialized Skills (53)
+### Specialized Skills (57)
 
 Skills are deep expertise modules loaded on demand — agents only pay the token cost when the skill is relevant.
 
@@ -311,7 +311,11 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 *   **[Mobile Design](.agents/skills/mobile-design/SKILL.md)**: Platform-native mobile interfaces for Flutter and React Native
 
 #### 🔀 Multi-Agent Orchestration Skills
+*   **[Convergence Loop](.agents/skills/convergence-loop/SKILL.md)**: Iterative problem solving protocol for coordinators.
+*   **[Fault Recovery](.agents/skills/fault-recovery/SKILL.md)**: Structured fault tolerance and escalation ladder.
+*   **[Integrity Enforcement](.agents/skills/integrity-enforcement/SKILL.md)**: Zero-tolerance compliance checking for the arbiter agent.
 *   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
+*   **[Scope Decomposition](.agents/skills/scope-decomposition/SKILL.md)**: Project and mission decomposition techniques.
 *   **[Audit Checklist](.agents/skills/audit-checklist/SKILL.md)**: Consolidated audit checklists for code review and verification — loaded by `/audit` workflow and multi-agent review pipelines.
 *   **[Acceptance Review](.agents/skills/acceptance-review/SKILL.md)**: Spec adherence and deliverable completeness verification — ensures what was delivered matches what was requested.
 
@@ -365,19 +369,22 @@ Language-specific patterns, tooling, project layout, and quality commands. Each 
 *   **[Payment Integration](.agents/skills/payment-integration/SKILL.md)**: PCI DSS compliance, tokenization, and webhook reliability
 *   **[Supply Chain Security](.agents/skills/supply-chain-security/SKILL.md)**: SBOM generation, CVE scanning, and license compliance
 
-### Agent Personas (16)
+### Agent Personas (21)
 
-Agent personas are specialized sub-agents designed for multi-agent orchestration. Each agent has an exclusive domain, clear boundaries, and never crosses into another agent's territory — enforcing MECE at the architecture level.
+Agent personas are specialized sub-agents designed for multi-agent orchestration. The system uses a Recursive Multi-Agent System (RMAS) with a 4-tier orchestration hierarchy. Each agent has an exclusive domain, clear boundaries, and never crosses into another agent's territory — enforcing MECE at the architecture level.
 
 #### Layers
 
 | Layer | Agents | Purpose |
 |---|---|---|
-| **Orchestration** | `tech-lead` | Anchor persona: elicits requirements, composes primitives, enforces standards, owns all quality gates |
+| **L1 Strategic** | `overseer` | Program director: aligns multiple domain streams and manages cross-domain dependencies |
+| **L2 Domain** | `rally-lead` | Domain coordinator: orchestrates multiple missions within a business vertical |
+| **L3 Execution** | `mission-lead` | Mission manager: drives a specific feature slice to completion |
+| **Compliance** | `arbiter`, `tech-lead` | Hard gate authorities: independent verification of rules, skills, and specs |
 | **Research** | `scout` | Codebase exploration, pattern discovery, technology research |
-| **Design** | `architect` + optional `ux-reviewer`, `database-expert`, `security-engineer` | System design, ADRs, API contracts |
+| **Design** | `architect` + optional `ux-craftsman`, `database-expert`, `security-engineer` | System design, ADRs, API contracts |
 | **Build** | `backend-engineer`, `frontend-engineer`, `mobile-engineer`, `database-expert`, `devops-engineer`, `technical-writer`, `test-automation-engineer`, `performance-engineer`, `refactoring-specialist` | Implementation with isolated worktrees |
-| **Review** | `qa-analyst`, `security-engineer`, `ux-reviewer`, `incident-responder` | Quality gates, security audits, UX review |
+| **Review** | `qa-analyst`, `security-engineer`, `ux-craftsman`, `incident-responder`, `acceptance-reviewer` | Quality gates, security audits, UX review |
 
 See the [workflow-team](.agents/workflows/workflow-team.md) workflow for the full dispatch protocol, including recursive parallel dispatch with MECE file ownership and DAG-based execution ordering.
 
@@ -426,14 +433,15 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 
 ```
 .agents/
-├── agents/            # 16 agent personas (multi-agent orchestration)
-│   ├── tech-lead.md             # Orchestration anchor — elicits, composes, gates
+├── agents/            # 21 agent personas (multi-agent orchestration)
+│   ├── overseer.md              # L1 Strategic Director
+│   ├── rally-lead.md            # L2 Domain Coordinator
+│   ├── mission-lead.md          # L3 Execution Manager
+│   ├── arbiter.md               # Independent compliance authority
+│   ├── tech-lead.md             # Quality gate authority
 │   ├── architect.md
 │   ├── backend-engineer.md
-│   ├── frontend-engineer.md
-│   ├── scout.md
-│   ├── qa-analyst.md
-│   └── ...            # 10 more specialized agents
+│   └── ...            # 14 more specialized agents
 ├── rules/             # 25 rules: 10 always-on mandates + 15 contextual principles
 │   │                  # Each rule = project-specific decisions only (not model knowledge)
 │   ├── rugged-software-constitution.md   # always_on: hostile-environment posture
@@ -442,7 +450,7 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── architectural-pattern.md          # always_on: I/O isolation, testability
 │   ├── rule-priority.md                  # always_on: conflict resolution
 │   └── ...            # 5 more always-on + 15 contextual principles
-├── skills/            # 53 specialized skills — loaded on demand, not always
+├── skills/            # 57 specialized skills — loaded on demand, not always
 │   ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
 │   ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
 │   ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts

@@ -7,7 +7,7 @@ nav_order: 6
 # Agent Personas
 {: .no_toc }
 
-16 specialized agent personas for multi-agent orchestration via `/workflow-team`.
+21 specialized agent personas for multi-agent orchestration via `/workflow-team`.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -39,8 +39,17 @@ Agents are organized into five layers:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Orchestration Layer                                │
-│  @tech-lead                                         │
+│  L1 Strategic Layer                                 │
+│  @overseer                                          │
+├─────────────────────────────────────────────────────┤
+│  L2 Domain Layer                                    │
+│  @rally-lead                                        │
+├─────────────────────────────────────────────────────┤
+│  L3 Execution Layer                                 │
+│  @mission-lead                                      │
+├─────────────────────────────────────────────────────┤
+│  Compliance Layer (Hard Gates)                      │
+│  @arbiter, @tech-lead                               │
 ├─────────────────────────────────────────────────────┤
 │  Research Layer (Read-only)                         │
 │  @scout                                             │
@@ -57,13 +66,74 @@ Agents are organized into five layers:
 ├─────────────────────────────────────────────────────┤
 │  Reviewer Layer (Read-only, post-merge)             │
 │  @qa-analyst, @security-engineer,                   │
-│  @ux-reviewer, @incident-responder                  │
+│  @ux-craftsman, @incident-responder,                │
+│  @acceptance-reviewer                               │
 └─────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Orchestration Layer
+
+### Overseer
+
+**File:** `.agents/agents/overseer.md`
+
+L1 Strategic Director. Program director aligning multiple domain streams and managing cross-domain dependencies.
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Strategic alignment, cross-domain coordination, global architecture |
+| **Boundaries** | No code writing, no direct feature implementation |
+| **Skills** | scope-decomposition, convergence-loop, fault-recovery |
+
+### Rally Lead
+
+**File:** `.agents/agents/rally-lead.md`
+
+L2 Domain Coordinator. Orchestrates multiple missions within a business vertical.
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Domain coordination, mission grouping, feature delivery |
+| **Boundaries** | No code writing |
+| **Skills** | scope-decomposition, convergence-loop, fault-recovery |
+
+### Mission Lead
+
+**File:** `.agents/agents/mission-lead.md`
+
+L3 Execution Manager. Drives a specific feature slice to completion.
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Task execution, parallel dispatch management, merge orchestration |
+| **Boundaries** | No strategic scope |
+| **Skills** | parallel-dispatch, convergence-loop, fault-recovery |
+
+### Arbiter
+
+**File:** `.agents/agents/arbiter.md`
+
+Independent compliance authority. Hard gate for quality and security requirements.
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Integrity enforcement, spec validation, final decision making |
+| **Boundaries** | No coding, no workflow modifications |
+| **Skills** | integrity-enforcement |
+
+### Acceptance Reviewer
+
+**File:** `.agents/agents/acceptance-reviewer.md`
+
+Ensures spec adherence and deliverables completeness.
+
+| Attribute | Details |
+| --- | --- |
+| **Domain** | Spec adherence, validation against requirements |
+| **Boundaries** | No code writing |
+| **Skills** | acceptance-review |
 
 ### Tech Lead
 
@@ -111,7 +181,7 @@ System architect. Production-grade: correct, observable, testable, secure. **Rea
 | **Skills** | research-methodology, adr |
 | **Output** | Architecture decisions, interface contracts, ADRs |
 
-Cross-layer experts (`@ux-reviewer`, `@database-expert`, `@security-engineer`, `@performance-engineer`) can join DESIGN workflows when invoked.
+Cross-layer experts (`@ux-craftsman`, `@database-expert`, `@security-engineer`, `@performance-engineer`) can join DESIGN workflows when invoked.
 
 ---
 
@@ -228,9 +298,9 @@ Senior security engineer. Security gate authority. **Read-only — produces find
 | **Boundaries** | No production code, no test code, no CI/CD, no non-security architecture |
 | **Skills** | research-methodology, sequential-thinking, supply-chain-security |
 
-### UX Reviewer
+### UX Craftsman
 
-**File:** `.agents/agents/ux-reviewer.md`
+**File:** `.agents/agents/ux-craftsman.md`
 
 | Attribute | Details |
 | --- | --- |
