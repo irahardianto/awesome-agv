@@ -1,0 +1,253 @@
+{
+  "version": "3.1.0",
+  "core": {
+    "paths": ["rules/", "workflows/", "agents/"]
+  },
+  "skills": {
+    "core": [
+      "acceptance-review",
+      "adr",
+      "api-documentation",
+      "audit-checklist",
+      "browser-automation",
+      "chaos-testing",
+      "ci-cd",
+      "cli-development",
+      "code-review",
+      "convergence-loop",
+      "data-engineering",
+      "debugging-protocol",
+      "embedded-systems",
+      "fault-recovery",
+      "feature-flags",
+      "frontend-design",
+      "guardrails",
+      "incident-response",
+      "integrity-enforcement",
+      "logging-implementation",
+      "ml-engineering",
+      "mobile-design",
+      "omni",
+      "parallel-dispatch",
+      "payment-integration",
+      "perf-optimization",
+      "refactoring-patterns",
+      "research-methodology",
+      "scope-decomposition",
+      "sequential-thinking",
+      "supply-chain-security",
+      "testability-patterns",
+      "testing-strategy"
+    ],
+    "stacks": {
+      "go": {
+        "label": "Go",
+        "description": "stdlib, error wrapping, gofumpt",
+        "group": "core",
+        "detect": ["go.mod", "go.sum"],
+        "skills": ["go-idioms"]
+      },
+      "typescript": {
+        "label": "TypeScript",
+        "description": "strict mode, type narrowing, Zod, vitest",
+        "group": "core",
+        "detect": ["tsconfig.json"],
+        "skills": ["typescript-idioms"]
+      },
+      "flutter": {
+        "label": "Flutter",
+        "description": "Riverpod 3, freezed, go_router",
+        "group": "core",
+        "detect": ["pubspec.yaml"],
+        "skills": ["flutter-idioms"]
+      },
+      "rust": {
+        "label": "Rust",
+        "description": "tokio, thiserror/anyhow, clippy pedantic",
+        "group": "core",
+        "detect": ["Cargo.toml"],
+        "skills": ["rust-idioms"]
+      },
+      "python": {
+        "label": "Python",
+        "description": "ruff, mypy strict, pytest, Pydantic",
+        "group": "core",
+        "detect": ["pyproject.toml", "requirements.txt", "setup.py"],
+        "skills": ["python-idioms"]
+      },
+      "vue": {
+        "label": "Vue",
+        "description": "Composition API, Pinia, composables",
+        "group": "core",
+        "requires": ["typescript"],
+        "detect": ["*.vue"],
+        "skills": ["vue-idioms"]
+      },
+      "angular": {
+        "label": "Angular",
+        "description": "components, signals, DI, RxJS",
+        "group": "core",
+        "requires": ["typescript"],
+        "detect": ["angular.json"],
+        "skills": ["angular-idioms"]
+      },
+      "react": {
+        "label": "React",
+        "description": "hooks, Suspense, Server Components",
+        "group": "core",
+        "requires": ["typescript"],
+        "detect": [],
+        "skills": ["react-idioms"]
+      },
+      "nextjs": {
+        "label": "Next.js",
+        "description": "App Router, RSC, ISR",
+        "group": "community",
+        "requires": ["react"],
+        "detect": ["next.config.js", "next.config.mjs", "next.config.ts"],
+        "skills": ["nextjs-idioms"]
+      },
+      "axum": {
+        "label": "Axum",
+        "description": "Rust HTTP routing, extractors, middleware",
+        "group": "community",
+        "requires": ["rust"],
+        "detect": [],
+        "skills": ["axum-idioms"]
+      },
+      "django": {
+        "label": "Django",
+        "description": "ORM, views, middleware",
+        "group": "community",
+        "requires": ["python"],
+        "detect": ["manage.py"],
+        "skills": ["django-idioms"]
+      },
+      "laravel": {
+        "label": "Laravel",
+        "description": "Eloquent, middleware, queues",
+        "group": "community",
+        "requires": ["php"],
+        "detect": ["artisan"],
+        "skills": ["laravel-idioms"]
+      },
+      "rails": {
+        "label": "Rails",
+        "description": "ActiveRecord, conventions, RSpec",
+        "group": "community",
+        "requires": ["ruby"],
+        "detect": ["Rakefile"],
+        "skills": ["rails-idioms"]
+      },
+      "spring-boot": {
+        "label": "Spring Boot",
+        "description": "Spring DI, JPA, WebFlux",
+        "group": "community",
+        "requires": ["java"],
+        "detect": [],
+        "skills": ["spring-boot-idioms"]
+      },
+      "dotnet": {
+        "label": ".NET",
+        "description": "ASP.NET Core, Entity Framework",
+        "group": "community",
+        "requires": ["csharp"],
+        "detect": ["global.json", "*.fsproj"],
+        "skills": ["dotnet-idioms"]
+      },
+      "cpp": {
+        "label": "C++",
+        "description": "modern C++, RAII, smart pointers, CMake",
+        "group": "community",
+        "detect": ["CMakeLists.txt"],
+        "skills": ["cpp-idioms"]
+      },
+      "csharp": {
+        "label": "C#",
+        "description": ".NET, async/await, LINQ, records",
+        "group": "community",
+        "detect": ["*.csproj", "*.sln"],
+        "skills": ["csharp-idioms"]
+      },
+      "elixir": {
+        "label": "Elixir",
+        "description": "OTP, GenServer, supervision trees",
+        "group": "community",
+        "detect": ["mix.exs"],
+        "skills": ["elixir-idioms"]
+      },
+      "java": {
+        "label": "Java",
+        "description": "streams, records, sealed classes",
+        "group": "community",
+        "detect": ["pom.xml", "build.gradle"],
+        "skills": ["java-idioms"]
+      },
+      "javascript": {
+        "label": "JavaScript",
+        "description": "ES2024+, async patterns, ESM",
+        "group": "community",
+        "detect": [],
+        "skills": ["javascript-idioms"]
+      },
+      "kotlin": {
+        "label": "Kotlin",
+        "description": "coroutines, sealed classes, Android",
+        "group": "community",
+        "detect": ["build.gradle.kts"],
+        "skills": ["kotlin-idioms"]
+      },
+      "php": {
+        "label": "PHP",
+        "description": "PHP 8+, type declarations, Composer",
+        "group": "community",
+        "detect": ["composer.json"],
+        "skills": ["php-idioms"]
+      },
+      "ruby": {
+        "label": "Ruby",
+        "description": "blocks, modules, metaprogramming",
+        "group": "community",
+        "detect": ["Gemfile"],
+        "skills": ["ruby-idioms"]
+      },
+      "sql": {
+        "label": "SQL",
+        "description": "query optimization, indexes, migrations",
+        "group": "community",
+        "detect": [],
+        "skills": ["sql-idioms"]
+      },
+      "swift": {
+        "label": "Swift",
+        "description": "SwiftUI, Combine, async/await",
+        "group": "community",
+        "detect": ["Package.swift"],
+        "skills": ["swift-idioms"]
+      }
+    }
+  },
+  "warnings": {
+    "always_on_rules": [
+      "rugged-software-constitution",
+      "security-mandate",
+      "rule-priority",
+      "logging-and-observability-mandate",
+      "architectural-pattern",
+      "code-idioms-and-conventions",
+      "code-organization-principles",
+      "core-design-principles",
+      "project-structure",
+      "documentation-principles"
+    ],
+    "rmas_critical_skills": [
+      "convergence-loop",
+      "fault-recovery",
+      "integrity-enforcement",
+      "parallel-dispatch",
+      "scope-decomposition",
+      "audit-checklist",
+      "acceptance-review"
+    ]
+  }
+}
