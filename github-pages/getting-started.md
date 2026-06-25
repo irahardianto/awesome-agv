@@ -32,27 +32,42 @@ Install and configure Awesome AGV in minutes.
 npx awesome-agv
 ```
 
-This downloads and installs the latest `.agents/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
+This launches an interactive installer where you choose your installation mode:
 
-**Options:**
+| Mode | Description |
+|---|---|
+| 🚀 **Default** | Install everything — the full arsenal (recommended) |
+| 🎯 **Curated** | Pick your languages & frameworks. Core rules and skills always included. |
+| ⚙️ **Advanced** | Full granular control over every component. |
 
-| Flag           | Description                                    |
-| -------------- | ---------------------------------------------- |
-| `[target-dir]` | Directory to install into (default: `./`)       |
-| `--force, -f`  | Overwrite existing `.agents/` without prompting |
-| `--help, -h`   | Show help                                       |
+In **Curated** and **Advanced** modes, the installer auto-detects your project's tech stack from files like `go.mod`, `Cargo.toml`, `tsconfig.json`, `pubspec.yaml`, etc. and pre-selects matching stacks.
+
+**CLI Flags:**
+
+| Flag | Description |
+| --- | --- |
+| `--stacks <list>` | Comma-separated stacks to include (**additive** with existing config) |
+| `--all` | Install everything (equivalent to Default mode) |
+| `--force, -f` | Replace existing `.agents/` — re-prompts from scratch |
+| `--help, -h` | Show help |
 
 **Examples:**
 
 ```bash
-# Install into current directory
+# Interactive — choose your mode
 npx awesome-agv
 
-# Install into a specific project
-npx awesome-agv ./my-project
+# Non-interactive: specific stacks, core always included
+npx awesome-agv --stacks go,python
 
-# Overwrite existing installation without prompting
-npx awesome-agv --force
+# Add React to existing installation (additive)
+npx awesome-agv --stacks react
+
+# Full install, no prompts
+npx awesome-agv --all --force
+
+# CI/CD: specific stacks, no prompts
+npx awesome-agv --stacks typescript,vue --force
 ```
 
 ### Option 2: Copy the `.agents` folder
@@ -164,7 +179,7 @@ This produces a structured findings report graded by severity (Critical → Majo
 
 ## Next Steps
 
-- [**Rules Reference**](/awesome-agv/rules) — Explore all 27 rules
-- [**Skills Reference**](/awesome-agv/skills) — Learn about specialized skills
-- [**Workflows Reference**](/awesome-agv/workflows) — Understand the development workflows
+- [**Rules Reference**](/awesome-agv/rules) — Explore all 25 rules
+- [**Skills Reference**](/awesome-agv/skills) — Learn about 57 specialized skills
+- [**Workflows Reference**](/awesome-agv/workflows) — Understand the 12 development workflows
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

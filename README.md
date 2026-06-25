@@ -62,27 +62,42 @@ To equip your AI agent with these superpowers, follow these steps.
 npx awesome-agv
 ```
 
-This downloads and installs the latest `.agents/` directory into your current project. Your AI agent will automatically pick it up — no additional configuration needed.
+This launches an interactive installer where you choose your installation mode:
 
-**Options:**
+| Mode | Description |
+|---|---|
+| 🚀 **Default** | Install everything — the full arsenal (recommended) |
+| 🎯 **Curated** | Pick your languages & frameworks. Core rules and skills always included. |
+| ⚙️ **Advanced** | Full granular control over every component. |
 
-| Flag           | Description                                    |
-| -------------- | ---------------------------------------------- |
-| `[target-dir]` | Directory to install into (default: `./`)       |
-| `--force, -f`  | Overwrite existing `.agents/` without prompting |
-| `--help, -h`   | Show help                                       |
+In **Curated** and **Advanced** modes, the installer auto-detects your project's tech stack from files like `go.mod`, `Cargo.toml`, `tsconfig.json`, `pubspec.yaml`, etc. and pre-selects matching stacks.
+
+**CLI Flags:**
+
+| Flag | Description |
+| --- | --- |
+| `--stacks <list>` | Comma-separated stacks to include (**additive** with existing config) |
+| `--all` | Install everything (equivalent to Default mode) |
+| `--force, -f` | Replace existing `.agents/` — re-prompts from scratch |
+| `--help, -h` | Show help |
 
 ### Examples
 
 ```bash
-# Install into current directory
+# Interactive — choose your mode
 npx awesome-agv
 
-# Install into a specific project
-npx awesome-agv ./my-project
+# Non-interactive: specific stacks, core always included
+npx awesome-agv --stacks go,python
 
-# Overwrite existing installation without prompting
-npx awesome-agv --force
+# Add React to existing installation (additive)
+npx awesome-agv --stacks react
+
+# Full install, no prompts
+npx awesome-agv --all --force
+
+# CI/CD: specific stacks, no prompts
+npx awesome-agv --stacks typescript,vue --force
 ```
 
 **Manual Install:**
@@ -488,13 +503,14 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (53 skills shipped).
+- [x] Include more specialized skills to aid development process (57 skills shipped).
 - [x] Add development workflows for structured feature delivery (12 workflows shipped).
 - [x] Add language-specific idiom skills (Go, TypeScript, Vue, Flutter, Rust, Python + 18 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
-- [x] Add multi-agent orchestration with 16 specialized agent personas (including tech-lead anchor) and consolidated parallel dispatch.
+- [x] Add multi-agent orchestration with 21 specialized agent personas in a 4-tier RMAS hierarchy.
 - [x] Distill rules to decisions-only: strip generic knowledge, keep project-specific overrides (25 rules, -71% from peak).
 - [x] Migrate language idioms from rules to on-demand skills — only load when relevant to the task.
+- [x] Selective CLI installer — 3-tier modes (Default/Curated/Advanced) with auto-detection and manifest-driven extraction.
 - [ ] Add automated validation scripts to check if an agent is following the constitution.
 - [x] Publish comprehensive documentation site (GitHub Pages).
 
