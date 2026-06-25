@@ -31,8 +31,13 @@ jobs:
       - name: Set version from git tag
         run: |
           VERSION=${GITHUB_REF_NAME#v}
-          echo "Setting version to $VERSION"
-          npm version $VERSION --no-git-tag-version
+          CURRENT=$(node -p "require('./package.json').version")
+          if [ "$CURRENT" != "$VERSION" ]; then
+            echo "Setting version to $VERSION"
+            npm version $VERSION --no-git-tag-version
+          else
+            echo "Version already set to $VERSION, skipping"
+          fi
         working-directory: ./cli
 
       - name: Copy README for npm package
