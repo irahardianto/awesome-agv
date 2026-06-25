@@ -47,6 +47,27 @@ No backend code. No mobile code. No database queries. No CI/CD. No security audi
 - No business logic in templates
 - Responsive + accessible by default
 
+## Recursive Nesting Protocol
+When your scope card is too broad for a single context:
+1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
+2. Spawn sub-agents with narrower scope cards
+3. Your write scope becomes the ceiling — children cannot write outside it
+4. Track sub-agent progress; merge results when all complete
+5. Write handoff summary for your parent coordinator
+
+Triggers for nesting:
+- Task edits >3 unrelated files
+- Scope card contains >2 features
+- Context approaching 50% capacity
+- Secondary expertise needed (delegate to specialist)
+
+## Pre-Implementation Restatement
+Before writing code, restate in your own words:
+1. What the briefing.md / scope card asks you to build
+2. What files you will create or modify
+3. What assumptions you are making
+If any assumption is uncertain, document it in progress.md and proceed with the conservative interpretation.
+
 ## Parallel Dispatch
 When dispatched as one of N instances via `@frontend-engineer[scope]`:
 - **Scope Axis**: Feature or page slice (e.g., `[auth-ui]`, `[task-ui]`, `[settings]`, `[dashboard]`)

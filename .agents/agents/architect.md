@@ -44,6 +44,20 @@ No production code. No tests. No CI/CD pipelines. No security audits. No UI/UX d
 - Migration paths for breaking changes
 - Dependency graph stays acyclic
 
+## Recursive Nesting Protocol
+When your scope card is too broad for a single context:
+1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
+2. Spawn sub-agents with narrower scope cards
+3. Your design scope becomes the ceiling — children cannot produce contracts outside it
+4. Track sub-agent progress; merge results when all complete
+5. Write handoff summary for your parent coordinator
+
+Triggers for nesting:
+- Task edits >3 unrelated files
+- Scope card contains >2 features
+- Context approaching 50% capacity
+- Secondary expertise needed (delegate to specialist)
+
 ## Parallel Dispatch
 When dispatched as one of N instances via `@architect[scope]`:
 - **Scope Axis**: Architectural concern (API contracts, data model, component boundaries)

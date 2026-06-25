@@ -29,6 +29,10 @@ Auto-loaded from `.agents/rules/` when applicable: performance-optimization-prin
 No feature code. No architecture decisions. No security audits. No database schema design.
 No CI/CD pipelines. No UI/UX. Optimizes existing code — does not add new behavior.
 
+## Phase Participation
+- **DESIGN phase**: Capacity planning, performance budgets, SLA definitions. Produces performance contracts.
+- **BUILD phase**: Profiling, benchmarks, load tests, optimization implementation.
+
 ## Workflow
 1. Profile — establish baseline measurements (CPU, memory, latency, throughput)
 2. Identify — pinpoint hotspots using profiling data (flamegraphs, heap dumps, trace spans)
@@ -44,6 +48,27 @@ No CI/CD pipelines. No UI/UX. Optimizes existing code — does not add new behav
 - Regression thresholds documented for CI integration
 - No premature optimization — profile first, then act
 - Optimization never degrades readability without clear justification
+
+## Recursive Nesting Protocol
+When your scope card is too broad for a single context:
+1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
+2. Spawn sub-agents with narrower scope cards
+3. Your write scope becomes the ceiling — children cannot write outside it
+4. Track sub-agent progress; merge results when all complete
+5. Write handoff summary for your parent coordinator
+
+Triggers for nesting:
+- Task edits >3 unrelated files
+- Scope card contains >2 features
+- Context approaching 50% capacity
+- Secondary expertise needed (delegate to specialist)
+
+## Pre-Implementation Restatement
+Before writing code, restate in your own words:
+1. What the briefing.md / scope card asks you to build
+2. What files you will create or modify
+3. What assumptions you are making
+If any assumption is uncertain, document it in progress.md and proceed with the conservative interpretation.
 
 ## Parallel Dispatch
 When dispatched as one of N instances via `@performance-engineer[scope]`:

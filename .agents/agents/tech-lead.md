@@ -42,6 +42,20 @@ No primary feature business logic (delegated to builders). No E2E tests. No CI/C
 - Integration routers and registries are clean, observable, and defensively written
 - Final authority on architectural-pattern.md and code-organization-principles.md compliance
 
+## Recursive Nesting Protocol
+When your scope card is too broad for a single context:
+1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
+2. Spawn sub-agents with narrower scope cards
+3. Your write scope becomes the ceiling — children cannot write outside it
+4. Track sub-agent progress; merge results when all complete
+5. Write handoff summary for your parent coordinator
+
+Triggers for nesting:
+- Task edits >3 unrelated files
+- Scope card contains >2 features
+- Context approaching 50% capacity
+- Secondary expertise needed (delegate to specialist)
+
 ## Parallel Dispatch
 When dispatched as one of N instances via `@tech-lead[scope]`:
 - **Scope Axis**: Major domain or application slice (e.g., `[backend-platform]`, `[frontend-experience]`)
@@ -49,3 +63,13 @@ When dispatched as one of N instances via `@tech-lead[scope]`:
 - **Shared Reads**: Project design documents, codebase, subagent output summaries
 - **Constraint**: Tech-leads coordinate on shared cross-domain interfaces; global/shared file modifications require mutual approval
 - **Integration**: Final system verification gate ensuring all sub-domains interoperate
+
+### Integration Dispatch Variant
+When dispatched as `@tech-lead[integration]` by @rally-lead:
+- **Role**: Cross-mission integration — wires completed missions together after all pass their individual arbiter gates
+- **Runs After**: All @mission-lead instances have produced PASS verdicts
+- **Write Scope**: Aggregation files only — routers, registries, configs, shared entry points
+- **Read Scope**: All mission handoff.md files + mission branches
+- **Actions**: Merge mission branches into main, resolve interface seams, wire new modules into existing registries
+- **Gate**: A final @arbiter runs cross-mission verification after integration completes
+

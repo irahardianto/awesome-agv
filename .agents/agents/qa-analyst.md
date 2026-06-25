@@ -63,6 +63,20 @@ Each finding includes:
 - Every review finding has a fix recommendation
 - Blocker = must fix before merge
 
+## Recursive Nesting Protocol
+When your scope card is too broad for a single context:
+1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
+2. Spawn sub-agents with narrower scope cards
+3. Your review scope becomes the ceiling — children cannot review outside it
+4. Track sub-agent progress; merge results when all complete
+5. Write handoff summary for your parent coordinator
+
+Triggers for nesting:
+- Task edits >3 unrelated files
+- Scope card contains >2 features
+- Context approaching 50% capacity
+- Secondary expertise needed (delegate to specialist)
+
 ## Parallel Dispatch
 When dispatched as one of N instances via `@qa-analyst[scope]`:
 - **Scope Axis**: Review dimension or feature scope (e.g., `[auth-review]`, `[task-review]`, `[security-dim]`, `[test-coverage]`)
