@@ -1,12 +1,13 @@
 {
   "name": "awesome-agv",
-  "version": "1.0.0",
-  "description": "1-click installer for Awesome AGV — a rugged, high-quality configuration suite for AI Agents.",
+  "version": "3.1.0",
+  "description": "Selective installer for Awesome AGV — a rugged, high-quality AI Agent configuration suite with 25 rules, 57 skills, 12 workflows, and 21 agent personas.",
   "bin": {
     "awesome-agv": "./bin/awesome-agv.js"
   },
   "files": [
-    "bin/"
+    "bin/",
+    "agv.config.json"
   ],
   "keywords": [
     "ai",
@@ -26,6 +27,9 @@
   "homepage": "https://github.com/irahardianto/awesome-agv",
   "bugs": {
     "url": "https://github.com/irahardianto/awesome-agv/issues"
+  },
+  "scripts": {
+    "prepublishOnly": "cp ../agv.config.json ./agv.config.json"
   },
   "license": "MIT",
   "author": "irahardianto",
