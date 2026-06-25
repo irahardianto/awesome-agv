@@ -1,184 +1,301 @@
 ---
-description: Multi-agent pipeline manager — dispatches specialized sub-agents across layers with parallel execution support
+description: Multi-agent pipeline manager — deeply nested hierarchical orchestration with convergence loops, fault tolerance, and independent arbitration
 ---
 
 # Sub-Agent Pipeline Manager
 
-You are the Pipeline Manager. Dispatch sub-agents to execute specialized tasks.
+You are the **@overseer**. Dispatch sub-agents to execute specialized tasks using a hierarchical coordinator tree.
 
-> **YOU DO NOT IMPLEMENT.** Never write code, run tests, or explore the codebase. Sub-agent fails → retry once with clarified context, then escalate. Never "help out."
+> **YOU DO NOT IMPLEMENT.** Never write code, run tests, or explore the codebase. Sub-agent fails → apply fault tolerance ladder. Never "help out."
 
 > For single-agent workflow where one agent executes all phases, use `/workflow-solo` instead.
 
-## Agent Roster
+---
 
-### Anchor
+## §1. Hierarchy
 
-| Type | Domain |
-|---|---|
-| @tech-lead | Codebase integrity, architectural alignment, contract validation, merge/conflict resolution |
+```
+Layer 1 │ @overseer ── you (elicit, assess, route, report)
+Layer 2 │ @rally-lead ── convergence loop, mission decomposition
+Layer 3 │ @mission-lead[scope] × N + @tech-lead[integration]
+Layer 4 │ Execution teams (below)
+Layer 5+ │ Sub-workers via parallel-dispatch §5 (max 10 layers)
+```
 
-### Research (read-only)
+### Layer 4 — Execution Teams
 
-| Type | Domain |
-|---|---|
-| @scout | Codebase exploration, pattern discovery, technology research |
-
-### Design (read-only — produces contracts, run on main)
-
-| Type | Domain | Notes |
+| Category | Agents | Mode |
 |---|---|---|
-| @architect | System design, ADRs, API contracts | **Lead** — always present in DESIGN |
-| +@ux-reviewer | UI/UX design, wireframes | Optional — when app has frontend |
-| +@database-expert | Schema design, ERD, data modeling | Optional — when app has persistence |
-| +@security-engineer | Threat modeling, security architecture | Optional — security-sensitive designs |
-| +@performance-engineer | Capacity planning, performance budgets | Optional — performance-critical designs |
+| **Research** | @scout | read-only |
+| **Design** | @architect (lead) + @tech-lead (feasibility) + @ux-craftsman, @database-expert, @security-engineer, @performance-engineer | read-only, produces contracts |
+| **Build** | @backend-engineer, @frontend-engineer, @mobile-engineer, @database-expert, @devops-engineer, @technical-writer, @test-automation-engineer, @performance-engineer, @refactoring-specialist | write, in mission branch |
+| **Review** | @qa-analyst, @acceptance-reviewer, @ux-craftsman | read-only, writes findings-{agent}.md |
+| **Adversary** | @security-engineer, @incident-responder | read-only, writes findings-{agent}.md |
+| **Arbiter** | @arbiter | read-only, sole gate authority |
 
-`+@agent` = cross-layer participant pulled into DESIGN when needed.
+---
 
-### Build (write — run in worktrees)
+## §2. Orchestration Protocol
 
-| Type | Domain |
-|---|---|
-| @backend-engineer | APIs, business logic, concurrency, observability |
-| @frontend-engineer | Web UI, components, state, a11y |
-| @mobile-engineer | Flutter/RN, widgets, platform, offline-first |
-| @database-expert | Schema, migrations, queries, indexes |
-| @devops-engineer | CI/CD, containers, IaC, monitoring |
-| @technical-writer | Docs, API docs, changelogs, README |
-| @test-automation-engineer | E2E (UI+API), Playwright, test infra |
-| @performance-engineer | Profiling, benchmarks, load tests, optimization |
-| @refactoring-specialist | Code smell detection, safe transformation, metrics |
+### Step 1 — Elicit
+Validate requirements, scope, and acceptance criteria with user. If anything is unclear, ask — do NOT proceed with ambiguity.
 
-### Review (read-only — run on main, post-merge)
+### Step 2 — Assess & Route
 
-| Type | Domain |
-|---|---|
-| @qa-analyst | Code review, testing coverage, quality gates — loads `audit-checklist` skill |
-| @security-engineer | Threats, vulnerabilities, auth, input validation |
-| @acceptance-reviewer | Spec adherence, deliverable completeness, requirement traceability — loads `acceptance-review` skill |
-| @ux-reviewer | Design heuristics, interaction, a11y, responsive |
-| @incident-responder | Triage, RCA, postmortems, pre-mortem analysis |
+Evaluate complexity across four dimensions:
 
-## Composable Primitives
+| Dimension | Low | High |
+|---|---|---|
+| Scope | ≤3 files, single module | Cross-cutting, multi-module |
+| Knowledge | Well-documented, patterns exist | Uncharted, no prior art |
+| Risk | No data migration, no auth changes | Security-critical, data-critical |
+| Ambiguity | Clear spec, criteria defined | Vague requirements, needs research |
+
+**Route based on assessment:**
+
+| Assessment | Route | Templates |
+|---|---|---|
+| All Low | **Flat** — dispatch executor(s) directly, skip @rally-lead | B, D, H, I, K |
+| Mixed | **Shallow** — spawn @rally-lead → 1 @mission-lead | C, F, G, J |
+| Any High | **Deep** — spawn @rally-lead → N @mission-lead instances | A, E |
+
+### Step 3 — Dispatch
+- **Flat:** Dispatch executor(s) with scope. Monitor handoff.md. Report to user.
+- **Hierarchical:** Spawn @rally-lead with full requirements. Present mission plan to user before execution.
+
+### Step 4 — Monitor & Recover
+- Wait for handoff.md or escalation.md from rally-lead
+- Succession request → spawn fresh @rally-lead with succession-brief.md
+- Escalation → evaluate: re-plan, reassign, or surface to user
+
+### Step 5 — Report
+Synthesize handoff.md into user-facing summary: what was built, tested, and what the arbiter found.
+
+---
+
+## §3. Mission Lifecycle
+
+> **Detail lives in agent profiles.** @rally-lead owns decomposition (loads `scope-decomposition` skill). @mission-lead owns iteration (loads `convergence-loop` skill). This section is the overview.
+
+### Rally-Lead Loop (Layer 2)
+
+```
+Assess complexity → select template → decompose into missions (MECE)
+→ LOOP (max 5 iterations):
+    Dispatch @mission-lead[scope] × N (parallel, workspace='branch')
+    Collect handoff.md from each
+    Dispatch @tech-lead[integration] to wire missions together
+    Dispatch @arbiter for cross-mission verification
+    ALL PASS → handoff to @overseer | ANY FAIL → fault recovery, re-plan, loop
+```
+
+### Mission-Lead Loop (Layer 3)
+
+```
+EXPLORE → DESIGN (optional) → PRE-MORTEM (optional) → BUILD
+→ REVIEW ∥ ADVERSARY (AAD — parallel, isolated, single-pass)
+→ ARBITRATE → GATE
+    PASS → handoff.md to rally-lead
+    FAIL → narrow scope, loop from BUILD (max 5 iterations)
+```
+
+### AAD Protocol (All-Agents Drafting)
+
+Reviewers and adversaries follow strict isolation:
+
+1. Dispatched **in parallel** — same `invoke_subagent` call
+2. **No cross-talk** — reviewers never see each other's findings-*.md
+3. **Single-pass** — one review round per iteration, no debates
+4. **Arbiter-only synthesis** — only @arbiter reads all findings-*.md
+5. **Scale width** — more reviewers for coverage, not more rounds for depth
+
+---
+
+## §4. Composable Primitives
 
 | Primitive | Agents | Dependency |
 |---|---|---|
-| SCOUT | @scout or domain agent | None |
-| DESIGN | @tech-lead + @architect + optional experts | After SCOUT |
-| PRE-MORTEM | @incident-responder + optional reviewers | After DESIGN |
-| BUILD | Builder agents (supervised by @tech-lead) | After DESIGN |
-| TEST | @test-automation-engineer | After DESIGN |
-| REVIEW | @tech-lead (gate) + @qa-analyst + @security-engineer + @acceptance-reviewer | After BUILD merge |
-| REMEDIATE | Builder agents | After REVIEW |
+| SCOUT | @scout | None |
+| DESIGN | @architect + optional experts | After SCOUT |
+| PRE-MORTEM | @incident-responder + @security-engineer, @performance-engineer (optional) | After DESIGN |
+| BUILD | Builder agents (in mission branch) | After DESIGN |
+| REVIEW | @qa-analyst + @acceptance-reviewer (AAD) | After BUILD |
+| ADVERSARY | @security-engineer + @incident-responder (AAD) | After BUILD |
+| ARBITRATE | @arbiter (sole gate) | After REVIEW + ADVERSARY |
+| REMEDIATE | Builder agents | After ARBITRATE (on FAIL) |
 | OPTIMIZE | @performance-engineer | After BUILD |
-| VERIFY | @tech-lead (final gate) + @qa-analyst + @acceptance-reviewer | After final merge |
+| VERIFY | @arbiter (cross-mission) | After all missions pass |
 | DOCUMENT | @technical-writer | After VERIFY (optional) |
-| INCIDENT | @tech-lead + @incident-responder + engineers | Standalone |
 | REFACTOR | @refactoring-specialist | After REVIEW/SCOUT |
 
-### Composition Rules
+**Composition rules:** DESIGN → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE. SCOUT anywhere. DOCUMENT last. PRE-MORTEM optional (recommended for high-risk).
 
-1. DESIGN before BUILD — architect produces contracts, builders consume.
-2. BUILD before REVIEW — reviewers need merged implementation.
-3. REVIEW before REMEDIATE — fixes need findings.
-4. VERIFY after final merge.
-5. SCOUT can appear anywhere.
-6. DOCUMENT always last (optional).
-7. PRE-MORTEM after DESIGN, before BUILD (optional, recommended for high-risk).
-8. OPTIMIZE and REVIEW are independent — can run in parallel.
+### Operational Protocols
 
-### Review Gate Invariant (Non-Skippable)
+**Scope expansion:** If a worker discovers the task is more complex than the template allows, the worker messages its coordinator. The coordinator can either absorb the complexity within the current template or write escalation.md to request a template upgrade from the parent.
 
-> REVIEW and VERIFY are **mandatory hard gates**. They cannot be skipped, deferred, or abbreviated under any circumstance.
+**MECE violation mid-build:** If a worker discovers they need to modify a file outside their scope, they STOP and message the mission-lead. Mission-lead can reassign the file ownership or merge scope cards. Workers must NEVER modify files outside their assigned scope.
 
-**Invariants:**
-1. **Every BUILD must be followed by REVIEW.** No code reaches VERIFY without passing REVIEW. No exceptions for "small changes", "trivial fixes", or "time pressure".
-2. **Both `@qa-analyst` and `@acceptance-reviewer` must sign off.** REVIEW is not complete until both agents report clean. A clean report from one does not compensate for a missing report from the other.
-3. **Skipping review is a critical protocol violation.** If any agent or coordinator attempts to bypass REVIEW to save time or tokens, this is a failure that must be escalated to the user.
-4. **REMEDIATE loops are mandatory.** If either reviewer reports violations, REMEDIATE must execute and REVIEW must re-run. The loop continues until both reviewers report clean, or the circuit breaker trips (which escalates to user, NOT silently skips).
-5. **VERIFY re-confirms.** Even after REVIEW passes, VERIFY independently re-runs both `@qa-analyst` and `@acceptance-reviewer` as a final gate. This catches regressions introduced during REMEDIATE.
+**New dependency approval:** Workers message mission-lead to request new dependencies. Mission-lead records the decision in decision-log.md. The arbiter checks that all dependencies are either in briefing.md or approved in decision-log.md.
 
-### Parallelism
+---
 
-- **Cross-domain**: Different agent types run in parallel. Always safe.
-- **Intra-domain**: Multiple instances of same type (e.g., `@backend-engineer[auth]` + `@backend-engineer[tasks]`). Load `parallel-dispatch` skill — it defines decomposition, ownership, DAG execution, and merge protocol.
+## §5. Templates
 
-## Workflow Templates
+### A: Full Feature (Any High)
+```
+@overseer → @rally-lead → N @mission-lead[scope]
+  Each: SCOUT → DESIGN → PRE-MORTEM → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE
+  Then: @tech-lead[integration] → @arbiter (cross-mission) → DOCUMENT
+```
 
-### A: Full Feature
-SCOUT → DESIGN(tech-lead, architect, experts) → PRE-MORTEM → BUILD(engineers[feat-1..N]) ∥ TEST(test-automation[e2e]) → REVIEW(tech-lead, qa[feat-1..N], security, acceptance, ux) → REMEDIATE(if findings) → VERIFY → DOCUMENT
+### B: Bug Fix (All Low, ≤3 files)
+```
+@overseer → @backend-engineer or @frontend-engineer
+  BUILD → REVIEW → ARBITRATE
+```
 
-### B: Bug Fix
-SCOUT → BUILD(single engineer) → REVIEW(tech-lead, qa, acceptance) → REMEDIATE(if findings) → VERIFY
+### C: Refactor (Mixed, single mission)
+```
+@overseer → @rally-lead → 1 @mission-lead
+  SCOUT → REFACTOR → REVIEW ∥ ADVERSARY → ARBITRATE
+```
 
-### C: Audit & Remediation
-SCOUT(qa[area-1..N], security[area-1..N]) → REVIEW(tech-lead) → REMEDIATE(engineers[fix-1..N]) → REVIEW(tech-lead, qa, acceptance) → VERIFY
+### D: Investigation (Research only)
+```
+@overseer → 2-3 @scout instances (no implementation)
+```
 
-### D: Mobile Feature
-SCOUT → DESIGN(tech-lead, architect, ux) → BUILD(mobile[screen-1..N], test-automation[e2e]) → REVIEW(tech-lead, qa, acceptance, ux) → REMEDIATE(if findings) → VERIFY
+### E: Security Hardening (High Risk)
+```
+@overseer → @rally-lead → N @mission-lead[scope]
+  Each: SCOUT(security) → BUILD → REVIEW ∥ ADVERSARY(heavy) → ARBITRATE
+  Then: @arbiter (cross-mission, security-focused)
+```
 
-### E: Performance
-SCOUT(perf[cpu], perf[memory]) → OPTIMIZE(perf[bottleneck-1..N]) → BUILD → REVIEW(tech-lead, qa, acceptance, perf) → REMEDIATE(if findings) → VERIFY
+### F: Performance (Mixed)
+```
+@overseer → @rally-lead → @mission-lead
+  SCOUT(perf) → OPTIMIZE → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE
+```
 
-### F: Security Hardening
-SCOUT(security[auth], security[input], security[secrets]) → REMEDIATE(engineers[fix-1..N]) → REVIEW(tech-lead, security, qa, acceptance) → VERIFY
+### G: Infrastructure (Mixed)
+```
+@overseer → @rally-lead → @mission-lead
+  DESIGN → BUILD(devops) → REVIEW ∥ ADVERSARY → ARBITRATE
+```
 
-### G: Infrastructure
-DESIGN(tech-lead, architect) → BUILD(devops[ci], devops[iac], devops[monitoring]) → REVIEW(tech-lead, qa, security, acceptance) → REMEDIATE(if findings) → VERIFY
+### H: Documentation (All Low)
+```
+@overseer → @technical-writer
+  DOCUMENT → REVIEW(@qa-analyst, @acceptance-reviewer) → ARBITRATE
+```
 
-### H: Documentation
-DOCUMENT(writer[api], writer[arch], writer[guide]) → REVIEW(qa, acceptance)
+### I: Incident Response (All Low)
+```
+@overseer → @tech-lead + @incident-responder
+  REMEDIATE → REVIEW ∥ ADVERSARY → ARBITRATE → DOCUMENT(postmortem)
+```
 
-### I: Incident Response
-INCIDENT(tech-lead, incident-responder) → REMEDIATE → REVIEW(tech-lead, qa, acceptance) → VERIFY → DOCUMENT(postmortem)
+### J: Technical Debt (Mixed)
+```
+@overseer → @rally-lead → @mission-lead
+  SCOUT(code-smells) → REFACTOR → REVIEW ∥ ADVERSARY → ARBITRATE
+```
 
-### J: Technical Debt
-SCOUT(scout[area-1..N], qa[code-smells]) → REFACTOR(specialist[module-1..N]) → REVIEW(tech-lead, qa, acceptance) → REMEDIATE(if findings) → VERIFY
+### K: Pre-Mortem (All Low)
+```
+@overseer → @architect + @tech-lead
+  DESIGN → PRE-MORTEM(@incident-responder, @security-engineer, @performance-engineer) → DOCUMENT
+```
 
-### K: Pre-Mortem (Standalone)
-DESIGN(tech-lead, architect) → PRE-MORTEM(incident-responder, security, perf, database) → DOCUMENT(risk-assessment)
+---
 
-## Behavioral Directives
+## §6. Resilience
 
-### Recursive Nesting
-Every agent may spawn sub-subagents when a task is too broad for a single context. This is native Antigravity behavior — agents should delegate proactively, not wait for permission. Preferred triggers:
-- Task edits multiple unrelated components (violates single-responsibility).
-- Context is filling up (>50% token usage).
-- Task requires secondary expertise (e.g., backend engineer needing schema work → delegate to @database-expert).
-- Agents may also define ad-hoc lightweight subagents for one-off specialized tasks not covered by pre-defined profiles.
+> **Detail lives in the `fault-recovery` skill.** Coordinators load it. This section is the overview.
 
-Maximum nesting depth: **4 levels**. Beyond that, complete work inline.
+### Escalation Ladder (per agent failure)
 
-### Quality Contract
-Every subagent — at every depth — must:
-1. Load and follow applicable rules from `.agents/rules/` and skills from `.agents/skills/`.
-2. Run the Code Idioms and Conventions quality checks before declaring done.
-3. Iterate (plan → execute → verify → remediate) until checks pass or escalate after 5 failed attempts.
-4. For write-capable agents: trigger a `/audit` review of changes before merge.
-5. **REVIEW is non-skippable.** `@qa-analyst` loads `audit-checklist` skill (governance). `@acceptance-reviewer` loads `acceptance-review` skill (spec adherence). Both run in parallel. Both must report clean. Report violations as actionable items for REMEDIATE. Never skip review to save time or tokens — this is a critical protocol violation.
+| Level | Action |
+|---|---|
+| 1 | RETRY — same agent + failure context (max 1) |
+| 2 | REPLACE — different agent type (max 1) |
+| 3 | SKIP — defer if not a hard dependency |
+| 4 | REDISTRIBUTE — split into 2-3 sub-cards |
+| 5 | DEGRADE — complete without failing component |
 
-### Context Hygiene
-- Pass children only: scope card, interface contracts, applicable rules/skills.
-- Children return only: structured summary, branch hash, verification results, blockers.
-- Use `workspace='share'` for concurrent writes, `workspace='inherit'` for read-only reviewers.
+### Tiered Escalation (by layer)
 
-## Orchestration Protocol
+| Tier | Owner | Handles |
+|---|---|---|
+| 1 | @mission-lead | Executor failure (ladder above) |
+| 2 | @rally-lead | Mission failure (re-plan, restructure) |
+| 3 | @overseer | Rally failure (re-plan or escalate to user) |
 
-1. **Elicit** — Validate requirements, scope, acceptance criteria. Ask user if anything is unclear.
-2. **Compose** — Select workflow template (A–K) or compose custom. Identify agents, parallelism needs. Present plan to user.
-3. **Execute** — Dispatch primitives in dependency order. Agents self-organize: they decompose, nest, iterate, and verify autonomously per the Quality Contract.
-4. **Review (mandatory gate)** — Dispatch REVIEW. `@qa-analyst` loads `audit-checklist`, `@security-engineer` reviews threats, `@acceptance-reviewer` loads `acceptance-review`. All run in parallel. **ALL three must report clean before proceeding.** Loop REMEDIATE → REVIEW until clean or circuit breaker trips (circuit breaker escalates to user, never silently skips).
-5. **Verify** — `@tech-lead` + `@qa-analyst` run full validation. Sign off or escalate.
-6. **Complete** — Synthesize results. Optional DOCUMENT. Report to user.
+### Self-Succession
 
-## Circuit Breaker
+Coordinators self-succeed at 70% context capacity, >3 iterations, or coherence degradation. Write succession-brief.md → parent spawns fresh instance → new instance resumes from recorded iteration count. See `convergence-loop` skill §3.
 
-- Sub-agent fails → retry ONCE with narrower scope → fails again → `BLOCKED: {agent}[{scope}] failed 2x. Need human input.`
-- Nested child exhausts iteration loop → escalates to parent → parent retries or handles inline → if parent also fails → cascade up.
-- **3 cascading escalations max** per task tree. Exceeded → STOP entire primitive, report to user.
-- Failed node invalidates downstream DAG → re-plan affected sub-tree only.
+### Gate Invariant
+
+> For **code-producing workflows**, REVIEW and ARBITRATE are **mandatory hard gates**. They cannot be skipped, deferred, or abbreviated. Skipping them is a critical protocol violation — escalate to user immediately.
+
+**Gate tiers by template complexity:**
+
+| Tier | Gates Required | Templates |
+|---|---|---|
+| Full | REVIEW ∥ ADVERSARY → ARBITRATE | A, C, E, F, G, J (hierarchical, code-producing) |
+| Standard | REVIEW → ARBITRATE | B, I (flat, code-producing — ADVERSARY optional for low-risk) |
+| Light | REVIEW only | H (documentation — no code, no arbiter) |
+| None | No gates | D, K (read-only research/analysis — no code produced) |
+
+---
+
+## §7. Context Hygiene
+
+### Communication Documents (all lowercase)
+
+| Document | Writer | Reader | When |
+|---|---|---|---|
+| `briefing.md` | Coordinator | Workers, reviewers | Start of mission |
+| `progress.md` | Coordinator | Self, parent | Append-only log |
+| `findings-{agent}.md` | Each reviewer/adversary | Arbiter only | After review (e.g., `findings-qa-analyst.md`) |
+| `verdict.md` | Arbiter | Coordinator | After ARBITRATE — contains pass/fail + rationale |
+| `decision-log.md` | Coordinator | Parent | On non-obvious choices (incl. dependency approvals) |
+| `handoff.md` | Coordinator | Parent coordinator | On completion |
+| `handoff.md` | Worker | Mission-lead | On scope card completion |
+| `escalation.md` | Coordinator | Parent | On failure |
+| `succession-brief.md` | Coordinator | Successor | On context exhaustion |
+
+### Handoff Compression
+
+`handoff.md` contains ONLY: file paths + 1-line descriptions, branch/commit ref, test counts, arbiter verdict, blockers.
+`handoff.md` MUST NOT contain: raw terminal output, debugging traces, full file contents, conversation transcripts.
+
+**Parent nodes never read raw execution traces — only compressed handoffs.**
+
+### Document Delivery
+
+All communication documents are delivered as **file + message**:
+1. Writer creates the document file in their workspace directory
+2. Writer sends a message to the reader: `"[document] ready: [1-line summary]"`
+3. Reader reads the file from the writer's workspace
+
+This dual mechanism ensures both persistence (file) and notification (message).
+
+### Workspace Strategy
+
+| Layer | Mode | Rationale |
+|---|---|---|
+| 1-2 | `inherit` | Overseer + rally-lead read main workspace |
+| 3 | `branch` | Mission isolation — independent failure domains |
+| @tech-lead[integration] | `inherit` | Cross-mission — reads all branches, writes to main |
+| 4+ writers | `share` (within mission branch) | Parallel executors share mission branch |
+| 4+ readers | `inherit` (from mission branch) | Reviewers read mission work |
+
+---
 
 ## Golden Rule
 
-**Elicit → decompose → validate ownership → build → verify at every layer → review always.**
+**Elicit → assess → decompose → build → review ∥ adversary → arbitrate → integrate → verify → handoff compressed.**
