@@ -176,6 +176,14 @@
         "detect": ["mix.exs"],
         "skills": ["elixir-idioms"]
       },
+      "hono": {
+        "label": "Hono",
+        "description": "Hono routing, middleware, Zod validation, RPC",
+        "group": "community",
+        "requires": ["typescript"],
+        "detect": [],
+        "skills": ["hono-idioms"]
+      },
       "java": {
         "label": "Java",
         "description": "streams, records, sealed classes",

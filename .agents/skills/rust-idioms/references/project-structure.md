@@ -225,5 +225,5 @@ Each service is its own directory under `apps/` with its own `Cargo.toml` and `D
 
 ### Related Principles
 - Project Structure @.agents/rules/project-structure.md (core philosophy)
-- Rust Idioms and Patterns ../SKILL.md
+- Rust Idioms and Patterns @../SKILL.md
 - Testing Strategy @.agents/rules/testing-strategy.md

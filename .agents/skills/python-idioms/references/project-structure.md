@@ -136,4 +136,4 @@ skips = ["B101"]   # assert statements allowed in test files
 
 ### Related Principles
 - Project Structure @.agents/rules/project-structure.md (core philosophy)
-- Python Idioms and Patterns ../SKILL.md (coding idioms, error handling, naming)
+- Python Idioms and Patterns @../SKILL.md (coding idioms, error handling, naming)

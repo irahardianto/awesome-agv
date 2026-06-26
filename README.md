@@ -38,7 +38,7 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **25 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
-*   🛠️ **57 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
+*   🛠️ **59 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
 *   🔄 **12 Workflows** — end-to-end development processes from research to ship.
 *   🤖 **21 Agent Personas** — specialized sub-agents for multi-agent orchestration arranged in a 4-tier hierarchy.
 *   🏗️ **Three-Tier Loading System** — always-on mandates + contextual principles + on-demand skills for zero-noise enforcement.
@@ -299,7 +299,7 @@ Activated by the model only when relevant — zero overhead when not applicable.
 *   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA, semantic HTML, keyboard navigation
 *   **[Git Workflow Principles](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, PR hygiene
 
-### Specialized Skills (57)
+### Specialized Skills (59)
 
 Skills are deep expertise modules loaded on demand — agents only pay the token cost when the skill is relevant.
 
@@ -334,7 +334,7 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 *   **[Audit Checklist](.agents/skills/audit-checklist/SKILL.md)**: Consolidated audit checklists for code review and verification — loaded by `/audit` workflow and multi-agent review pipelines.
 *   **[Acceptance Review](.agents/skills/acceptance-review/SKILL.md)**: Spec adherence and deliverable completeness verification — ensures what was delivered matches what was requested.
 
-#### 🌐 Language & Framework Idioms (24)
+#### 🌐 Language & Framework Idioms (26)
 
 Language-specific patterns, tooling, project layout, and quality commands. Each skill auto-loads via `paths:` triggers when the agent touches files in that language.
 
@@ -342,7 +342,7 @@ Language-specific patterns, tooling, project layout, and quality commands. Each 
 
 | Skill | Ecosystem | Auto-loads on |
 |---|---|---|
-| [Go Idioms](.agents/skills/go-idioms/SKILL.md) + [layout](./agents/skills/go-idioms/references/project-structure.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `**/*.go`, `**/go.mod` |
+| [Go Idioms](.agents/skills/go-idioms/SKILL.md) + [layout](.agents/skills/go-idioms/references/project-structure.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `**/*.go`, `**/go.mod` |
 | [TypeScript Idioms](.agents/skills/typescript-idioms/SKILL.md) + [layout](.agents/skills/typescript-idioms/references/project-structure.md) | Strict mode, type narrowing, Zod, vitest | `**/*.ts`, `**/*.tsx` |
 | [Vue Idioms](.agents/skills/vue-idioms/SKILL.md) + [layout](.agents/skills/vue-idioms/references/project-structure.md) | Vue 3 Composition API, Pinia (Setup Store), composables | `**/*.vue`, `**/store/**/*.ts`, `**/*.store.ts` |
 | [Flutter Idioms](.agents/skills/flutter-idioms/SKILL.md) + [layout](.agents/skills/flutter-idioms/references/project-structure.md) | Riverpod 3, freezed, go_router, const widgets | `**/*.dart`, `**/pubspec.yaml`, `**/analysis_options.yaml` |
@@ -353,20 +353,22 @@ Language-specific patterns, tooling, project layout, and quality commands. Each 
 
 | Skill | Ecosystem |
 |---|---|
-| [Angular](.agents/skills/angular-idioms/SKILL.md) | Angular components, signals, DI, RxJS |
+| [Angular](.agents/skills/angular-idioms/SKILL.md) + [layout](.agents/skills/angular-idioms/references/project-structure.md) | Angular components, signals, DI, RxJS |
+| [Axum](.agents/skills/axum-idioms/SKILL.md) | Axum HTTP routing, extractors, Tower middleware |
 | [C++](.agents/skills/cpp-idioms/SKILL.md) | Modern C++ (RAII, smart pointers, CMake) |
 | [C#](.agents/skills/csharp-idioms/SKILL.md) | .NET, async/await, LINQ, records |
 | [Django](.agents/skills/django-idioms/SKILL.md) | Django ORM, views, middleware |
 | [.NET](.agents/skills/dotnet-idioms/SKILL.md) | ASP.NET Core, Entity Framework |
 | [Elixir](.agents/skills/elixir-idioms/SKILL.md) | OTP, GenServer, supervision trees |
+| [Hono](.agents/skills/hono-idioms/SKILL.md) + [layout](.agents/skills/hono-idioms/references/project-structure.md) | Hono routing, middleware, Zod validation, RPC |
 | [Java](.agents/skills/java-idioms/SKILL.md) | Streams, records, sealed classes |
 | [JavaScript](.agents/skills/javascript-idioms/SKILL.md) | ES2024+, async patterns, ESM |
 | [Kotlin](.agents/skills/kotlin-idioms/SKILL.md) | Coroutines, sealed classes, Android |
 | [Laravel](.agents/skills/laravel-idioms/SKILL.md) | Eloquent, middleware, queues |
-| [Next.js](.agents/skills/nextjs-idioms/SKILL.md) | App Router, RSC, ISR |
+| [Next.js](.agents/skills/nextjs-idioms/SKILL.md) + [layout](.agents/skills/nextjs-idioms/references/project-structure.md) | App Router, RSC, ISR |
 | [PHP](.agents/skills/php-idioms/SKILL.md) | PHP 8+, type declarations, Composer |
 | [Rails](.agents/skills/rails-idioms/SKILL.md) | ActiveRecord, conventions, RSpec |
-| [React](.agents/skills/react-idioms/SKILL.md) | Hooks, Suspense, Server Components |
+| [React](.agents/skills/react-idioms/SKILL.md) + [layout](.agents/skills/react-idioms/references/project-structure.md) | Hooks, Suspense, Server Components |
 | [Ruby](.agents/skills/ruby-idioms/SKILL.md) | Blocks, modules, metaprogramming |
 | [Spring Boot](.agents/skills/spring-boot-idioms/SKILL.md) | Spring DI, JPA, WebFlux |
 | [SQL](.agents/skills/sql-idioms/SKILL.md) | Query optimization, indexes, migrations |
@@ -465,7 +467,7 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── architectural-pattern.md          # always_on: I/O isolation, testability
 │   ├── rule-priority.md                  # always_on: conflict resolution
 │   └── ...            # 5 more always-on + 15 contextual principles
-├── skills/            # 57 specialized skills — loaded on demand, not always
+├── skills/            # 59 specialized skills — loaded on demand, not always
 │   ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
 │   ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
 │   ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts
@@ -503,7 +505,7 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (57 skills shipped).
+- [x] Include more specialized skills to aid development process (59 skills shipped).
 - [x] Add development workflows for structured feature delivery (12 workflows shipped).
 - [x] Add language-specific idiom skills (Go, TypeScript, Vue, Flutter, Rust, Python + 18 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
@@ -526,7 +528,7 @@ Awesome AGV ships with **opinionated defaults** for specific technology stacks. 
 | **Systems**      | Rust — tokio, thiserror/anyhow, clippy pedantic     | [rust-idioms](.agents/skills/rust-idioms/SKILL.md)               |
 | **Scripting/AI** | Python — ruff, mypy strict, pytest, Pydantic        | [python-idioms](.agents/skills/python-idioms/SKILL.md)           |
 
-**Using a different framework?** The idiom skills are modular — swap or edit them to match your stack. Community language skills are available for Angular, React, Next.js, Spring Boot, Django, Laravel, Rails, and more. See the [Adapting guide](https://irahardianto.github.io/awesome-agv/adapting) for which files to change.
+**Using a different framework?** The idiom skills are modular — swap or edit them to match your stack. Community language skills are available for Angular, React, Next.js, Hono, Axum, Spring Boot, Django, Laravel, Rails, and more. See the [Adapting guide](https://irahardianto.github.io/awesome-agv/adapting) for which files to change.
 
 ## Project Adaptation Guide
 
