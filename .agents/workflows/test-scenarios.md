@@ -169,6 +169,8 @@ Scenarios pre-organized as checklists for downstream workflows:
 
 **Gate:** Test scenario document produced.
 
+**Persistent output:** Save the test scenario document to `docs/testing/test-scenarios-{feature}-{YYYY-MM-DD}.md` so it can be referenced by downstream `/test-unit`, `/test-integration`, and `/test-e2e` workflows. Create the `docs/testing/` directory if it doesn't exist.
+
 ### Phase 8: HUMAN REVIEW (Mandatory Gate)
 **This gate is mandatory. Do not feed scenarios into testing workflows without user approval.**
 

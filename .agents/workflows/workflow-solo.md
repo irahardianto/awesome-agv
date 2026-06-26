@@ -108,6 +108,8 @@ Route to a track:
 
 **Gate:** Committed with conventional format. `task.md` updated.
 
+> **Document hygiene:** If `decision-log.md` was used during implementation, it should follow the `.agentwork/` → `docs/decisions/` promotion pattern defined in `workflow-team.md` §7.5. For significant architectural decisions, use the `adr` skill to write directly to `docs/decisions/`.
+
 ---
 
 ## Error Handling
