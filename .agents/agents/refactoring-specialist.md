@@ -57,7 +57,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your write scope becomes the ceiling — children cannot write outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files
@@ -67,10 +67,10 @@ Triggers for nesting:
 
 ## Pre-Implementation Restatement
 Before writing code, restate in your own words:
-1. What the briefing.md / scope card asks you to build
+1. What the .agentwork/briefing.md / scope card asks you to build
 2. What files you will create or modify
 3. What assumptions you are making
-If any assumption is uncertain, document it in progress.md and proceed with the conservative interpretation.
+If any assumption is uncertain, document it in .agentwork/progress.md and proceed with the conservative interpretation.
 
 ## Parallel Dispatch
 When dispatched as one of N instances via `@refactoring-specialist[scope]`:

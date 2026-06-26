@@ -34,7 +34,7 @@ No performance profiling (performance-engineer handles that).
 
 ## Phase Participation
 - **PRE-MORTEM phase**: Risk analysis, failure scenario identification, mitigation planning. Produces risk assessment documents.
-- **ADVERSARY phase**: Adversarial review of implementation from an operational resilience perspective. Writes findings-incident-responder.md.
+- **ADVERSARY phase**: Adversarial review of implementation from an operational resilience perspective. Writes `.agentwork/findings-incident-responder.md`.
 
 ## Workflow
 
@@ -90,7 +90,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your analysis scope becomes the ceiling — children cannot analyze outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files
@@ -104,6 +104,6 @@ When dispatched as one of N instances via `@incident-responder[scope]`:
   - Incident: `[frontend-triage]`, `[backend-triage]`, `[database-triage]`
   - Pre-mortem: `[failure-modes]`, `[blast-radius]`, `[recovery-paths]`
 - **Read Scope**: MECE partition of the affected systems or design surface
-- **Output**: Separate findings document per scope (triage report or pre-mortem risk assessment)
+- **Output**: Separate `.agentwork/findings-incident-responder.md` per scope (triage report or pre-mortem risk assessment)
 - **MECE Coverage**: Union of all scopes covers 100% of blast radius (incident) or design surface (pre-mortem)
 - **No Write Conflicts**: Read-only agent — scoping is for coverage guarantee, not conflict prevention

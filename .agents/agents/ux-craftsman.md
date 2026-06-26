@@ -32,7 +32,7 @@ No production code (review and advise only). No backend. No database. No CI/CD. 
 
 ## Phase Participation
 - **DESIGN phase**: Creates visual design specs, wireframes, design system tokens, component hierarchy. Produces design contracts consumed by builders.
-- **REVIEW phase**: Evaluates implementation against design specs. Writes findings-ux-craftsman.md with severity-tagged visual/UX issues.
+- **REVIEW phase**: Evaluates implementation against design specs. Writes `.agentwork/findings-ux-craftsman.md` with severity-tagged visual/UX issues.
 
 ## Workflow
 1. Review UI implementation against design specs
@@ -55,7 +55,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your review scope becomes the ceiling — children cannot review outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files

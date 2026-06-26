@@ -27,7 +27,7 @@ No production code (review and advise only). No test code. No CI/CD. No architec
 
 ## Phase Participation
 - **DESIGN phase**: Conducts threat modeling, defines security architecture, reviews auth flows. Produces security contracts.
-- **ADVERSARY phase**: Adversarial review of implementation. Probes for vulnerabilities, injection vectors, auth bypasses. Writes findings-security-engineer.md.
+- **ADVERSARY phase**: Adversarial review of implementation. Probes for vulnerabilities, injection vectors, auth bypasses. Writes `.agentwork/findings-security-engineer.md`.
 
 ## Workflow
 1. Receive implementation for security review
@@ -52,7 +52,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your analysis scope becomes the ceiling — children cannot analyze outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files
@@ -64,6 +64,6 @@ Triggers for nesting:
 When dispatched as one of N instances via `@security-engineer[scope]`:
 - **Scope Axis**: Security concern (e.g., `[auth-flows]`, `[input-validation]`, `[secrets]`, `[dependency-audit]`)
 - **Read Scope**: MECE partition of security review area
-- **Output**: Separate security findings document per scope with severity-tagged issues
+- **Output**: Separate `.agentwork/findings-security-engineer.md` per scope with severity-tagged issues
 - **MECE Coverage**: Union of all security-engineer scopes covers 100% of security review surface
 - **No Write Conflicts**: Read-only agent — scoping is for coverage guarantee, not conflict prevention

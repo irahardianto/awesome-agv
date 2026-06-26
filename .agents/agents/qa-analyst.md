@@ -49,7 +49,7 @@ No production code. No test code (review only). No architecture decisions. No se
 4. Report — document findings; dispatch `@performance-engineer` for implementation
 
 ## Output Format
-Deliverables are always **findings documents**, never code changes.
+Deliverables are always **findings documents** (written to `.agentwork/`), never code changes.
 
 Each finding includes:
 - **Severity tag** (`[SEC]`, `[TEST]`, `[OBS]`, `[ERR]`, `[ARCH]`, `[PAT]`)
@@ -69,7 +69,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your review scope becomes the ceiling — children cannot review outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files
@@ -81,6 +81,6 @@ Triggers for nesting:
 When dispatched as one of N instances via `@qa-analyst[scope]`:
 - **Scope Axis**: Review dimension or feature scope (e.g., `[auth-review]`, `[task-review]`, `[security-dim]`, `[test-coverage]`)
 - **Read Scope**: MECE partition of code under review (e.g., `features/<scope>/**` or by review dimension)
-- **Output**: Separate findings document per scope with severity-tagged issues
+- **Output**: Separate `.agentwork/findings-qa-analyst.md` per scope with severity-tagged issues
 - **MECE Coverage**: Union of all qa-analyst scopes covers 100% of code under review
 - **No Write Conflicts**: Read-only agent — scoping is for coverage guarantee, not conflict prevention

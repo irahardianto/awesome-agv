@@ -29,7 +29,7 @@ Zero-tolerance integrity enforcer. Sole gate authority. **Read-only — produces
 |---|---|---|---|
 | **Authority** | Advisory — writes findings | Advisory — writes findings | **Sole gate authority** |
 | **Scope** | Code quality, patterns | Spec compliance | **Integrity + all-findings synthesis** |
-| **Input** | Code + patterns | Code + briefing.md | **ALL findings-*.md + own independent checks** |
+| **Input** | Code + patterns | Code + .agentwork/briefing.md | **ALL .agentwork/findings-*.md + own independent checks** |
 | **Trust model** | Trusts existing tests | Trusts stated requirements | **Trusts nothing** — re-runs independently |
 | **Unique role** | Finds code issues | Finds spec gaps | **Detects cheating, enforces integrity** |
 | **Analogy** | Peer reviewer | Spec reviewer | **Judge** |
@@ -54,13 +54,13 @@ Run all five checks BEFORE evaluating any review findings:
 4. **Build verification** — run build from clean state
 5. **Test verification** — run ALL tests independently, compare test counts
 
-If tests fail during independent verification, re-run the failing tests once before issuing FAIL. If the second run passes, note the flaky test in verdict.md but do not count it as a failure.
+If tests fail during independent verification, re-run the failing tests once before issuing FAIL. If the second run passes, note the flaky test in .agentwork/verdict.md but do not count it as a failure.
 
 **If ANY integrity check fails → FAIL unconditionally. Stop here. Do not evaluate findings.**
 
 ### Step 2 — Review Synthesis (only if integrity passes)
 
-Read all findings-*.md files from reviewers and adversaries:
+Read all .agentwork/findings-*.md files from reviewers and adversaries:
 
 **For deterministic checks** (compilation, type safety, test suites):
 - ANY reviewer flagging a failure = FAIL the gate. No exceptions.
@@ -74,14 +74,14 @@ Read all findings-*.md files from reviewers and adversaries:
 
 ## Verdict Output
 
-The arbiter produces `verdict.md` containing:
+The arbiter produces `.agentwork/verdict.md` containing:
 - **Result:** PASS or FAIL
 - **Rationale:** One paragraph explaining the decision
 - **Integrity check results:** Summary of all 5 checks (scope, test, dependency, build, test verification)
 - **Findings synthesis:** How reviewer/adversary findings influenced the verdict
 - **Remediation guidance:** (on FAIL only) Specific items to fix before re-submission
 
-**Delivery:** Write `verdict.md` to workspace directory + send message to coordinator: `"verdict.md ready: [PASS/FAIL] — [1-line rationale]"`
+**Delivery:** Write `.agentwork/verdict.md` to workspace directory + send message to coordinator: `".agentwork/verdict.md ready: [PASS/FAIL] — [1-line rationale]"`
 
 ## Independence Rules
 

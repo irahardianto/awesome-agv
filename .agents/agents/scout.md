@@ -30,7 +30,7 @@ No CI/CD. No UI/UX decisions. Pure research and reporting.
 2. Decompose into 2-5 searchable topics (per research-methodology skill)
 3. Multi-tool search (MCP tools → web search → file system → training data)
 4. Document findings in structured format
-5. Return findings document to orchestrator or user
+5. Return `.agentwork/` findings document to orchestrator or user
 
 ## Output Format
 Deliverables are always **research documents**, never code.
@@ -55,7 +55,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your review scope becomes the ceiling — children cannot analyze outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files

@@ -48,7 +48,7 @@ When your scope card is too broad for a single context:
 2. Spawn sub-agents with narrower scope cards
 3. Your write scope becomes the ceiling — children cannot write outside it
 4. Track sub-agent progress; merge results when all complete
-5. Write handoff summary for your parent coordinator
+5. Write `.agentwork/handoff.md` for your parent coordinator
 
 Triggers for nesting:
 - Task edits >3 unrelated files
@@ -69,7 +69,7 @@ When dispatched as `@tech-lead[integration]` by @rally-lead:
 - **Role**: Cross-mission integration — wires completed missions together after all pass their individual arbiter gates
 - **Runs After**: All @mission-lead instances have produced PASS verdicts
 - **Write Scope**: Aggregation files only — routers, registries, configs, shared entry points
-- **Read Scope**: All mission handoff.md files + mission branches
+- **Read Scope**: Mission handoff summaries (received via messages from rally-lead) + mission branches
 - **Actions**: Merge mission branches into main, resolve interface seams, wire new modules into existing registries
 - **Gate**: A final @arbiter runs cross-mission verification after integration completes
 
