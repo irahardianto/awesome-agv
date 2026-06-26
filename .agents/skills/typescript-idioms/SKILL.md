@@ -1,4 +1,6 @@
 ---
+name: typescript-idioms
+description: TypeScript strict mode, type narrowing, Zod validation, vitest, ESLint flat config.
 paths:
   - "**/*.ts"
   - "**/*.tsx"
@@ -11,7 +13,7 @@ paths:
 
 TypeScript's type system is your documentation, your test, and your specification — all at once. Make the type system encode the invariants of your domain so that invalid states are unrepresentable. Lean into the compiler.
 
-> **Scope:** This file covers TypeScript-specific *type system and language idioms*. For Vue-specific patterns, see `@.agents/skills/vue-idioms/SKILL.md`. For file layout, see `references/project-structure.md in this skill`. For quality commands, see `code-idioms-and-conventions.md`. For logging library, see `@.agents/skills/logging-implementation/SKILL.md`.
+> **Scope:** This file covers TypeScript-specific *type system and language idioms*. For framework-specific patterns, see the respective idiom skill (Vue, React, Angular, Next.js, Hono). For file layout, see `references/project-structure.md in this skill`. For quality commands, see `code-idioms-and-conventions.md`. For logging library, see `@.agents/skills/logging-implementation/SKILL.md`.
 
 ---
 
@@ -296,6 +298,7 @@ See `code-idioms-and-conventions.md` for the exact commands to run before commit
 ### Related Principles
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - Vue Idioms and Patterns @.agents/skills/vue-idioms/SKILL.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md
 - Core Design Principles § Concurrency @core-design-principles.md

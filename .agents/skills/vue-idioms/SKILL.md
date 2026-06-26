@@ -1,4 +1,6 @@
 ---
+name: vue-idioms
+description: Vue 3 Composition API, Pinia stores, composables, Vite, Vitest.
 paths:
   - "**/*.vue"
   - "**/vite.config.*"
@@ -343,7 +345,7 @@ When using `<Transition>` or `<RouterView>` with transition effects, CSS framewo
 
 4. **Give the transition parent `position: relative`** — contains the absolutely-positioned leaving element during the simultaneous transition overlap
 
-> For full diagnosis steps when a transition-stuck blank screen occurs, see the Debugging Protocol's [Frontend module](file:///home/irahardianto/works/projects/awesome-agv/.agents/skills/debugging-protocol/languages/frontend.md) § CSS × Animation.
+> For full diagnosis steps when a transition-stuck blank screen occurs, see the Debugging Protocol's Frontend module: `@.agents/skills/debugging-protocol/languages/frontend.md` § CSS × Animation.
 
 ---
 
@@ -384,6 +386,9 @@ See `code-idioms-and-conventions.md` for exact commands.
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - TypeScript Idioms and Patterns @.agents/skills/typescript-idioms/SKILL.md
 - Project Structure — Vue Frontend @.agents/skills/vue-idioms/references/project-structure.md
+- Security Principles @.agents/rules/security-principles.md
+- Accessibility Principles @.agents/rules/accessibility-principles.md
 - Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Testing Strategy @testing-strategy.md
+- Error Handling Principles @error-handling-principles.md
 - Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

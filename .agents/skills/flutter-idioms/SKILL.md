@@ -1,4 +1,6 @@
 ---
+name: flutter-idioms
+description: Flutter Riverpod 3, freezed, go_router, const widgets, repository pattern.
 paths:
   - "**/*.dart"
   - "**/pubspec.yaml"
@@ -867,6 +869,8 @@ dart run build_runner watch --delete-conflicting-outputs
 ### Related Principles
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - Project Structure — Flutter Mobile @.agents/skills/flutter-idioms/references/project-structure.md
+- Security Principles @.agents/rules/security-principles.md
+- Accessibility Principles @.agents/rules/accessibility-principles.md
 - Architectural Patterns — Testability-First Design @.agents/rules/architectural-pattern.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md

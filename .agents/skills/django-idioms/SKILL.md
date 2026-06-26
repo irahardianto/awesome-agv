@@ -1,4 +1,6 @@
 ---
+name: django-idioms
+description: Django ORM, class-based views, DRF serializers, migrations, pytest-django. For Python see python-idioms.
 paths:
   - "**/views.py"
   - "**/models.py"
@@ -81,5 +83,12 @@ Django rewards convention, the ORM, and "batteries included" design. Idiomatic D
 | `bandit` | Security | `bandit -r .` |
 
 ### Related
+- Code Idioms and Conventions @.agents/rules/code-idioms-and-conventions.md
 - Python Idioms @.agents/skills/python-idioms/SKILL.md
+- Security Principles @.agents/rules/security-principles.md
+- Architectural Patterns @.agents/rules/architectural-pattern.md
 - Database Design Principles @.agents/rules/database-design-principles.md
+- Error Handling Principles @.agents/rules/error-handling-principles.md
+- Testing Strategy @.agents/rules/testing-strategy.md
+- Logging and Observability Mandate @.agents/rules/logging-and-observability-mandate.md
+- Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md

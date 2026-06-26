@@ -1,4 +1,6 @@
 ---
+name: python-idioms
+description: Python type hints, Protocols, Pydantic, async/await, pytest, ruff, mypy strict.
 paths:
   - "**/*.py"
   - "**/pyproject.toml"
@@ -450,9 +452,11 @@ asyncio_mode = "auto"
 ### Related Principles
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - Project Structure — Python Backend references/project-structure.md
+- Security Principles @security-principles.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md
 - Core Design Principles § Concurrency @core-design-principles.md
+- Logging and Observability Mandate @logging-and-observability-mandate.md
 - Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md
-- Security Principles @security-principles.md
 - Dependency Management Principles @dependency-management-principles.md

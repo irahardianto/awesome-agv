@@ -1,4 +1,6 @@
 ---
+name: go-idioms
+description: Go stdlib, error wrapping, interfaces, goroutines, table-driven tests, gofumpt.
 paths:
   - "**/*.go"
   - "**/go.mod"
@@ -309,8 +311,11 @@ All of the following **must pass with zero warnings/errors** before any commit. 
 ### Related Principles
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - Project Structure — Go Backend @references/project-structure.md
+- Security Principles @security-principles.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Testing Strategy @testing-strategy.md
 - Error Handling Principles @error-handling-principles.md
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md
+- Logging and Observability Mandate @logging-and-observability-mandate.md
 - Logging and Observability Principles @.agents/skills/logging-implementation/SKILL.md
 - Dependency Management Principles @dependency-management-principles.md

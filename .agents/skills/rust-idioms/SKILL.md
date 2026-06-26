@@ -1,4 +1,6 @@
 ---
+name: rust-idioms
+description: Rust ownership, tokio, thiserror/anyhow, Clippy pedantic, unsafe, lifetimes.
 paths:
   - "**/*.rs"
   - "**/Cargo.toml"
@@ -185,6 +187,8 @@ expect_used = "warn"
 
 ### Related Principles
 - Error Handling Principles @error-handling-principles.md
+- Security Principles @security-principles.md
+- Architectural Patterns — Testability-First Design @architectural-pattern.md
 - Concurrency and Threading Principles @concurrency-and-threading-principles.md
 - Core Design Principles § Concurrency @core-design-principles.md
 - Performance Optimization Principles @performance-optimization-principles.md
@@ -192,4 +196,6 @@ expect_used = "warn"
 - Security Mandate @security-mandate.md
 - Code Idioms and Conventions @code-idioms-and-conventions.md
 - Testing Strategy @testing-strategy.md
+- Logging and Observability Mandate @logging-and-observability-mandate.md
+- Logging Implementation @.agents/skills/logging-implementation/SKILL.md
 - Dependency Management Principles @dependency-management-principles.md
