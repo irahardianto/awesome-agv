@@ -38,8 +38,8 @@ For example, the principles of the [Rugged Software Constitution](.agents/rules/
 ### Key Features
 
 *   📏 **25 Rules** — covering security, reliability, architecture, and maintainability. Distilled to project-specific decisions only — rules encode *what overrides model defaults*, not what models already know.
-*   🛠️ **59 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, performance, CI/CD, and more.
-*   🔄 **12 Workflows** — end-to-end development processes from research to ship.
+*   🛠️ **60 Skills** — specialized capabilities loaded on demand: language idioms, debugging, design, testing, performance, CI/CD, and more.
+*   🔄 **10 Workflows** — end-to-end development processes from research to ship, plus specialized testing pipelines.
 *   🤖 **21 Agent Personas** — specialized sub-agents for multi-agent orchestration arranged in a 4-tier hierarchy.
 *   🏗️ **Three-Tier Loading System** — always-on mandates + contextual principles + on-demand skills for zero-noise enforcement.
 
@@ -299,7 +299,7 @@ Activated by the model only when relevant — zero overhead when not applicable.
 *   **[Accessibility Principles](.agents/rules/accessibility-principles.md)**: WCAG 2.1 AA, semantic HTML, keyboard navigation
 *   **[Git Workflow Principles](.agents/rules/git-workflow-principles.md)**: Conventional commits, branch naming, PR hygiene
 
-### Specialized Skills (59)
+### Specialized Skills (60)
 
 Skills are deep expertise modules loaded on demand — agents only pay the token cost when the skill is relevant.
 
@@ -320,6 +320,10 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 *   **[CI/CD](.agents/skills/ci-cd/SKILL.md)**: Pipeline design, multi-stage Docker builds, image scanning, SBOM attestation, environment promotion (Level 0–2)
 *   **[CI/CD GitOps & Kubernetes](.agents/skills/ci-cd/references/gitops-kubernetes.md)**: ArgoCD, Kubernetes deployment patterns — bundled with `ci-cd`
 *   **[Feature Flags](.agents/skills/feature-flags/SKILL.md)**: Release flags, kill switches, experiment flags, lifecycle rules — PRD-gated, loaded only when required
+
+#### 🧪 Testing Skills
+*   **[Testing Strategy](.agents/skills/testing-strategy/SKILL.md)**: Test doubles strategy, integration test infrastructure (Testcontainers, Firebase emulator), naming conventions, test organization patterns
+*   **[Mobile Testing](.agents/skills/mobile-testing/SKILL.md)**: Mobile E2E testing patterns — Flutter integration_test, Patrol, Maestro, golden testing, device matrix, and test data management
 
 #### 🎨 Design & UI Skills
 *   **[Frontend Design](.agents/skills/frontend-design/SKILL.md)**: Production-grade frontend interfaces, bold aesthetics, typography, motion
@@ -405,26 +409,21 @@ Agent personas are specialized sub-agents designed for multi-agent orchestration
 
 See the [workflow-team](.agents/workflows/workflow-team.md) workflow for the full dispatch protocol, including recursive parallel dispatch with MECE file ownership and DAG-based execution ordering.
 
-### Development Workflows (12)
+### Development Workflows (10)
 
 The setup includes opinionated, end-to-end workflows that chain rules and skills into structured development processes.
 
 #### 🏭 Feature Workflow — Single Agent (`/workflow-solo`)
 
-The primary workflow for a single agent executing all phases sequentially — **no skipping**.
+A lean, single-agent pipeline with adaptive complexity routing. The agent assesses task scope, risk, and knowledge to route into one of three tracks:
 
-```
-Research → Implement (TDD) → Integrate → E2E (conditional) → Verify → Ship
-```
+| Track | When | Pipeline |
+|-------|------|----------|
+| **Light** | All dimensions Low (1–3 files, no breaking changes) | IMPLEMENT → VERIFY → COMMIT |
+| **Standard** | Any dimension Medium/High | RESEARCH → IMPLEMENT → VERIFY → COMMIT |
+| **Thorough** | Multiple dimensions High | RESEARCH → IMPLEMENT → VERIFY (full) → COMMIT |
 
-| Phase        | Phase File                                                     | Purpose                                                                                                                 |
-| ------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 1. Research  | [`phase-research`](.agents/workflows/phase-research.md)       | Understand context, search docs, create ADRs, uses [Qurio](https://github.com/irahardianto/qurio) default to web search |
-| 2. Implement | [`phase-implement`](.agents/workflows/phase-implement.md)     | TDD cycle: Red → Green → Refactor                                                                                       |
-| 3. Integrate | [`phase-integrate`](.agents/workflows/phase-integrate.md)     | Integration tests with Testcontainers                                                                                   |
-| 3.5. E2E     | [`phase-e2e`](.agents/workflows/phase-e2e.md)                 | End-to-end validation with Playwright                                                                                   |
-| 4. Verify    | [`phase-verify`](.agents/workflows/phase-verify.md)           | Full lint, test, and build validation                                                                                   |
-| 5. Ship      | [`phase-commit`](.agents/workflows/phase-commit.md)           | Git commit with conventional format                                                                                     |
+Each phase references existing rules and skills rather than restating content — the workflow is 133 lines total. Subagent spawning is allowed but not prescribed.
 
 #### 🤖 Multi-Agent Orchestration (`/workflow-team`)
 
@@ -435,6 +434,17 @@ SCOUT → DESIGN → PRE-MORTEM → BUILD (parallel) → REVIEW (parallel) → R
 ```
 
 Includes 11 workflow templates (A-K) for common scenarios: full features, bug fixes, audits, mobile features, security hardening, infrastructure, documentation sprints, incident response, and technical debt.
+
+#### 🧪 Testing Workflows
+
+Specialized workflows for retroactive testing improvements on existing codebases:
+
+| Workflow | Pipeline | Purpose |
+|----------|----------|---------|
+| [`/test-unit`](.agents/workflows/test-unit.md) | ANALYZE → PRIORITIZE → REFACTOR → TEST → VERIFY | Coverage-gap-first unit test improvement — analyze gaps, prioritize by business risk and git churn, refactor for testability if needed |
+| [`/test-integration`](.agents/workflows/test-integration.md) | AUDIT → INFRASTRUCTURE → TEST → VERIFY | Adapter audit — scan for I/O boundaries, set up Testcontainers/mocks, write contract-compliance tests |
+| [`/test-e2e`](.agents/workflows/test-e2e.md) | PLAN → SETUP → AUTHOR → EXECUTE → REPORT | Platform-adaptive E2E — web (Playwright) + mobile (Flutter/Patrol/Maestro), journey-based with evidence capture |
+| [`/test-scenarios`](.agents/workflows/test-scenarios.md) | INPUT → INVENTORY → ANALYZE → DERIVE → EXPAND → ORGANIZE → OUTPUT → HUMAN REVIEW | Hybrid structured derivation + mutation-informed expansion — generates prioritized test scenarios that feed into the above workflows |
 
 #### 🔧 Specialized Workflows
 
@@ -467,7 +477,7 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── architectural-pattern.md          # always_on: I/O isolation, testability
 │   ├── rule-priority.md                  # always_on: conflict resolution
 │   └── ...            # 5 more always-on + 15 contextual principles
-├── skills/            # 59 specialized skills — loaded on demand, not always
+├── skills/            # 60 specialized skills — loaded on demand, not always
 │   ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
 │   ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
 │   ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts
@@ -476,6 +486,9 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── python-idioms/           # paths: **/*.py, **/pyproject.toml
 │   ├── testability-patterns/    # reference-loaded from architectural-pattern.md
 │   ├── logging-implementation/  # reference-loaded from logging-and-observability-mandate.md
+│   ├── testing-strategy/        # test doubles, naming, infrastructure patterns
+│   ├── mobile-testing/          # Flutter integration_test, Patrol, Maestro, golden testing
+│   │   └── references/          # flutter.md, maestro.md — framework-specific details
 │   ├── ci-cd/                   # paths: Dockerfile, .github/workflows/*, Jenkinsfile, ...
 │   ├── feature-flags/           # paths: feature*flag*, feature*toggle* (PRD-gated)
 │   ├── debugging-protocol/      # Core engineering (reference-loaded)
@@ -487,15 +500,13 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 │   ├── java-idioms/
 │   ├── incident-response/       # Domain skills
 │   └── ...
-└── workflows/         # 12 development workflows
-    ├── workflow-solo.md          # Composite: single-agent feature workflow
-    ├── workflow-team.md          # Composite: multi-agent pipeline manager
-    ├── phase-research.md         # Phase: understand context
-    ├── phase-implement.md        # Phase: TDD cycle
-    ├── phase-integrate.md        # Phase: integration tests
-    ├── phase-verify.md           # Phase: full validation
-    ├── phase-commit.md           # Phase: git commit
-    ├── phase-e2e.md              # Phase: E2E testing
+└── workflows/         # 10 development workflows
+    ├── workflow-solo.md          # Single-agent: lean adaptive pipeline
+    ├── workflow-team.md          # Multi-agent: hierarchical orchestration
+    ├── test-unit.md              # Testing: unit test coverage improvement
+    ├── test-integration.md       # Testing: integration test coverage
+    ├── test-e2e.md               # Testing: E2E mobile & web
+    ├── test-scenarios.md         # Testing: scenario generator
     ├── bugfix.md                 # Standalone: bug fixes
     ├── refactor.md               # Standalone: code restructuring
     ├── audit.md                  # Standalone: code review
@@ -505,8 +516,8 @@ Includes 11 workflow templates (A-K) for common scenarios: full features, bug fi
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Include more specialized skills to aid development process (59 skills shipped).
-- [x] Add development workflows for structured feature delivery (12 workflows shipped).
+- [x] Include more specialized skills to aid development process (60 skills shipped).
+- [x] Add development workflows for structured feature delivery (10 workflows shipped).
 - [x] Add language-specific idiom skills (Go, TypeScript, Vue, Flutter, Rust, Python + 18 community language skills).
 - [x] Create a CLI tool for easier installation (`npx awesome-agv`).
 - [x] Add multi-agent orchestration with 21 specialized agent personas in a 4-tier RMAS hierarchy.
@@ -542,7 +553,7 @@ This setup supports different project structures:
 | **Microservices**       | Adapt `project-structure.md` per service, add service mesh rules |
 | **Mobile (Flutter/RN)** | Use flutter-idioms or react-idioms skill                        |
 
-**To adapt:** Edit `project-structure.md`, the relevant idiom skill's `references/project-structure.md`, and `phase-verify.md` to match your project layout.
+**To adapt:** Edit `project-structure.md` and the relevant idiom skill's `references/project-structure.md` to match your project layout.
 
 <!-- CONTRIBUTING -->
 ## Contributing
