@@ -96,13 +96,13 @@ For each step in the refactoring plan:
 ### Phase 3: Parity Verification
 **Set Mode:** Use `task_boundary` to set mode to **VERIFICATION**
 
-1. Run the full validation suite (same as `phase-verify.md`)
+1. Run the full validation suite: quality checks per idiom skill, all tests, build check
 2. **Compare test coverage** — coverage should be equal to or better than before
 3. **Verify no behavior changes** — same inputs produce same outputs
-4. If applicable, run E2E tests (`phase-e2e.md`)
+4. If applicable, run E2E tests per `browser-automation` skill
 
 ### Phase 4: Ship
-Follow `phase-commit.md` with commit type `refactor(<scope>): <description>`
+Commit with type `refactor(<scope>): <description>` per @git-workflow-principles.md
 
 ## Completion Criteria
 - [ ] Requirement source identified (Path A, B, or C)

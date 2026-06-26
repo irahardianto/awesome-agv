@@ -53,9 +53,9 @@ Before starting, you MUST:
 ### Phase 3: Verify + Ship
 **Set Mode:** Use `task_boundary` to set mode to **VERIFICATION**
 
-1. Run the full validation suite (same as `phase-verify.md`)
-2. If the fix touched UI or user-facing flows, run E2E validation (same as `phase-e2e.md`)
-3. If all checks pass, commit with conventional format (same as `phase-commit.md`)
+1. Run the full validation suite: quality checks per idiom skill, all tests, build check
+2. If the fix touched UI or user-facing flows, run E2E validation per `browser-automation` skill
+3. If all checks pass, commit with conventional format per @git-workflow-principles.md
 4. Use commit type `fix(<scope>): <description>`
 
 ## Completion Criteria

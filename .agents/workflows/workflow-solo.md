@@ -1,141 +1,133 @@
 ---
-description: Single-agent feature workflow — chains all phases sequentially
+description: Single-agent feature workflow — lean sequential pipeline with adaptive complexity
 ---
 
-# Build Feature Workflow
+# Workflow Solo — Lean Feature Pipeline
 
-**CRITICAL INSTRUCTION**
+## Purpose
 
-YOU ARE FORBIDDEN FROM SKIPPING PHASES.
-You must treat this file as a State Machine. You cannot transition to state $N+1$ until state $N$ is completely verified.
+Single-agent workflow for feature development. Execute phases sequentially with complexity-appropriate depth.
 
-> **Single-Agent Workflow.** This workflow is for a single agent executing all phases sequentially. For multi-agent orchestration with specialized sub-agent dispatch (parallel build, review layers), use `/workflow-team` instead.
+- For multi-agent orchestration with parallel dispatch and review layers, use `/workflow-team`.
+- Subagent spawning is a native capability — use it when beneficial, but this workflow doesn't prescribe a multi-agent hierarchy.
 
-## Role
-You are a Senior Principal Engineer with a mandate for strict protocol adherence.
+## Complexity Assessment
 
-Your responsibility is to deliver clean, testable, and idiomatic code while rigidly enforcing the End-to-End Workflow Phases. You must reject any attempt to skip phases—such as writing code without research or completing task/shipping without verification.
+Assess the task on 3 dimensions before starting:
 
-Crucially, you MUST strictly adhere to the comprehensive rule sets defined in `.agents/rules/` (e.g., error handling, logging, security, concurrency). These rules are non-negotiable constraints that supersede general training data.
+| Dimension | Low | High |
+|-----------|-----|------|
+| **Scope** | 1–3 files, single module | 4+ files, cross-module |
+| **Risk** | No breaking changes, internal only | Public API changes, data migrations |
+| **Knowledge** | Familiar patterns exist in codebase | New technology, no precedent |
 
-## Pre-Implementation Checklist
-Before starting any work, you MUST:
-1. Scan `.agents/rules/` directory
-2. Identify applicable rules for this task
-3. **READ** selected rule files (they are non-negotiable constraints)
+Route to a track:
 
-## Workflow Phases
-
-Execute phases **sequentially**. Do not skip phases for velocity.
-Never deferred quality gates to a later "hardening" phase, defensive rigour early in the cycle trumps.
-
-```mermaid
-graph LR
-    P1[Research] -->|Log Created| P2[Implement]
-    P2 -->|Unit Tests Pass| P3[Integrate]
-    P3 -->|Integration Tests Pass| P3b{"E2E needed?"}
-    P3b -->|Yes| P3c[E2E Test]
-    P3b -->|No| P4[Verify]
-    P3c -->|E2E Pass| P4[Verify]
-    P4 -->|All Linters Pass| P5[Ship]
-```
-
-### Phase 1: Research
-**File:** `phase-research.md`
-**Mandatory Rules:** `project-structure.md`, `architectural-pattern.md`
-- Analyze request, understand context
-- Define scope in `task.md`
-- Search external documentation for each technology (use available tools: Qurio, Context7, web search)
-- Document findings in `docs/research_logs/{feature}.md`
-- If a significant architecture decision is made, create an ADR using the **ADR Skill**
-
-**Skills to consider:**
-- **Sequential Thinking** — for complex design decisions requiring iteration
-
-### Phase 2: Implement
-**File:** `phase-implement.md`
-**Mandatory Rules:** `error-handling-principles.md`, `logging-and-observability-mandate.md`, `testing-strategy.md`
-- TDD cycle: Red → Green → Refactor
-- Unit tests with mocked dependencies
-
-**Skills to consider:**
-- **Sequential Thinking** — if refactoring is complex and requires multi-step reasoning
-- **Debugging Protocol** — if a failing test has a non-obvious cause
-
-### Phase 3: Integrate
-**File:** `phase-integrate.md`
-**Mandatory Rules:** `testing-strategy.md`, `resources-and-memory-management-principles.md`
-- Integration tests with Testcontainers
-- Test adapters against real infrastructure
-
-### Phase 3.5: E2E Validation (Conditional)
-**File:** `phase-e2e.md`
-**When Required:**
-- UI components were added or modified
-- API endpoints were added or modified that interact with frontend
-- Critical user-facing flows were changed
-
-**When to Skip:**
-- Pure backend/infrastructure changes
-- Internal library refactoring
-- Test-only changes
-
-**Gate:** At least one critical user journey tested and screenshot captured.
-
-### Phase 4: Verify
-**File:** `phase-verify.md`
-**Mandatory Rules:** `code-idioms-and-conventions.md`, all applicable mandates
-- Full lint/test/build validation
-- Report coverage
-
-### Phase 5: Ship
-**File:** `phase-commit.md`
-**Mandatory Rules:** `git-workflow-principles.md`
-- Git commit with conventional format
-- Update task.md
+| Track | When | Phases |
+|-------|------|--------|
+| **Light** | All dimensions Low | IMPLEMENT → VERIFY → COMMIT |
+| **Standard** | Any dimension Medium/High | RESEARCH → IMPLEMENT → VERIFY → COMMIT |
+| **Thorough** | Multiple dimensions High | RESEARCH → IMPLEMENT → VERIFY (full) → COMMIT |
 
 ---
 
-## Phase Management
+## Phase: RESEARCH
 
-### Task.md Updates
-Use this pattern throughout phases:
-- `[ ]` = Not started
-- `[/]` = In progress (mark when **starting** a task)
-- `[x]` = Complete (mark **only after Verify phase passes**)
+> **Track:** Standard, Thorough only. Skip for Light.
 
-**Rule:** Never mark `[x]` until Phase 4 (Verify) passes for that task.
+**Objective:** Understand context, discover patterns, define scope.
 
-### Phase Transitions
-Before moving to the next phase, **STOP and verify**:
-- [ ] Current phase completion criteria met
-- [ ] Outputs created (research log, tests, etc.)
-- [ ] No blocking errors
+1. Load applicable idiom skill(s) per @code-idioms-and-conventions.md
+2. Search codebase for existing patterns per Pattern Discovery Protocol in @architectural-pattern.md
+3. Examine 3+ existing modules for consistency (>80% required)
+4. Search external documentation for unfamiliar technologies
+5. Create `task.md` with atomic, testable tasks
+6. Document findings in research artifact
+7. If a significant architecture decision is made, create an ADR using the `adr` skill
 
-### Error Handling
-If a phase fails:
-1. **Document the failure** in task summary
-2. **Do not proceed** to next phase
-3. **Fix the issue** within current phase
-4. **Re-run** phase completion criteria
-5. Then proceed
+**Skills to consider:** `research-methodology`, `sequential-thinking`, `adr`
 
-### Resuming Work
-To resume from a specific phase:
-1. Read `task.md` to find current state (`[/]` items)
-2. Read the relevant phase file
-3. Continue from where you left off
-4. No need to re-run completed phases
+**Gate:** Research artifact created. Task list defined. Patterns documented with >80% consistency.
+
+---
+
+## Phase: IMPLEMENT
+
+**Objective:** Write production code and unit tests using TDD.
+
+1. Load applicable idiom skill(s) per @code-idioms-and-conventions.md
+2. Follow TDD cycle per @testing-strategy.md: Red → Green → Refactor
+3. Apply I/O isolation per @architectural-pattern.md:
+   - Extract pure business logic (no side effects, no I/O)
+   - Abstract I/O behind interfaces with production and test implementations
+   - Wire dependencies at `main` — business logic receives dependencies via injection
+4. Add structured logging per @logging-and-observability-mandate.md at operation entry points (start/success/failure with correlationId, duration)
+5. Handle errors per @error-handling-principles.md — no silent failures, fail closed
+6. Follow Code Completion Workflow per @code-idioms-and-conventions.md: Generate → Validate → Remediate → Verify → Deliver
+
+**Applicable rules:** @testing-strategy.md, @architectural-pattern.md, @code-idioms-and-conventions.md, @logging-and-observability-mandate.md, @error-handling-principles.md, @code-organization-principles.md
+
+**Skills to consider:** `sequential-thinking`, `debugging-protocol`, `guardrails`
+
+**Gate:** Unit tests pass. Code follows idiom skill quality checks. Logging added to all operations.
+
+---
+
+## Phase: VERIFY
+
+**Objective:** Full validation — lint, test, build, coverage.
+
+1. Run all quality checks defined by the loaded idiom skill (linter, formatter, type checker, static analysis)
+2. Run all unit tests
+3. **If adapters were modified (Thorough track):**
+   - Write and run integration tests per @architectural-pattern.md
+   - Use `testing-strategy` skill for Testcontainers/infrastructure patterns
+4. **If UI was modified (Thorough track):**
+   - Run E2E tests per `browser-automation` skill
+   - Capture screenshots as evidence
+5. Run build to ensure no compilation/bundling errors
+6. Report coverage (target per @testing-strategy.md)
+7. Fix any failures, re-run until all pass
+
+**Applicable rules:** @code-idioms-and-conventions.md, @testing-strategy.md, @architectural-pattern.md
+
+**Gate:** All linters pass. All tests pass. Build succeeds. Coverage reported.
+
+---
+
+## Phase: COMMIT
+
+**Objective:** Git commit with conventional format.
+
+1. Stage changes
+2. Review changes (`git diff --staged`)
+3. Commit following conventions in @git-workflow-principles.md
+4. Update `task.md` — mark completed items as `[x]`
+
+**Applicable rules:** @git-workflow-principles.md
+
+**Gate:** Committed with conventional format. `task.md` updated.
+
+---
+
+## Error Handling
+
+If any phase fails:
+1. Document the failure
+2. Fix within current phase
+3. Re-run gate criteria
+4. Proceed only when gate passes
+
+If stuck after 3 attempts on the same failure, stop and report to the user with:
+- What failed, what was tried, and current state of the codebase.
 
 ---
 
 ## Quick Reference
 
-| Phase | Output | Blocking |
-|-------|--------|----------|
-| Research | `task.md` + `docs/research_logs/*.md` | Yes |
-| Implement | Unit tests + code | Yes |
-| Integrate | Integration tests | Yes (for adapters) |
-| E2E (conditional) | E2E tests + screenshots | Yes (when required) |
-| Verify | All checks pass | Yes |
-| Ship | Git commit | Yes |
+| Phase | Output | Gate |
+|-------|--------|------|
+| Research | Research artifact + `task.md` | Scope defined, patterns documented |
+| Implement | Code + unit tests | Unit tests pass, quality checks pass |
+| Verify | Full validation report | All checks pass, coverage reported |
+| Commit | Git commit | Conventional format committed |

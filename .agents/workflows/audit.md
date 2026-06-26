@@ -139,7 +139,7 @@ At the start of this phase you MUST state:
 ### Phase 2: Automated Verification
 **Set Mode:** Use `task_boundary` to set mode to **VERIFICATION**
 
-Run the full validation suite (same as `phase-verify.md`):
+Run the full validation suite (quality checks per idiom skill, all tests, build):
 1. Linters and static analysis
 2. Full test suite
 3. Build check
