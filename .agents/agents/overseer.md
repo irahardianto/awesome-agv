@@ -22,7 +22,7 @@ Top-level supervisor. User-facing entry point. Dispatch-only.
 3. Flat template selection — for flat templates (B, D, H, I, K), select and dispatch directly without @rally-lead
 4. Rally-lead spawning — for hierarchical templates (A, C, E, F, G, J), spawn @rally-lead
 5. Succession handling — if @rally-lead requests succession, spawn fresh replacement
-6. Final reporting — synthesize rally-lead's handoff.md into user-facing summary
+6. Final reporting — synthesize rally-lead's .agentwork/handoff.md into user-facing summary
 7. Escalation handling — if rally-lead escalates, decide: re-plan or surface to user
 
 ## Skills
@@ -50,16 +50,16 @@ Evaluate complexity across four dimensions (Scope, Knowledge, Risk, Ambiguity):
 > **Routing boundary:** Once @rally-lead is spawned, the overseer does NOT intervene in template selection, mission decomposition, or execution decisions. Rally-lead has full authority within the hierarchical path.
 
 ### 3. Dispatch
-- **Flat route:** Dispatch executor(s) directly. Monitor handoff.md. Report to user.
+- **Flat route:** Dispatch executor(s) directly. Monitor .agentwork/handoff.md. Report to user.
 - **Hierarchical route:** Spawn @rally-lead with full requirement context. Rally-lead handles everything from here.
 
 ### 4. Monitor
-- Wait for rally-lead's handoff.md or escalation.md
-- If succession requested: spawn fresh @rally-lead with succession-brief.md
+- Wait for rally-lead's .agentwork/handoff.md or .agentwork/escalation.md
+- If succession requested: spawn fresh @rally-lead with .agentwork/succession-brief.md
 - If escalation received: evaluate → re-plan or surface to user
 
 ### 5. Report
-- Synthesize handoff.md into user-facing summary
+- Synthesize .agentwork/handoff.md into user-facing summary
 - Highlight: what was built, what was tested, what the arbiter found
 - Optional: dispatch @technical-writer for documentation
 
@@ -67,9 +67,16 @@ Evaluate complexity across four dimensions (Scope, Knowledge, Risk, Ambiguity):
 
 | Document | When | Content |
 |---|---|---|
-| No briefing.md | Overseer receives requirements from user directly | — |
-| handoff.md | Received from rally-lead | Final compressed result |
-| escalation.md | Received from rally-lead | Failure report with recommendations |
+| No .agentwork/briefing.md | Overseer receives requirements from user directly | — |
+| .agentwork/handoff.md | Received from rally-lead | Final compressed result |
+| .agentwork/escalation.md | Received from rally-lead | Failure report with recommendations |
+
+## Final Cleanup
+
+After synthesizing the handoff into the user-facing summary, clean up agent work directory:
+```bash
+rm -rf .agentwork/
+```
 
 ## Agent Definition Protocol
 

@@ -50,7 +50,7 @@ Before decomposing, assess the task across four dimensions:
 
 ```
 LOOP (max 5 iterations):
-  1. Assess — read mission handoff.md reports
+  1. Assess — read mission .agentwork/handoff.md reports
   2. Plan — determine which missions need (re)work, what's blocked
   3. Execute — dispatch/re-dispatch @mission-lead instances (workspace='branch')
   4. Gate — wait for all missions, evaluate arbiter verdicts
@@ -59,7 +59,7 @@ LOOP (max 5 iterations):
        Failures → apply fault tolerance ladder, narrow scope, LOOP again
 
   At iteration cap (5):
-    → Write escalation.md → message @overseer
+    → Write .agentwork/escalation.md → message @overseer
     → @overseer decides: spawn successor rally-lead OR escalate to user
 ```
 
@@ -67,11 +67,11 @@ LOOP (max 5 iterations):
 
 ```
 When context utilization approaches 70% capacity:
-  1. Write current state to progress.md (all mission statuses, iteration count)
-  2. Write succession-brief.md (what next generation needs to know)
+  1. Write current state to .agentwork/progress.md (all mission statuses, iteration count)
+  2. Write .agentwork/succession-brief.md (what next generation needs to know)
   3. Message @overseer: "Context exhaustion. Succession needed."
-  4. @overseer spawns fresh @rally-lead with succession-brief.md as input
-  5. New rally-lead reads progress.md + succession-brief.md, continues
+  4. @overseer spawns fresh @rally-lead with .agentwork/succession-brief.md as input
+  5. New rally-lead reads .agentwork/progress.md + .agentwork/succession-brief.md, continues
 
 Triggers:
   - Context > 70% capacity
@@ -89,17 +89,28 @@ When a dispatched @mission-lead fails, follow the escalation ladder (from `fault
 2. **REPLACE** — re-plan the mission (split differently, reassign scope)
 3. **SKIP** — defer non-critical mission (only if not a dependency)
 4. **REDISTRIBUTE** — split mission into 2-3 smaller missions
-5. **DEGRADE** — complete project without the failing mission; report in handoff.md
+5. **DEGRADE** — complete project without the failing mission; report in .agentwork/handoff.md
 
 ## Communication Documents
 
 | Document | When Created | Content |
 |---|---|---|
-| progress.md | Start of loop | Iteration log, mission statuses (append-only) |
-| decision-log.md | On non-obvious choices | Context, alternatives, rationale |
-| handoff.md | On completion | Compressed result for @overseer |
-| escalation.md | On iteration cap or unrecoverable failure | Blocker details, attempted recovery |
-| succession-brief.md | On context exhaustion | State snapshot for next generation |
+| .agentwork/progress.md | Start of loop | Iteration log, mission statuses (append-only) |
+| .agentwork/decision-log.md | On non-obvious choices | Context, alternatives, rationale |
+| .agentwork/handoff.md | On completion | Compressed result for @overseer |
+| .agentwork/escalation.md | On iteration cap or unrecoverable failure | Blocker details, attempted recovery |
+| .agentwork/succession-brief.md | On context exhaustion | State snapshot for next generation |
+
+## Document Promotion Protocol
+
+After all missions pass and integration is complete, before writing `.agentwork/handoff.md`:
+
+1. If `.agentwork/decision-log.md` has entries → copy to `docs/decisions/decision-log-{YYYY-MM-DD}.md`
+2. Create `docs/decisions/` directory if it doesn't exist
+3. Write `.agentwork/handoff.md` (reference promoted file paths)
+4. After sending handoff message → clean up: `rm -rf .agentwork/`
+
+> If a decision has architectural significance (affects system structure, matters 6 months from now), elevate it to an ADR using the `adr` skill instead of including it in the decision log.
 
 ## Agent Definition Protocol
 
