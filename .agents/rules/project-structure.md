@@ -22,19 +22,14 @@ trigger: always_on
    - **Rule:** Divide application into vertical business slices (e.g., `user/`, `order/`, `payment/`).
    - **Anti-Pattern:** Do NOT organize by technical layer (e.g., `controllers/`, `models/`, `services/`) at the top level.
 
-### Language-Specific Layouts
+### Language and Framework-Specific Layouts
 
-Each layout follows the universal philosophy above. Load the relevant layout when working with a specific language or framework:
+Each layout follows the universal philosophy above. When working with a specific language or framework, load the project structure reference from its idiom skill:
 
-| Layout             | Skill Reference                                                          | When to Use                          |
-| ------------------ | ------------------------------------------------------------------------ | ------------------------------------ |
-| Go Backend         | `.agents/skills/go-idioms/references/project-structure.md`               | Go services, APIs, CLI tools         |
-| Vue/React Frontend | `.agents/skills/vue-idioms/references/project-structure.md`              | Web frontends (Vue, React, Svelte)   |
-| Flutter/Mobile     | `.agents/skills/flutter-idioms/references/project-structure.md`          | Mobile apps (Flutter, React Native)  |
-| Rust/Cargo         | `.agents/skills/rust-idioms/references/project-structure.md`             | Rust binaries, libraries, workspaces |
-| Python Backend     | `.agents/skills/python-idioms/references/project-structure.md`           | Python services, APIs, data pipelines |
+**Convention:** `.agents/skills/{name}-idioms/references/project-structure.md` (e.g., `go-idioms` for Go, `nextjs-idioms` for Next.js)
 
-> This Feature/Domain/UI/API structure is framework-agnostic. It applies equally to any language or framework. The layout files provide language-specific conventions (file naming, module systems, test locations) while preserving the vertical slice architecture.
+If no reference file exists for the current stack, apply the universal vertical slice pattern above directly.
+
 
 ### Adapting for Different Project Types
 
