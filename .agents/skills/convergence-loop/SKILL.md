@@ -13,9 +13,9 @@ Reusable iteration protocol for coordinator agents (rally-lead, mission-lead) th
 
 ## §1. Briefing Phase — Document Templates
 
-Produce these three documents before the first iteration.
+Produce these three documents in `.agentwork/` before the first iteration.
 
-### briefing.md
+### .agentwork/briefing.md
 ```markdown
 # Briefing
 ## Scope          <!-- One paragraph: what and why -->
@@ -26,7 +26,7 @@ Produce these three documents before the first iteration.
 ## Complexity Assessment  <!-- Low / Medium / High + justification -->
 ```
 
-### progress.md
+### .agentwork/progress.md
 Append-only, monotonic — never delete or rewrite earlier entries.
 ```markdown
 # Progress
@@ -35,7 +35,7 @@ Append-only, monotonic — never delete or rewrite earlier entries.
 | 1         | …                    | …            | …       | …             |
 ```
 
-### decision-log.md
+### .agentwork/decision-log.md
 ```markdown
 # Decision Log
 ## DEC-001: <title>
@@ -57,12 +57,12 @@ BRIEFING → ITERATE → GATE → CONVERGE or RE-PLAN
 
 1. **ITERATE** — Dispatch workers. Execute the current plan.
 2. **GATE** — Read arbiter verdict. Evaluate against acceptance criteria.
-3. **CONVERGE** — All criteria met → produce handoff.md, message parent.
-4. **RE-PLAN** — Criteria unmet → narrow scope using arbiter findings, update progress.md, loop.
+3. **CONVERGE** — All criteria met → produce `.agentwork/handoff.md`, message parent.
+4. **RE-PLAN** — Criteria unmet → narrow scope using arbiter findings, update `.agentwork/progress.md`, loop.
 
 ### Iteration Cap
 - **Maximum 5 iterations per coordinator instance.**
-- On re-plan: record changes in progress.md. Narrow to specific arbiter-identified failures — do not repeat the full plan.
+- On re-plan: record changes in `.agentwork/progress.md`. Narrow to specific arbiter-identified failures — do not repeat the full plan.
 
 ### Gate Evaluation
 - Read arbiter verdict in full.
@@ -71,7 +71,7 @@ BRIEFING → ITERATE → GATE → CONVERGE or RE-PLAN
 - Ambiguous verdict → treat as FAIL, request clarification next iteration.
 
 ### Escalation on Cap Reached
-When iteration 5 ends without convergence: write escalation.md, message parent, do NOT attempt iteration 6.
+When iteration 5 ends without convergence: write `.agentwork/escalation.md`, message parent, do NOT attempt iteration 6.
 
 ```markdown
 # Escalation
@@ -105,32 +105,41 @@ Spawn a successor when ANY condition holds:
 | Iteration count           | >3 iterations completed in current instance   |
 | Coherence self-assessment | Coordinator detects reasoning degradation     |
 
-### succession-brief.md
+### .agentwork/succession-brief.md
 ```markdown
 # Succession Brief
 ## Mission Status    <!-- Per task: status, last iteration, blockers -->
-## Pending Decisions <!-- Unresolved items from decision-log.md -->
+## Pending Decisions <!-- Unresolved items from .agentwork/decision-log.md -->
 ## Iteration Count   <!-- Completed: N of 5 max -->
 ## Key Context       <!-- Info successor needs NOT in briefing/progress -->
 ```
 
-Parent handles succession: spawn fresh coordinator, pass briefing.md + progress.md + decision-log.md + succession-brief.md. New instance resumes from recorded iteration count — does NOT restart from 1.
+Parent handles succession: spawn fresh coordinator, pass `.agentwork/briefing.md` + `.agentwork/progress.md` + `.agentwork/decision-log.md` + `.agentwork/succession-brief.md`. New instance resumes from recorded iteration count — does NOT restart from 1.
 
 ## §4. Turn Budget
 
 ### Review Phase Is Single-Pass
 ```
 Coordinator → dispatch reviewers (parallel)
-           → each writes findings-{agent-name}.md (e.g., findings-qa-analyst.md)
+           → each writes .agentwork/findings-{agent-name}.md (e.g., .agentwork/findings-qa-analyst.md)
            → pass all findings to arbiter
-           → arbiter produces verdict.md + messages coordinator
+           → arbiter produces .agentwork/verdict.md + messages coordinator
 ```
 - **No reviewer-to-reviewer debates.** Reviewers never see each other's findings.
 - **Arbiter resolves conflicts** — not another review round.
 - **Scale width over depth.** More reviewers for coverage, not more rounds for depth.
-- Each reviewer/adversary writes their own `findings-{agent-name}.md` independently.
+- Each reviewer/adversary writes their own `.agentwork/findings-{agent-name}.md` independently.
 
 ## §5. Handoff Compression
+
+### Promotion Before Handoff
+
+Before writing `.agentwork/handoff.md`, promote persistent documents per `workflow-team.md` §7.5:
+
+1. If `.agentwork/decision-log.md` has entries → copy to `docs/decisions/decision-log-{scope}-{YYYY-MM-DD}.md`
+2. If design contracts were produced → copy to `docs/designs/`
+3. If a decision has architectural significance → elevate to ADR via `adr` skill
+4. Create target `docs/` subdirectories if they don't exist
 
 ### Coordinator Handoff (coordinator → parent coordinator)
 ```markdown
@@ -146,6 +155,7 @@ Coordinator → dispatch reviewers (parallel)
 ## Arbiter Verdict
 - **Result:** PASS / FAIL
 - **Rationale:** One paragraph.
+## Promoted Documents  <!-- List docs/ paths of promoted persistent documents -->
 ## Blockers for Parent  <!-- Omit if none -->
 ```
 
@@ -164,11 +174,18 @@ Workers produce a scope-level handoff when their scope card is complete:
 ```
 
 ### Exclusion Rules
-handoff.md MUST NOT contain:
+`.agentwork/handoff.md` MUST NOT contain:
 - Raw terminal output or build logs
 - Intermediate debugging steps or scratch notes
 - Full file contents or large diffs
 - Conversation transcripts or agent-to-agent message history
 
 Parent nodes never read raw execution traces — only compressed handoffs. This is what makes deep nesting viable without context rot.
+
+### Cleanup After Handoff
+
+After sending the handoff message to the parent coordinator:
+```bash
+rm -rf .agentwork/
+```
 

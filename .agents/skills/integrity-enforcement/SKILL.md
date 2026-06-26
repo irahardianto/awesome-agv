@@ -32,7 +32,7 @@ Any match = **INTEGRITY VIOLATION**.
 
 Diff package manifests (`go.mod`, `package.json`, `requirements.txt`, `Cargo.toml`, `pubspec.yaml`) against the state before BUILD. Flag:
 
-- Any NEW dependency not mentioned in `briefing.md` or approved in `decision-log.md`
+- Any NEW dependency not mentioned in `.agentwork/briefing.md` or approved in `.agentwork/decision-log.md`
 - Version downgrades or pinning changes without documented rationale
 
 ### Check 4 — Build Verification

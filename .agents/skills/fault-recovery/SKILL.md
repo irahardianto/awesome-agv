@@ -17,7 +17,7 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 | 2     | REPLACE        | Same agent fails twice           | 1 replacement| → Level 3              |
 | 3     | SKIP           | Replacement also fails           | —            | → Level 4 (if blocked) |
 | 4     | REDISTRIBUTE   | Skip invalid (hard dependency)   | 2–3 sub-cards| → Level 5              |
-| 5     | DEGRADE        | Sub-cards also fail              | —            | → escalation.md        |
+| 5     | DEGRADE        | Sub-cards also fail              | —            | → `.agentwork/escalation.md` |
 
 ### Level 1 — RETRY
 
@@ -36,9 +36,9 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 
 - Mark the scope card as deferred.
 - Only valid if the skipped card is **NOT** a hard dependency for other cards.
-- Record in progress.md: `SKIPPED: [card] — reason: [failure detail]`
+- Record in `.agentwork/progress.md`: `SKIPPED: [card] — reason: [failure detail]`
 - Continue with remaining scope cards.
-- Report skipped cards in handoff.md as degraded scope.
+- Report skipped cards in `.agentwork/handoff.md` as degraded scope.
 
 ### Level 4 — REDISTRIBUTE
 
@@ -50,9 +50,9 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 ### Level 5 — DEGRADE
 
 - Complete the mission without the failing component.
-- Write degradation notice in handoff.md: `DEGRADED: [component] — reason: [failure history]`
+- Write degradation notice in `.agentwork/handoff.md`: `DEGRADED: [component] — reason: [failure history]`
 - Arbiter evaluates whether degraded output is still acceptable.
-- If arbiter says degraded output is unacceptable → write escalation.md.
+- If arbiter says degraded output is unacceptable → write `.agentwork/escalation.md`.
 
 ## §2. Dead-Man Timers
 
@@ -71,7 +71,7 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 
 ## §3. State Preservation During Recovery
 
-Before retrying or replacing, save to progress.md:
+Before retrying or replacing, save to `.agentwork/progress.md`:
 
 ```markdown
 ## Recovery State — [scope card identifier]
@@ -86,7 +86,7 @@ Pass this state as additional context to the retry/replacement agent.
 
 ## §4. Cross-Level Escalation Format
 
-When all 5 levels are exhausted, write escalation.md:
+When all 5 levels are exhausted, write `.agentwork/escalation.md`:
 
 ```markdown
 # Escalation Report
@@ -105,7 +105,7 @@ When all 5 levels are exhausted, write escalation.md:
 [re-plan | reassign | degrade | escalate to user] — [rationale]
 
 ## Progress Log
-[Paste all relevant progress.md entries]
+[Paste all relevant `.agentwork/progress.md` entries]
 ```
 
 ## §5. Anti-Patterns
@@ -115,4 +115,4 @@ When all 5 levels are exhausted, write escalation.md:
 | Skipping levels                     | Jumps (e.g., RETRY → DEGRADE) miss cheaper recovery options     |
 | Retrying without additional context | Exact same input produces exact same failure                    |
 | Redistributing into >3 sub-cards    | Coordination overhead exceeds the benefit of narrower scope     |
-| Degrading silently                  | Must always record in handoff.md and report to arbiter          |
+| Degrading silently                  | Must always record in `.agentwork/handoff.md` and report to arbiter          |

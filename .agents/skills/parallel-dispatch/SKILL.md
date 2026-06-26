@@ -178,7 +178,7 @@ When work spans multiple missions or epics, decompose into coordinator subtrees 
 A coordinator agent (@rally-lead, @mission-lead):
 1. Owns a subtree of executors
 2. Loads the `convergence-loop` skill
-3. Has its own briefing.md, progress.md, handoff.md lifecycle
+3. Has its own `.agentwork/briefing.md`, `.agentwork/progress.md`, `.agentwork/handoff.md` lifecycle
 4. Reports upward to its parent coordinator, not to the root
 5. Never writes code or runs tests — only dispatches, evaluates, and re-plans
 
