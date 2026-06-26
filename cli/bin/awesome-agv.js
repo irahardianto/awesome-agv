@@ -694,6 +694,35 @@ function writeAgvrc(targetDir, mode, selectedStacks, deselected) {
   fs.writeFileSync(rcPath, JSON.stringify(config, null, 2) + '\n');
 }
 
+// ── Patch .gitignore ───────────────────────────────────────────────────────────
+const AGENTWORK_ENTRY = '.agentwork/';
+
+/**
+ * Ensures .agentwork/ is listed in .gitignore.
+ * Creates .gitignore if it doesn't exist.
+ * Returns: 'created' | 'patched' | 'already_present'
+ */
+function patchGitignore(targetDir) {
+  const gitignorePath = path.join(targetDir, '.gitignore');
+
+  if (!fs.existsSync(gitignorePath)) {
+    fs.writeFileSync(gitignorePath, `${AGENTWORK_ENTRY}\n`, 'utf8');
+    return 'created';
+  }
+
+  const content = fs.readFileSync(gitignorePath, 'utf8');
+  const lines = content.split('\n').map((l) => l.trim());
+
+  if (lines.includes(AGENTWORK_ENTRY)) {
+    return 'already_present';
+  }
+
+  // Append with a preceding newline if the file doesn't end with one
+  const separator = content.endsWith('\n') ? '' : '\n';
+  fs.appendFileSync(gitignorePath, `${separator}${AGENTWORK_ENTRY}\n`, 'utf8');
+  return 'patched';
+}
+
 // ── Read existing .agvrc ───────────────────────────────────────────────────────
 function readAgvrc(targetDir) {
   const rcPath = path.join(targetDir, AGENT_DIR, CONFIG_FILE);
@@ -760,7 +789,7 @@ function readManifest(tarballPath) {
 }
 
 // ── Print Success Summary ──────────────────────────────────────────────────────
-function printSuccess(targetDir, mode, selectedStacks) {
+function printSuccess(targetDir, mode, selectedStacks, gitignoreResult) {
   const agentDir = path.join(targetDir, AGENT_DIR);
   const rulesDir = path.join(agentDir, 'rules');
   const skillsDir = path.join(agentDir, 'skills');
@@ -788,6 +817,16 @@ function printSuccess(targetDir, mode, selectedStacks) {
         ? `${icon.target} Curated`
         : `${icon.gear} Advanced`;
 
+  // Gitignore status message
+  let gitignoreMsg;
+  if (gitignoreResult === 'created') {
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} created with ${c.cyan}.agentwork/${c.reset} entry`;
+  } else if (gitignoreResult === 'patched') {
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} patched — added ${c.cyan}.agentwork/${c.reset}`;
+  } else {
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} already contains ${c.cyan}.agentwork/${c.reset}`;
+  }
+
   console.log(`
 ${c.green}${c.bold}  Installation complete! ${icon.rocket}${c.reset}
 
@@ -798,6 +837,8 @@ ${c.green}${c.bold}  Installation complete! ${icon.rocket}${c.reset}
   ${icon.tool}  ${c.bold}${skillsCount}${c.reset} Skills     ${c.dim}Debugging, design, code review, language idioms${c.reset}
   ${icon.cycle}  ${c.bold}${workflowsCount}${c.reset} Workflows  ${c.dim}End-to-end dev processes${c.reset}
   🤖  ${c.bold}${agentsCount}${c.reset} Agents     ${c.dim}Specialized multi-agent personas${c.reset}
+
+  ${gitignoreMsg}
 `);
 
   if (selectedStacks && selectedStacks.size > 0) {
@@ -1005,8 +1046,11 @@ async function main() {
     // ── Write .agvrc ──
     writeAgvrc(options.targetDir, mode, selectedStackKeys, deselected);
 
+    // ── Patch .gitignore ──
+    const gitignoreResult = patchGitignore(options.targetDir);
+
     // ── Success ──
-    printSuccess(options.targetDir, mode, selectedStackKeys);
+    printSuccess(options.targetDir, mode, selectedStackKeys, gitignoreResult);
   } catch (err) {
     console.error(`\n  ${icon.error} ${c.red}Installation failed:${c.reset} ${err.message}\n`);
 
