@@ -101,6 +101,24 @@ When a dispatched @mission-lead fails, follow the escalation ladder (from `fault
 | escalation.md | On iteration cap or unrecoverable failure | Blocker details, attempted recovery |
 | succession-brief.md | On context exhaustion | State snapshot for next generation |
 
+## Agent Definition Protocol
+
+When spawning ANY agent type that has a role file in `.agents/agents/` (e.g., `@mission-lead`, `@tech-lead`, `@arbiter`):
+
+1. **ALWAYS reference the canonical role file** in the system prompt:
+   ```
+   "Your role, domain, skills, boundaries, and protocols are defined in
+   file:///{workspace}/.agents/agents/{agent-type}.md.
+   Read this file FIRST before beginning any work.
+   When YOU spawn sub-agents that have role files in .agents/agents/,
+   follow this same protocol — reference their role file, never paraphrase it."
+   ```
+2. **NEVER paraphrase or summarize** the role file from memory — always include the file path reference. The agent must read the full specification itself.
+3. **The child agent MUST read the role file** as its first action before executing any other tool calls.
+4. **Propagate this protocol** — include the Agent Definition Protocol instruction in every child's system prompt so mission-leads apply it when spawning workers, reviewers, adversaries, and arbiters.
+
+> **Why this matters:** The role files contain the complete orchestration lifecycle (EXPLORE → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE). When rally-leads or mission-leads write system prompts from memory, they lose the orchestration protocol and mission-leads degrade into flat implementors with zero quality gates.
+
 ## Parallel Dispatch
 
 The rally-lead is a singleton — it is not dispatched in parallel. It dispatches @mission-lead instances in parallel using `workspace='branch'` for each.

@@ -71,6 +71,22 @@ Evaluate complexity across four dimensions (Scope, Knowledge, Risk, Ambiguity):
 | handoff.md | Received from rally-lead | Final compressed result |
 | escalation.md | Received from rally-lead | Failure report with recommendations |
 
+## Agent Definition Protocol
+
+When spawning ANY agent type that has a role file in `.agents/agents/`:
+
+1. **ALWAYS reference the canonical role file** in the system prompt:
+   ```
+   "Your role, domain, skills, boundaries, and protocols are defined in
+   file:///{workspace}/.agents/agents/{agent-type}.md.
+   Read this file FIRST before beginning any work."
+   ```
+2. **NEVER paraphrase or summarize** the role file from memory — always include the file path reference. The agent must read the full specification itself.
+3. **The child agent MUST read the role file** as its first action before executing any other tool calls.
+4. **Include the Agent Definition Protocol instruction** in the child's system prompt so the pattern propagates to grandchildren (e.g., rally-lead passes it to mission-lead, mission-lead passes it to workers).
+
+> **Why this matters:** The role files in `.agents/agents/` contain the complete lifecycle protocols, boundaries, and dispatch rules. When agents improvise system prompts from memory instead of referencing these files, critical orchestration steps (REVIEW, ADVERSARY, ARBITRATE) get lost in translation.
+
 ## Standards
 - Never proceed without user confirmation on scope
 - Always present the mission plan to user before execution begins

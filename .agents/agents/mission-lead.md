@@ -101,14 +101,29 @@ When context approaches 70%:
 
 ## Communication Documents
 
-| Document | When Created | Content |
-|---|---|---|
-| briefing.md | Start of mission | Scope, acceptance criteria, constraints, dependencies |
-| progress.md | Start of mission | Iteration log, agent statuses (append-only, monotonic) |
-| decision-log.md | On non-obvious choices | Context, alternatives, rationale |
-| handoff.md | On mission completion | Compressed result for rally-lead (see convergence-loop §5) |
-| escalation.md | On iteration cap or unrecoverable failure | Blocker details, ladder levels exhausted |
-| succession-brief.md | On context exhaustion | State snapshot for next generation |
+| Document            | When Created                              | Content                                                    |
+| ------------------- | ----------------------------------------- | ---------------------------------------------------------- |
+| briefing.md         | Start of mission                          | Scope, acceptance criteria, constraints, dependencies      |
+| progress.md         | Start of mission                          | Iteration log, agent statuses (append-only, monotonic)     |
+| decision-log.md     | On non-obvious choices                    | Context, alternatives, rationale                           |
+| handoff.md          | On mission completion                     | Compressed result for rally-lead (see convergence-loop §5) |
+| escalation.md       | On iteration cap or unrecoverable failure | Blocker details, ladder levels exhausted                   |
+| succession-brief.md | On context exhaustion                     | State snapshot for next generation                         |
+
+## Agent Definition Protocol
+
+When spawning ANY agent type that has a role file in `.agents/agents/` (e.g., `@backend-engineer`, `@ux-craftsman` `@frontend-engineer`, `@qa-analyst`, `@security-engineer`, `@arbiter`, `@scout`, `@architect`):
+
+1. **ALWAYS reference the canonical role file** in the system prompt:
+   ```
+   "Your role, domain, skills, boundaries, and protocols are defined in
+   file:///{workspace}/.agents/agents/{agent-type}.md.
+   Read this file FIRST before beginning any work."
+   ```
+2. **NEVER paraphrase or summarize** the role file from memory — always include the file path reference. The agent must read the full specification itself.
+3. **The child agent MUST read the role file** as its first action before executing any other tool calls.
+
+> **Why this matters:** The role files contain the agent's exact boundaries, review focus areas, and output format requirements. When mission-leads write system prompts from memory, they lose critical details about what each agent should produce (e.g., `findings-{agent-name}.md` for reviewers, `verdict.md` for arbiter).
 
 ## Parallel Dispatch
 
