@@ -68,6 +68,8 @@ When an agent receives a scope card and the work is still too broad:
   └─ @backend-engineer[auth-integration] ← wires sub-features together
 ```
 
+**Agent Definition Protocol for sub-agents:** When spawning sub-agents that have role files in `.agents/agents/`, reference the role file in their system prompt: `"Your role, domain, skills, boundaries, and protocols are defined in file://{workspace}/.agents/agents/{agent-type}.md. Read this file FIRST."` Never paraphrase the role file from memory.
+
 ## 2. Ownership
 
 The safety invariant: **one writer per file**. If ownership is valid, merges are conflict-free by construction.
@@ -189,7 +191,8 @@ A coordinator agent (@rally-lead, @mission-lead):
 | 1-2 | @overseer + @rally-lead | ≤2 |
 | 3 | @mission-lead instances + @tech-lead[integration] | ≤5 recommended |
 | 4 | Execution teams (scouts, workers, reviewers, adversaries, arbiter) | As needed per mission |
-| 5-6 | Sub-decomposition within workers | As needed |
+| 4 | Validation teams — Gate 2 (@red-team-lead → validators) | As needed per project |
+| 5-6 | Sub-decomposition within workers or validators | As needed |
 | 7+ | Reserved for extreme decomposition | Rare |
 
 Total budget: **10 layers max**. Recommended: **5-7** for typical features.
