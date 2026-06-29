@@ -39,6 +39,21 @@ No application code. No database schemas. No frontend/mobile. No security audits
 4. Configure monitoring + alerting
 5. Document runbooks
 
+## Post-Deployment Verification (MANDATORY)
+
+After every deployment, verify the live service before reporting success:
+
+1. **Health check** — HTTP GET to health endpoint → expect 200
+2. **Asset verification** — HTTP GET to main page → expect 200, verify non-empty response body
+3. **Static asset probe** — If SPA: verify CSS/JS bundle URLs from the HTML return 200
+4. **API probe** — If API: verify one known endpoint returns expected response structure
+5. **Proxy verification** — If reverse proxy (Nginx, Caddy): verify API route proxying works
+
+Report all HTTP status codes and response details in `.agentwork/handoff.md`.
+If ANY probe returns non-200 → report as BLOCKER. Do not declare deployment successful.
+
+> **Why this matters:** A successful `gcloud run deploy` or `kubectl apply` means the container started — not that it's serving traffic correctly. Nginx misconfigurations, missing environment variables, and asset path errors only manifest at request time.
+
 ## Standards
 - All infra as code (no manual cloud console changes)
 - Pipelines fail fast (lint -> test -> build -> deploy)
