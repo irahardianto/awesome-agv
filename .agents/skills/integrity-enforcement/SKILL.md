@@ -9,7 +9,7 @@ description: >-
 
 ## §1. Integrity Checks (Execute BEFORE Review Evaluation)
 
-Run all five checks first. If ANY check fails → **FAIL unconditionally**. Do not evaluate reviewer findings.
+Run all six checks first. If ANY check fails → **FAIL unconditionally**. Do not evaluate reviewer findings.
 
 ### Check 1 — Scope Violation
 
@@ -43,6 +43,26 @@ Run the build from clean state (not incremental). If build fails → **FAIL** re
 
 Run ALL tests independently (not just the ones workers ran). Compare test counts: if tests were removed or renamed, flag as suspicious. If any test fails → **FAIL** regardless of what workers reported.
 
+### Check 6 — Runtime Boot Test
+
+Verify the application can start from its current state:
+
+1. **Environment configuration documented:**
+   - `.env.example` (or equivalent) exists with ALL required variables
+   - Each variable has a description or reasonable default
+   - If `.env` exists, verify it's in `.gitignore`
+
+2. **Application startup:**
+   - Identify the start command from `package.json` scripts, `Makefile`, or `README`
+   - Start the application with documented defaults
+   - Wait up to 15 seconds for a health/ready signal (HTTP 200 on health endpoint, or stdout confirmation)
+   - Stop the application
+
+3. If startup fails → **FAIL** with the error output
+4. If no start command is discoverable → **WARNING** (not FAIL), note in verdict
+
+This check does NOT verify UI rendering, user journeys, or external integrations — those are Gate 2 (Red Team) responsibilities.
+
 ## §2. Verdict Format
 
 ```markdown
@@ -54,6 +74,7 @@ Run ALL tests independently (not just the ones workers ran). Compare test counts
 - Dependency integrity: PASS | FAIL — [details]
 - Build verification: PASS | FAIL — [details]
 - Test verification: PASS | FAIL — [details]
+- Runtime boot test: PASS | FAIL — [details]
 
 ## Review Synthesis (only if integrity PASS)
 - QA findings: [summary]
