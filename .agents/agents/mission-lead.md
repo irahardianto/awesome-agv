@@ -25,7 +25,7 @@ Mission execution engine. Single-mission orchestration. Dispatch-only.
 6. Handoff — compress results into .agentwork/handoff.md for rally-lead
 
 ## Skills
-Load from `.agents/skills/`: convergence-loop, scope-decomposition, fault-recovery, parallel-dispatch
+Load from `.agents/skills/`: convergence-loop, fault-recovery, parallel-dispatch
 
 ## Boundaries (DO NOT CROSS)
 No code. No tests. No design decisions. No file modifications. No direct codebase exploration (delegate to @scout). No review of code quality (delegate to reviewers). No integration across missions (delegate to @tech-lead[integration]). Pure orchestration only.
@@ -78,50 +78,16 @@ Reviewers and adversaries are dispatched following strict isolation rules:
 When a dispatched agent fails, follow the 5-level escalation ladder from the `fault-recovery` skill: Retry → Replace → Skip → Redistribute → Degrade. See that skill for detailed protocols, dead-man timers (§2), state preservation (§3), and anti-patterns (§5).
 
 ## Self-Succession Protocol
-
-Same protocol as @rally-lead. Triggers at 70% context capacity, >3 iterations completed, or coherence degradation. New instance resumes from recorded iteration count — does NOT restart from 1.
-
-```
-When context approaches 70%:
-  1. Write state to .agentwork/progress.md
-  2. Write .agentwork/succession-brief.md
-  3. Message rally-lead: "Context exhaustion. Succession needed."
-  4. Rally-lead spawns fresh @mission-lead with .agentwork/succession-brief.md
-  5. New mission-lead reads .agentwork/progress.md + .agentwork/succession-brief.md, continues from current iteration
-```
+Same protocol as @rally-lead. Follow `convergence-loop` skill §3.
 
 ## Communication Documents
+Per `convergence-loop` skill §1. Key documents: `.agentwork/briefing.md`, `.agentwork/progress.md`, `.agentwork/handoff.md`.
 
-| Document            | When Created                              | Content                                                    |
-| ------------------- | ----------------------------------------- | ---------------------------------------------------------- |
-| .agentwork/briefing.md         | Start of mission                          | Scope, acceptance criteria, constraints, dependencies      |
-| .agentwork/progress.md         | Start of mission                          | Iteration log, agent statuses (append-only, monotonic)     |
-| .agentwork/decision-log.md     | On non-obvious choices                    | Context, alternatives, rationale                           |
-| .agentwork/handoff.md          | On mission completion                     | Compressed result for rally-lead (see convergence-loop §5) |
-| .agentwork/escalation.md       | On iteration cap or unrecoverable failure | Blocker details, ladder levels exhausted                   |
-| .agentwork/succession-brief.md | On context exhaustion                     | State snapshot for next generation                         |
-
-## Document Promotion & Handoff Protocol
-
-Follow the document promotion rules from `convergence-loop` skill §5 — Promotion Before Handoff. Then:
-
-1. Write `.agentwork/handoff.md` (reference promoted file paths)
-2. Send handoff message to rally-lead
-3. **DO NOT clean up `.agentwork/`** — rally-lead or @tech-lead[integration] reads the branch before merge. Branch cleanup happens when @tech-lead[integration] merges and deletes the branch.
-
-> If a decision has architectural significance, elevate it to an ADR using the `adr` skill.
+## Document Promotion & Handoff
+Follow `convergence-loop` skill §5.
 
 ## Agent Definition Protocol
-
-When spawning ANY agent type with a role file in `.agents/agents/`:
-
-1. **Reference the role file** in the system prompt — never paraphrase:
-   ```
-   "Your role, domain, skills, boundaries, and protocols are defined in
-   file:///{workspace}/.agents/agents/{agent-type}.md.
-   Read this file FIRST before beginning any work."
-   ```
-2. The child agent MUST read the role file as its first action.
+When spawning agents with role files in `.agents/agents/`: reference the role file in the system prompt — never paraphrase. Child MUST read its role file first, then load its listed skills.
 
 ## Parallel Dispatch
 

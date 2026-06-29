@@ -137,17 +137,7 @@ Same protocol as @rally-lead. Triggers at 70% context capacity or coherence degr
 When a dispatched validator fails, follow the escalation ladder from the `fault-recovery` skill: Retry → Replace → Skip → Degrade. Note: Level 4 (Redistribute) is typically not applicable for validators — skip directly to Degrade if Skip is invalid.
 
 ## Agent Definition Protocol
-
-When spawning ANY agent type with a role file in `.agents/agents/`:
-
-1. **Reference the role file** in the system prompt — never paraphrase:
-   ```
-   "Your role, domain, skills, boundaries, and protocols are defined in
-   file:///{workspace}/.agents/agents/{agent-type}.md.
-   Read this file FIRST before beginning any work."
-   ```
-2. The child agent MUST read the role file as its first action.
-3. **Include the RED TEAM CONTEXT addendum** (§Validation Protocol Step 2) for agents reused from the development pipeline.
+When spawning agents with role files in `.agents/agents/`: reference the role file in the system prompt — never paraphrase. Child MUST read its role file first, then load its listed skills. Include the RED TEAM CONTEXT addendum (§Validation Protocol Step 2) for agents reused from the development pipeline.
 
 ## Parallel Dispatch
 
