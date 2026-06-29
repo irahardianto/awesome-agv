@@ -63,7 +63,7 @@ LOOP (max 5 iterations):
   Iteration 1 — Initial dispatch:
     1. Decompose into MECE missions using parallel-dispatch skill (§1, §6)
     2. Present full mission plan to user — list missions with scope, acceptance criteria, template. Wait for explicit approval.
-    3. Execute — dispatch @mission-lead[scope] × N (workspace='branch')
+    3. Execute — dispatch @mission-lead[scope] × N using staggered dispatch (see below)
     4. Gate — wait for all mission handoffs, evaluate arbiter verdicts
     5. Decide:
          All pass (DEEP — N missions) → dispatch @tech-lead[integration] (merge + wire) → dispatch @arbiter (cross-mission verification) → HANDOFF to @overseer
@@ -91,13 +91,49 @@ Follow `convergence-loop` skill §3. Triggers: 70% context capacity, coherence d
 
 When a dispatched @mission-lead fails, follow the 5-level escalation ladder from the `fault-recovery` skill: Retry → Replace → Skip → Redistribute → Degrade. See that skill for detailed protocols, dead-man timers, state preservation, and anti-patterns.
 
+> **429 / RESOURCE_EXHAUSTED:** If a mission-lead failure is caused by rate limiting (429), do NOT immediately retry or spawn replacements. Follow `fault-recovery` skill §1.1 (Rate-Limit Backoff Protocol). Let the failed agent's backoff timer handle the retry — do not duplicate retry attempts from the rally-lead level.
+
+## Staggered Dispatch Protocol
+
+When dispatching N mission-leads simultaneously, stagger the spawns to avoid hitting the platform's per-project RPM quota:
+
+| Mission Count | Strategy |
+|---|---|
+| 1-2 missions | Single `invoke_subagent` call (no stagger needed) |
+| 3-4 missions | Two batches: dispatch first 2, `schedule(DurationSeconds=10)`, then dispatch remaining |
+| 5+ missions | Batches of 2, with 10s delay between each batch |
+
+**Example for 4 missions:**
+```
+invoke_subagent → [mission-lead-A, mission-lead-B] (workspace='branch')
+schedule(DurationSeconds=10)
+invoke_subagent → [mission-lead-C, mission-lead-D] (workspace='branch')
+```
+
+> This smooths the RPM curve. Each spawned agent immediately makes several API calls (read role file, read skills, plan) — spawning all N at once creates a burst that can exceed per-minute quota.
+
 ## Communication Documents
 Per `convergence-loop` skill §1. Key documents: `.agentwork/briefing.md`, `.agentwork/progress.md`, `.agentwork/handoff.md`, `.agentwork/escalation.md`.
 
 ## Document Promotion & Handoff
 Follow `convergence-loop` skill §5. Promote `.agentwork/handoff.md` to parent on mission completion.
 
-## Agent Definition Protocol
+## Agent Spawn Protocol
+
+**CRITICAL: Always use `TypeName="self"` for ALL spawns.** Named types (`mission-lead`, `tech-lead`, `scout`, etc.) only receive `schedule` + `send_message` — they cannot read files, write code, or spawn subagents.
+
+**Correct pattern:**
+```
+invoke_subagent → TypeName: "self", Role: "Mission Lead (Scope)", Prompt: "Read your role file FIRST: file://{workspace}/.agents/agents/mission-lead.md ..."
+invoke_subagent → TypeName: "self", Role: "Tech Lead (Integration)", Prompt: "Read your role file FIRST: file://{workspace}/.agents/agents/tech-lead.md ..."
+```
+
+**Incorrect pattern:**
+```
+invoke_subagent → TypeName: "mission-lead"    ← TOOL-DEPRIVED (only schedule + send_message)
+invoke_subagent → TypeName: "tech-lead"       ← TOOL-DEPRIVED (only schedule + send_message)
+```
+
 When spawning agents with role files in `.agents/agents/`: reference the role file in the system prompt — never paraphrase. Child MUST read its role file first, then load its listed skills.
 
 ## Parallel Dispatch

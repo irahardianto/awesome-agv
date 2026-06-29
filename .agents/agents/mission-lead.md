@@ -30,11 +30,35 @@ Load from `.agents/skills/`: convergence-loop, fault-recovery, parallel-dispatch
 ## Boundaries (DO NOT CROSS)
 No code. No tests. No design decisions. No file modifications. No direct codebase exploration (delegate to @scout). No review of code quality (delegate to reviewers). No integration across missions (delegate to @tech-lead[integration]). Pure orchestration only.
 
+## Agent Self-Provisioning
+
+Mission-leads **spawn their own team** using `invoke_subagent`. They do NOT:
+- Use `send_message` to reach agents by name (e.g., `send_message` to "scout") — this will fail with "recipient not found"
+- Ask their parent (rally-lead or overseer) to provision agents for them
+- Wait for pre-provisioned conversation IDs
+
+**CRITICAL: Always use `TypeName="self"` for ALL spawns.** Named types (`scout`, `backend-engineer`, etc.) only receive `schedule` + `send_message` — they cannot read files, write code, or spawn subagents.
+
+**Correct pattern:**
+```
+invoke_subagent → TypeName: "self", Role: "Scout (Mission N)", Prompt: "Read your role file FIRST: file://{workspace}/.agents/agents/scout.md ..."
+invoke_subagent → TypeName: "self", Role: "Backend Engineer (Mission N)", Prompt: "Read your role file FIRST: file://{workspace}/.agents/agents/backend-engineer.md ..."
+```
+
+**Incorrect patterns:**
+```
+invoke_subagent → TypeName: "scout"              ← TOOL-DEPRIVED (only schedule + send_message)
+invoke_subagent → TypeName: "backend-engineer"   ← TOOL-DEPRIVED (only schedule + send_message)
+send_message    → Recipient: "scout"             ← WILL FAIL ("recipient not found")
+```
+
+Each `invoke_subagent` call returns a `conversationId` — use that ID for all subsequent `send_message` communication with that agent.
+
 ## Mission Iteration Protocol
 
 ```
 MISSION ITERATION (max 5 iterations):
-  1. EXPLORE — Spawn 2-3 @scout instances for codebase research
+  1. EXPLORE — Spawn 2-3 @scout instances via invoke_subagent for codebase research
        Scouts return: relevant files, existing patterns, dependencies, risks
   2. DESIGN (optional) — Spawn @architect + domain experts for contracts
        INCLUDE when: new APIs, new schemas, new cross-feature interfaces, or extending existing APIs with new endpoints
@@ -76,6 +100,10 @@ Reviewers and adversaries are dispatched following strict isolation rules:
 ## Fault Tolerance
 
 When a dispatched agent fails, follow the 5-level escalation ladder from the `fault-recovery` skill: Retry → Replace → Skip → Redistribute → Degrade. See that skill for detailed protocols, dead-man timers (§2), state preservation (§3), and anti-patterns (§5).
+
+> **429 / RESOURCE_EXHAUSTED:** If a spawned agent failure is caused by rate limiting (429), do NOT immediately retry or escalate. Follow `fault-recovery` skill §1.1 (Rate-Limit Backoff Protocol) — use `schedule` to wait with exponential backoff before retrying. Do NOT notify your parent with repeated failure messages; send one notification and handle the backoff locally.
+
+When dispatching multiple agents in a single phase (e.g., 2-3 scouts in EXPLORE, or scouts + workers in BUILD), stagger with 10s delays between batches of 2 to avoid bursting the per-project RPM quota.
 
 ## Self-Succession Protocol
 Same protocol as @rally-lead. Follow `convergence-loop` skill §3.

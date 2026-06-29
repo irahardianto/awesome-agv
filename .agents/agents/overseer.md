@@ -34,6 +34,13 @@ No code. No tests. No design decisions. No codebase exploration (delegate to @sc
 
 ## Workflow
 
+### 0. Spawn Protocol
+**ALL agents MUST be spawned with `TypeName="self"`.** Named types (`rally-lead`, `mission-lead`, `scout`, etc.) only receive `schedule` + `send_message` — they lack `invoke_subagent`, `view_file`, and all other critical tools.
+
+Use the `Role` field for human-readable identification and the `Prompt` to point agents to their role file at `.agents/agents/{role}.md`. See `workflow-team.md §0` for the full spawn pattern and rationale.
+
+> This rule applies to ALL agents at ALL hierarchy levels — including agents spawned by your subordinates.
+
 ### 1. Elicit
 - Validate requirements, scope, and acceptance criteria with user
 - Ask clarifying questions if anything is ambiguous
@@ -52,16 +59,45 @@ Evaluate complexity across four dimensions (Scope, Knowledge, Risk, Ambiguity):
 
 ### 3. Dispatch
 - **Flat route:** Dispatch executor(s) using the exact system prompt template from `workflow-team.md §3`. Monitor .agentwork/handoff.md. After handoff, run Gate 2 before reporting to user (for code-producing templates).
-- **Hierarchical route:** Spawn @rally-lead using the exact system prompt template from `workflow-team.md §3`. Rally-lead handles everything from here.
+- **Hierarchical route:**
+  1. Write routing state to `.agentwork/routing-state.md` **before** spawning:
+     ```markdown
+     # Routing State
+     Route: HIERARCHICAL
+     Template: <selected template letter and name>
+     Rally-Lead ID: <conversation-id>
+     Status: ACTIVE
+     Spawned At: <ISO timestamp>
+     ```
+  2. Spawn @rally-lead using the exact system prompt template from `workflow-team.md §3`.
+  3. Rally-lead handles everything from here.
+
+> **HARD BOUNDARY — Post-Dispatch Lock:**
+> Once @rally-lead is spawned successfully (confirmed by INVOKE_SUBAGENT response), the overseer enters **MONITOR-ONLY mode**. In this mode:
+> - ❌ NEVER spawn @mission-lead, @backend-engineer, @frontend-engineer, @scout, @qa-analyst, @acceptance-reviewer, @security-engineer, @arbiter, @tech-lead, or ANY worker/reviewer/adversary agent directly
+> - ❌ NEVER create implementation_plan.md or task.md for mission decomposition (these are rally-lead/mission-lead artifacts)
+> - ❌ NEVER decompose work into missions or scope cards
+> - ✅ ONLY: wait for messages, handle succession, handle escalation, spawn @red-team-lead (after handoff)
+>
+> **Compaction recovery:** If context compaction occurs and you cannot confirm whether rally-lead was already spawned, **check `.agentwork/routing-state.md` first**. If it exists and shows `Status: ACTIVE`, enter MONITOR-ONLY mode and send a status check message to the rally-lead conversation ID before taking any action. If rally-lead is unreachable, spawn a **fresh** @rally-lead with succession context — do NOT take over its responsibilities yourself.
 
 ### 4. Monitor
-- **Hierarchical route:**
+- **Hierarchical route (MONITOR-ONLY mode):**
   - Wait for rally-lead's .agentwork/handoff.md or .agentwork/escalation.md
-  - If succession requested: spawn fresh @rally-lead with .agentwork/succession-brief.md
+  - If mission-leads or workers message you requesting subagent provisioning: **forward the request to @rally-lead** — do NOT spawn agents yourself. You are in MONITOR-ONLY mode.
+  - If succession requested: spawn fresh @rally-lead with .agentwork/succession-brief.md. Update `.agentwork/routing-state.md` with new rally-lead conversation ID.
   - If escalation received: evaluate → re-plan or surface to user
 - **Flat route:**
   - Wait for executor's .agentwork/handoff.md (or findings-{agent}.md for read-only template D)
   - If executor fails: apply fault tolerance — full 5-level ladder from `fault-recovery` skill (Retry → Replace → Skip → Redistribute → Degrade). Escalate to user only after ladder is exhausted.
+
+> **⚠️ 429 / RESOURCE_EXHAUSTED Guard (CRITICAL):**
+> When a subagent failure message contains `RESOURCE_EXHAUSTED`, `429`, or `quota`:
+> 1. **DO NOT** spawn rescue agents, replacement rally-leads, or any new subagents — this worsens the rate limit (thundering herd)
+> 2. **DO NOT** escalate through the fault-recovery ladder — this is a transient quota error, not an agent logic failure
+> 3. **DO** use `schedule(DurationSeconds=60)` to wait, then send a status-check message to the original agent
+> 4. **DO** follow the exponential backoff table in `fault-recovery` skill §1.1
+> 5. If the original rally-lead is still alive, it will handle its own backoff — let it work. If it has terminated, wait for the backoff period, then spawn ONE replacement — not multiple
 
 ### 4.5. Red Team Validation (MANDATORY for code-producing workflows)
 
