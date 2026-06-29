@@ -214,3 +214,31 @@ After all missions pass their individual arbiter gates:
 3. Integration runs on the main branch, merging mission branches
 4. A final @arbiter runs cross-mission verification before completion
 
+## 6. Scope Sizing & Integration Points
+
+### Scope Sizing Heuristics
+
+| Signal | Action |
+|---|---|
+| Mission requires **>4 workers** | Too large — split into sub-missions |
+| Mission is **1 worker editing ≤3 files** | Too small — merge with adjacent mission |
+| Mission spans **>8 files** | Too broad — find a natural seam to split |
+| Mission touches **<1 file** | Phantom mission — remove or merge |
+
+**Sweet spot:** 3–8 files per mission, 1–3 workers, completable by 1 mission-lead with ≤4 workers.
+
+### Integration Point Identification
+
+Integration points are where missions touch each other:
+- Shared API contracts (request/response types, proto files)
+- Database schemas and migrations
+- Event bus topics and message formats
+- Configuration files and environment variables
+
+Rules:
+1. Identify ALL integration points **before** dispatch — never discover them mid-build
+2. Assign integration work to `@tech-lead[integration]`, which runs **after** all missions pass
+3. Shared contracts are **read-only during BUILD** — no mission may modify a shared contract unilaterally
+4. If a contract needs changes, **STOP and escalate** to the coordinator for re-planning
+
+

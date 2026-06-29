@@ -146,3 +146,25 @@ This skill enforces all rules in `.agents/rules/`. Key references:
 - Testing Strategy @testing-strategy.md
 - Logging and Observability Mandate @logging-and-observability-mandate.md
 - Error Handling Principles @error-handling-principles.md
+
+## Quick Reference Audit Checklist
+
+Consolidated from rule-based checklists. Use as a rapid scan after detailed review.
+
+### Architecture *(from architectural-pattern.md)*
+- [ ] I/O behind interfaces; pure business logic; dependencies point inward
+
+### Database *(from database-design-principles.md)*
+- [ ] Parameterized queries; migrations reversible; indexes documented
+
+### Dependencies *(from dependency-management-principles.md)*
+- [ ] Versions pinned; lock file committed; unused deps removed
+
+### Git *(from git-workflow-principles.md)*
+- [ ] Conventional commits; no large binaries; .gitignore complete
+
+### Monitoring *(from monitoring-and-alerting-principles.md)*
+- [ ] Health endpoint; key metrics instrumented; alerting rules defined
+
+### Performance *(from performance-optimization-principles.md)*
+- [ ] No premature optimization; profiling before tuning; budgets defined

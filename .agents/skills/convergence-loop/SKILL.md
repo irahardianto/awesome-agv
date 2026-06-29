@@ -46,6 +46,34 @@ Append-only, monotonic — never delete or rewrite earlier entries.
 - **Consequences:** Trade-offs accepted.
 ```
 
+### .agentwork/ Document Registry
+
+| Document | Writer | Reader |
+|---|---|---|
+| `briefing.md` | Coordinator | Workers, reviewers |
+| `progress.md` | Coordinator | Self, parent |
+| `findings-{agent}.md` | Gate 1: Reviewer/Adversary; Gate 2: Validator | Gate 1: Arbiter; Gate 2: Red-team-lead |
+| `verdict.md` | @arbiter | Coordinator |
+| `red-team-verdict.md` | @red-team-lead | @overseer |
+| `decision-log.md` | Coordinator | Parent |
+| `handoff.md` | Coordinator/Worker | Parent |
+| `integration-handoff.md` | @tech-lead[integration] | @rally-lead |
+| `escalation.md` | Coordinator | Parent |
+| `succession-brief.md` | Coordinator | Successor |
+
+**Handoff = compressed:** file paths + 1-line descriptions, branch ref, test counts, verdict, blockers only.
+
+**Findings naming:** Default `findings-{agent-name}.md`. When multiple instances of same agent type: `findings-{agent-name}-{scope}.md` (e.g., `findings-security-engineer-auth.md`).
+
+### Document Lifecycle
+
+- **Ephemeral** → `.agentwork/` (gitignored, deleted after workflow)
+- **Persistent** → `docs/` (git-tracked, permanent)
+- **Promote before handoff:** `decision-log.md` → `docs/decisions/`, design contracts → `docs/designs/`, ADRs via `adr` skill
+- **Cleanup:** `rm -rf .agentwork/` — overseer runs at ANY terminal state
+
+> In `workspace='branch'`, gitignored files are NOT merged. Promote BEFORE branch removal.
+
 ## §2. Iteration Protocol
 
 ### Core Loop
@@ -71,17 +99,7 @@ BRIEFING → ITERATE → GATE → CONVERGE or RE-PLAN
 - Ambiguous verdict → treat as FAIL, request clarification next iteration.
 
 ### Escalation on Cap Reached
-When iteration 5 ends without convergence: write `.agentwork/escalation.md`, message parent, do NOT attempt iteration 6.
-
-```markdown
-# Escalation
-## Iterations Exhausted
-- **Cap:** 5 | **Final verdict:** PASS / FAIL
-## Unmet Criteria   <!-- Each failing criterion + arbiter rationale -->
-1. …
-## Attempted Remediations  <!-- Per-iteration: what was tried, why insufficient -->
-## Recommended Next Steps  <!-- Re-scope, add resources, unblock dependency -->
-```
+When iteration 5 ends without convergence: write `.agentwork/escalation.md` using the template from `fault-recovery` skill §4, message parent, do NOT attempt iteration 6.
 
 ## §3. Context Hygiene & Self-Succession
 

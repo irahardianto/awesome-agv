@@ -71,22 +71,7 @@ Run through this checklist **after writing code, before verification**:
 
 ## Language-Specific Self-Review
 
-After completing the universal checklist above, load the relevant language-specific checklist:
-
-| Language | Checklist |
-|---|---|
-| **Go** | `languages/go.md` |
-| **TypeScript** | `languages/typescript.md` |
-| **Python** | `languages/python.md` |
-| **Rust** | `languages/rust.md` |
-| **Java** | `languages/java.md` |
-| **C#** | `languages/csharp.md` |
-| **Swift** | `languages/swift.md` |
-| **Flutter/Dart** | `languages/flutter.md` |
-| **C++** | `languages/cpp.md` |
-| **Kotlin** | `languages/kotlin.md` |
-| **PHP** | `languages/php.md` |
-| **Ruby** | `languages/ruby.md` |
+After completing the universal checklist above, load the relevant language-specific checklist from `code-review/languages/{language}.md`. The language files contain both review anti-patterns and self-review checklists.
 
 > Only load the file for languages you are actively writing. If a language is not listed, skip — but the universal checklist above always applies.
 
