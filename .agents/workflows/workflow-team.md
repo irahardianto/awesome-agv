@@ -183,14 +183,7 @@ system_prompt:
 | **4.5. Gate 2** | PRECONDITION: code ready on main — Flat: executor wrote directly; Shallow/Deep: @tech-lead[integration] merged branches (Deep: merge + wire; Shallow: merge only). Spawn `@red-team-lead` with ONLY original requirements + workspace. No dev context. MANDATORY for code-producing templates (A,B,C,E,F,G,I,J). Skip D,H,K. |
 | **5. Report** | Synthesize handoff + red-team-verdict → user summary. Then `rm -rf .agentwork/`. |
 
-**Gate 2 remediation cycle:**
-```
-develop → handoff → red-team-lead → verdict
-    PASS → Report
-    CONDITIONAL PASS → Report with warnings (user decides; no remediation cycle consumed)
-    FAIL → remediate (check rally-lead alive; if dead, spawn fresh) → loop
-    Max 2 cycles → escalate to user
-```
+> Gate 2 remediation cycle detail: `overseer.md` Step 4.5.
 
 ---
 
@@ -216,14 +209,7 @@ EXPLORE → DESIGN (opt) → BUILD
     FAIL → narrow scope, loop (max 5)
 ```
 
-**Branch Merge Protocol (tech-lead[integration]):**
-1. Receive mission branch(es) from rally-lead
-2. Merge branch(es) into main in dependency order (per `parallel-dispatch` skill §3)
-3. Textual conflicts → resolve by reading both sides and combining intent
-4. Semantic conflicts → escalate to rally-lead for re-plan
-5. After successful merge → run build and tests
-6. **Deep route only:** Hand off to @arbiter for cross-mission verification. Shallow route skips this (single mission already passed its own arbiter gate).
-7. Mission branches are deleted after successful merge (and arbiter PASS for Deep route)
+> Branch Merge Protocol detail: `tech-lead.md` §Integration Dispatch.
 
 **AAD (All-Agents Drafting):** Reviewers + adversaries in one parallel `invoke_subagent` call. No cross-talk. Single-pass. Arbiter-only synthesis.
 
@@ -292,7 +278,7 @@ Gate 1 = per mission. Gate 2 = once per project, after integration.
 | Mission failure | @rally-lead |
 | Rally failure | @overseer |
 
-**Self-succession:** At 70% context or >3 iterations → write `.agentwork/succession-brief.md` → parent spawns fresh instance. See `convergence-loop` skill.
+> Self-succession protocol: `convergence-loop` skill §3.
 
 ---
 
@@ -326,14 +312,6 @@ Gate 1 = per mission. Gate 2 = once per project, after integration.
 | L4+ writers | `share` (within mission branch) |
 | L4+ readers (Gate 1) | `inherit` (from mission branch) |
 | L4+ validators (Gate 2) | `inherit` (from main workspace) |
-
-### .agentwork/ Path Resolution
-
-- All `.agentwork/` paths are **relative to the agent's workspace root**.
-- `workspace='branch'`: `.agentwork/` is inside the branch — parent reads via the branch path.
-- `workspace='inherit'`: `.agentwork/` is shared with parent — same physical directory.
-- `workspace='share'`: `.agentwork/` is shared within the mission branch.
-
 ### Findings File Naming
 
 Default: `.agentwork/findings-{agent-name}.md` (e.g., `findings-qa-analyst.md`)
