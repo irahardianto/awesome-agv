@@ -47,15 +47,14 @@ MISSION ITERATION (max 5 iterations):
   4. BUILD — Spawn 1-N Workers (@backend-engineer, @frontend-engineer, etc.)
        Workers can sub-decompose via parallel-dispatch (Layer 5-6)
        Each worker gets a scope card with exclusive write scope
-  5. REVIEW — Spawn @qa-analyst + @acceptance-reviewer IN PARALLEL
-       AAD protocol: parallel dispatch, no cross-talk, single-pass
-       Each reviewer writes .agentwork/findings-{agent-name}.md independently
-  6. ADVERSARY — Spawn 1-2 adversaries (@security-engineer, @incident-responder)
-       Each adversary writes .agentwork/findings-{agent-name}.md independently
-  7. ARBITRATE — Spawn @arbiter
+  5. REVIEW ∥ ADVERSARY — Spawn ALL reviewers + adversaries in ONE parallel invoke_subagent call (AAD protocol):
+       Reviewers: @qa-analyst + @acceptance-reviewer
+       Adversaries: @security-engineer, @incident-responder (1-2 as appropriate)
+       No cross-talk, single-pass. Each writes .agentwork/findings-{agent-name}.md independently.
+  6. ARBITRATE — Spawn @arbiter
        Arbiter reads ALL .agentwork/findings-*.md files + runs independent integrity checks
        Arbiter writes .agentwork/verdict.md + messages mission-lead
-  8. GATE — Read .agentwork/verdict.md:
+  7. GATE — Read .agentwork/verdict.md:
        PASS → write .agentwork/handoff.md, message rally-lead
        FAIL → update .agentwork/progress.md with arbiter findings, narrow scope, LOOP from BUILD
 
@@ -74,17 +73,9 @@ Reviewers and adversaries are dispatched following strict isolation rules:
 4. **Arbiter-only synthesis** — the arbiter is the ONLY agent that reads all .agentwork/findings-*.md files
 5. **Scale width** — if more review coverage is needed, add more reviewers, don't add more review rounds
 
-## Fault Tolerance Escalation Ladder
+## Fault Tolerance
 
-When a dispatched agent fails, follow IN ORDER (from `fault-recovery` skill):
-
-1. **RETRY** — re-dispatch same agent type, same scope + failure context. Max 1 retry.
-2. **REPLACE** — dispatch different agent type for same task. Max 1 replacement.
-3. **SKIP** — mark scope card as deferred (only if not a hard dependency). Record in .agentwork/progress.md.
-4. **REDISTRIBUTE** — split failing scope card into 2-3 smaller sub-cards. Only valid if depth < 8.
-5. **DEGRADE** — complete mission without failing component. Note in .agentwork/handoff.md.
-
-For dead-man timers and state preservation during recovery, see `fault-recovery` skill §2-§3.
+When a dispatched agent fails, follow the 5-level escalation ladder from the `fault-recovery` skill: Retry → Replace → Skip → Redistribute → Degrade. See that skill for detailed protocols, dead-man timers (§2), state preservation (§3), and anti-patterns (§5).
 
 ## Self-Succession Protocol
 
@@ -110,32 +101,27 @@ When context approaches 70%:
 | .agentwork/escalation.md       | On iteration cap or unrecoverable failure | Blocker details, ladder levels exhausted                   |
 | .agentwork/succession-brief.md | On context exhaustion                     | State snapshot for next generation                         |
 
-## Document Promotion Protocol
+## Document Promotion & Handoff Protocol
 
-Before writing `.agentwork/handoff.md`, promote persistent documents:
+Follow the document promotion rules from `convergence-loop` skill §5 — Promotion Before Handoff. Then:
 
-1. If `.agentwork/decision-log.md` has entries → copy to `docs/decisions/decision-log-{scope}-{YYYY-MM-DD}.md`
-2. If design contracts were produced → copy to `docs/designs/`
-3. Create `docs/decisions/` and `docs/designs/` directories if they don't exist
-4. Write `.agentwork/handoff.md` (reference promoted file paths)
-5. After sending handoff message → clean up: `rm -rf .agentwork/`
+1. Write `.agentwork/handoff.md` (reference promoted file paths)
+2. Send handoff message to rally-lead
+3. **DO NOT clean up `.agentwork/`** — rally-lead or @tech-lead[integration] reads the branch before merge. Branch cleanup happens when @tech-lead[integration] merges and deletes the branch.
 
-> If a decision has architectural significance (affects system structure, matters 6 months from now), elevate it to an ADR using the `adr` skill instead of including it in the decision log.
+> If a decision has architectural significance, elevate it to an ADR using the `adr` skill.
 
 ## Agent Definition Protocol
 
-When spawning ANY agent type that has a role file in `.agents/agents/` (e.g., `@backend-engineer`, `@ux-craftsman` `@frontend-engineer`, `@qa-analyst`, `@security-engineer`, `@arbiter`, `@scout`, `@architect`):
+When spawning ANY agent type with a role file in `.agents/agents/`:
 
-1. **ALWAYS reference the canonical role file** in the system prompt:
+1. **Reference the role file** in the system prompt — never paraphrase:
    ```
    "Your role, domain, skills, boundaries, and protocols are defined in
    file:///{workspace}/.agents/agents/{agent-type}.md.
    Read this file FIRST before beginning any work."
    ```
-2. **NEVER paraphrase or summarize** the role file from memory — always include the file path reference. The agent must read the full specification itself.
-3. **The child agent MUST read the role file** as its first action before executing any other tool calls.
-
-> **Why this matters:** The role files contain the agent's exact boundaries, review focus areas, and output format requirements. When mission-leads write system prompts from memory, they lose critical details about what each agent should produce (e.g., `.agentwork/findings-{agent-name}.md` for reviewers, `.agentwork/verdict.md` for arbiter).
+2. The child agent MUST read the role file as its first action.
 
 ## Parallel Dispatch
 
