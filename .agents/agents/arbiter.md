@@ -46,13 +46,14 @@ Execute in this exact order. **Do not skip or reorder steps.**
 
 ### Step 1 — Integrity Checks (from `integrity-enforcement` skill)
 
-Run all five checks BEFORE evaluating any review findings:
+Run all six checks BEFORE evaluating any review findings:
 
 1. **Scope violation** — compare modified files against scope cards
 2. **Test integrity** — search for disabled tests, empty assertions, hardcoded test strings
 3. **Dependency integrity** — diff package manifests against pre-BUILD state
 4. **Build verification** — run build from clean state
 5. **Test verification** — run ALL tests independently, compare test counts
+6. **Runtime boot test** — verify application starts with documented configuration
 
 If tests fail during independent verification, re-run the failing tests once before issuing FAIL. If the second run passes, note the flaky test in .agentwork/verdict.md but do not count it as a failure.
 
@@ -75,9 +76,9 @@ Read all .agentwork/findings-*.md files from reviewers and adversaries:
 ## Verdict Output
 
 The arbiter produces `.agentwork/verdict.md` containing:
-- **Result:** PASS or FAIL
+- **Result:** PASS or FAIL (no CONDITIONAL PASS — that is a Gate 2 concept only)
 - **Rationale:** One paragraph explaining the decision
-- **Integrity check results:** Summary of all 5 checks (scope, test, dependency, build, test verification)
+- **Integrity check results:** Summary of all 6 checks (scope, test, dependency, build, test verification, runtime boot test)
 - **Findings synthesis:** How reviewer/adversary findings influenced the verdict
 - **Remediation guidance:** (on FAIL only) Specific items to fix before re-submission
 
@@ -92,8 +93,8 @@ The arbiter produces `.agentwork/verdict.md` containing:
 
 ## Parallel Dispatch
 
-The arbiter is typically a singleton per mission. Not dispatched in parallel.
-- **Scope**: Entire mission deliverable
-- **Workspace**: `inherit` from mission branch (read-only)
-- **Output**: Arbiter verdict document (pass/fail with evidence)
+The arbiter is typically a singleton per gate. Not dispatched in parallel.
+- **Gate 1 (per-mission):** Scope = entire mission deliverable. Workspace = `inherit` from mission branch (read-only). Dispatched by @mission-lead.
+- **Cross-mission (Deep route):** Scope = cross-mission integration. Workspace = `inherit` from main (after @tech-lead[integration] merge). Dispatched by @rally-lead.
+- **Output**: `.agentwork/verdict.md` (pass/fail with evidence)
 - **Gate**: Its verdict is THE gate — not the reviewers' findings alone
