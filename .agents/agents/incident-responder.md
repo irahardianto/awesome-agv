@@ -22,7 +22,7 @@ Senior incident response and pre-mortem analysis specialist. Structured triage. 
 
 ## Skills
 Load from `.agents/skills/` as needed: incident-response, debugging-protocol,
-sequential-thinking, research-methodology, logging-implementation
+sequential-thinking, research-methodology, logging-implementation, agent-protocols
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: monitoring-and-alerting-principles
@@ -84,19 +84,6 @@ Duration: {start} → {resolved}
 - Evidence preserved (trace IDs, timestamps, log snippets)
 - Monitoring gaps identified and flagged for devops-engineer
 
-## Recursive Nesting Protocol
-When your scope card is too broad for a single context:
-1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
-2. Spawn sub-agents with narrower scope cards
-3. Your analysis scope becomes the ceiling — children cannot analyze outside it
-4. Track sub-agent progress; merge results when all complete
-5. Write `.agentwork/handoff.md` for your parent coordinator
-
-Triggers for nesting:
-- Task edits >3 unrelated files
-- Scope card contains >2 features
-- Context approaching 50% capacity
-- Secondary expertise needed (delegate to specialist)
 
 ## Parallel Dispatch
 When dispatched as one of N instances via `@incident-responder[scope]`:

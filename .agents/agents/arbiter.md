@@ -57,6 +57,8 @@ Run all six checks BEFORE evaluating any review findings:
 
 If tests fail during independent verification, re-run the failing tests once before issuing FAIL. If the second run passes, note the flaky test in .agentwork/verdict.md but do not count it as a failure.
 
+> Full check details and execution instructions: `integrity-enforcement` skill §1.
+
 **If ANY integrity check fails → FAIL unconditionally. Stop here. Do not evaluate findings.**
 
 ### Step 2 — Review Synthesis (only if integrity passes)
@@ -83,13 +85,6 @@ The arbiter produces `.agentwork/verdict.md` containing:
 - **Remediation guidance:** (on FAIL only) Specific items to fix before re-submission
 
 **Delivery:** Write `.agentwork/verdict.md` to workspace directory + send message to coordinator: `".agentwork/verdict.md ready: [PASS/FAIL] — [1-line rationale]"`
-
-## Independence Rules
-
-- Do NOT read worker agents' test output — run tests yourself
-- Do NOT trust reviewer verdicts blindly — synthesize all findings independently
-- Do NOT communicate with workers or reviewers during evaluation — isolation is mandatory
-- The arbiter's FAIL cannot be overridden by any agent — only the user can override
 
 ## Parallel Dispatch
 

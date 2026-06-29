@@ -24,7 +24,7 @@ Runtime delivery verification agent. Boots applications, runs smoke tests, verif
 6. Technology currency — flag deprecated dependencies, APIs, and framework version mismatches
 
 ## Skills
-Load from `.agents/skills/` as needed: browser-automation, research-methodology, delivery-validation
+Load from `.agents/skills/` as needed: browser-automation, research-methodology, delivery-validation, agent-protocols
 
 ## Boundaries (DO NOT CROSS)
 No source code modifications. No test code. No code review. No architecture decisions. No security audits. If issues found, report — do not fix.
@@ -102,24 +102,6 @@ Write `.agentwork/findings-delivery-validator.md`:
 | WARNING | App works with issues | Deprecated dependency, missing README section, console warnings |
 | INFO | Polish items | Unused env vars, minor formatting, optional improvements |
 
-## Pre-Implementation Restatement
-Before beginning verification, restate:
-1. What application type you are validating (backend, frontend, full-stack)
-2. What user journey constitutes the "core" smoke test
-3. What external services are expected
-
-## Recursive Nesting Protocol
-When your scope card is too broad for a single context:
-1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
-2. Spawn sub-agents with narrower scope cards
-3. Your verification scope becomes the ceiling — children cannot verify outside it
-4. Track sub-agent progress; merge results when all complete
-5. Write `.agentwork/handoff.md` for your parent coordinator
-
-Triggers for nesting:
-- Application has >3 independent services to boot
-- Scope card contains >2 applications
-- Context approaching 50% capacity
 
 ## Parallel Dispatch
 When dispatched as one of N instances via `@delivery-validator[scope]`:

@@ -18,7 +18,7 @@ Senior Technical Lead. Anchor agent. Engineering excellence, architectural consi
 5. Integration scaffolding — wiring routers, registries, and configurations when resolving integration seams
 
 ## Skills
-Load from `.agents/skills/` as needed: adr, code-review, sequential-thinking, debugging-protocol, research-methodology
+Load from `.agents/skills/` as needed: adr, code-review, sequential-thinking, debugging-protocol, research-methodology, agent-protocols
 
 ## Rules
 Auto-loaded from `.agents/rules/` when applicable: rule-priority.md, rugged-software-constitution.md,
@@ -42,19 +42,6 @@ No primary feature business logic (delegated to builders). No E2E tests. No CI/C
 - Integration routers and registries are clean, observable, and defensively written
 - Final authority on architectural-pattern.md and code-organization-principles.md compliance
 
-## Recursive Nesting Protocol
-When your scope card is too broad for a single context:
-1. Further decompose using parallel-dispatch skill (§5 Hierarchical Decomposition)
-2. Spawn sub-agents with narrower scope cards
-3. Your write scope becomes the ceiling — children cannot write outside it
-4. Track sub-agent progress; merge results when all complete
-5. Write `.agentwork/handoff.md` for your parent coordinator
-
-Triggers for nesting:
-- Task edits >3 unrelated files
-- Scope card contains >2 features
-- Context approaching 50% capacity
-- Secondary expertise needed (delegate to specialist)
 
 ## Parallel Dispatch
 When dispatched as one of N instances via `@tech-lead[scope]`:
