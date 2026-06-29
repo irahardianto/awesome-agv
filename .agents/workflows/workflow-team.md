@@ -122,12 +122,54 @@ Red Team Findings: .agentwork/red-team-verdict.md
 
 ---
 
+## §0. Spawn Protocol — Universal `TypeName="self"`
+
+> **CRITICAL PLATFORM CONSTRAINT.** All named subagent types (`rally-lead`, `mission-lead`, `scout`, etc.) receive ONLY `schedule` + `send_message` tools — they lack `invoke_subagent`, `view_file`, `run_command`, and all other critical tools. `define_subagent` reports success but defined types cannot be invoked. This is a verified platform limitation.
+
+**Rule: ALL agents MUST be spawned as `TypeName="self"`.** Role differentiation is achieved through the `Role` field and the system prompt (which points to the agent's role file).
+
+### Spawn Pattern
+
+```
+invoke_subagent(
+  TypeName: "self",                              ← ALWAYS "self"
+  Role:     "Rally-Lead",                        ← Human-readable role name
+  Prompt:   "Your role, domain, skills...        ← Points to .agents/agents/{role}.md
+             file://{workspace}/.agents/agents/rally-lead.md
+             Read this file FIRST before beginning any work.
+             Your workspace is: {workspace}
+             Your task: ..."
+)
+```
+
+### Why This Works
+
+| TypeName | Tools Available | Spawn Result |
+|---|---|---|
+| `"rally-lead"` | `schedule`, `send_message` only | ❌ Cannot read files, spawn agents, or do anything useful |
+| `"scout"` | `schedule`, `send_message` only | ❌ Cannot explore codebase |
+| `"backend-engineer"` | `schedule`, `send_message` only | ❌ Cannot write code |
+| **`"self"`** | **All 20 tools** (read + write + subagent + MCP) | ✅ Full capabilities |
+
+### Boundary Enforcement
+
+Since `self` gives all tools to every agent, boundaries are enforced by **protocol**, not by tool restriction:
+- Each agent's role file (`.agents/agents/{role}.md`) defines what the agent may and may not do
+- Orchestrators (`rally-lead`, `mission-lead`) are told "No code. No file modifications."
+- Read-only agents (`scout`, `qa-analyst`) are told "No code changes. Report findings only."
+- The role file is the **authoritative boundary** — agents read it FIRST before any work
+
+> This applies at ALL hierarchy levels. When a rally-lead spawns mission-leads, or a mission-lead spawns scouts/workers, they ALL use `TypeName="self"`.
+
+---
+
 ## §4. Pipeline Steps
 
 > Detail: `overseer.md`.
 
 | Step | Action |
 |---|---|
+| **0. Spawn Protocol** | Use `TypeName="self"` for ALL agent spawns (§0). Named types are tool-deprived. |
 | **1. Elicit** | Clarify scope + acceptance criteria. No ambiguity. |
 | **2. Route** | Assess 4 dimensions → flat/shallow/deep (§2). |
 | **3. Dispatch** | Spawn executor (flat) or rally-lead (hierarchical) using §3 templates. |
