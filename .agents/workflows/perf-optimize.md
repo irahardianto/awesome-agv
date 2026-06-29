@@ -42,6 +42,7 @@ Follow the analysis methodology from SKILL.md:
 2. Identify top 3-5 offenders
 3. Separate benchmark artifacts from production cost
 4. Identify irreducible floors (reference the language module's table)
+5. Run the Opportunity Scan (SKILL.md § Step 2b) within the identified hot paths
 
 ### 4. Prioritize Fixes
 
@@ -57,12 +58,24 @@ For each fix, follow the orchestrator workflow:
 
 1. **Write tests first** (TDD Red → Green)
 2. **Implement the fix**
-3. **Run all existing tests** (`go test -race ./...` or equivalent)
-4. **Benchmark immediately** — compare ns/op, B/op, allocs/op
-5. **Run quality checks** (formatter, linter, security scanner)
-6. **Commit independently** with conventional format: `perf(scope): description`
+3. **Add `PERF:` comments** — annotate each optimization with an inline comment explaining the rationale (what the profiler showed and why the new approach is faster)
+4. **Run all existing tests** (`go test -race ./...` or equivalent)
+5. **Benchmark immediately** — compare ns/op, B/op, allocs/op
+6. **Run quality checks** (formatter, linter, security scanner)
+7. **Commit independently** with conventional format:
+
+```
+perf(scope): one-line description
+
+What: <the optimization implemented>
+Why: <what the profiler showed — the performance problem it solves>
+Impact: <expected improvement, e.g., "Eliminates ~500 allocations per request">
+Measurement: <how to verify, e.g., "Run BenchmarkX, compare allocs/op">
+```
 
 **Rule:** One fix per commit. Never batch optimizations.
+
+**Size guidance:** Each fix should be focused and minimal. If a fix requires > ~100 lines or touches > 3 files, it's likely a refactor — use the `/refactor` workflow instead.
 
 ### 6. Final Verification
 
@@ -77,6 +90,8 @@ After all fixes are applied:
 Update the analysis document with:
 - Before/after benchmark comparison table
 - Which fixes were applied and which were skipped (and why)
+- **Failed optimizations:** For each optimization that was tried but didn't improve performance, document: (1) what was tried, (2) expected gain, (3) actual result, (4) why it didn't work. This prevents future sessions from repeating failed experiments.
+- **Surprising findings:** Any unexpected profiler results that reveal codebase-specific performance characteristics
 - Any remaining optimization opportunities for future sessions
 
 ### 8. Ship
@@ -93,8 +108,8 @@ Commit and present the final results to the user with:
 | Phase | Output | Gate |
 |---|---|---|
 | Profile | Raw data + extracted markdown | Data collected |
-| Analyze | `docs/research_logs/{component}-perf-analysis.md` | Top offenders identified |
+| Analyze + Scan | `docs/research_logs/{component}-perf-analysis.md` + opportunity scan | Top offenders + adjacent wins identified |
 | Prioritize | Implementation plan | User approved |
-| Implement | Tests + code + benchmark per fix | Each fix passes tests |
+| Implement | Tests + code + `PERF:` comments + benchmark per fix | Each fix passes tests |
 | Verify | Full benchmark comparison | All checks pass |
-| Ship | Conventional commits | User notified |
+| Ship | Conventional commits with structured body | User notified |

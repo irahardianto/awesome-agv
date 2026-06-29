@@ -2,7 +2,8 @@
 name: perf-optimization
 description: >
   Profile-driven performance optimization protocol. Use when profiling data (CPU, heap, trace)
-  is available or when the user requests performance analysis. Covers methodology, pattern catalog,
+  is available or when the user requests performance analysis. Covers methodology (Profile →
+  Analyze → Opportunity Scan → Prioritize → Optimize → Benchmark), optimization pattern catalog,
   safety invariants, and when-to-stop heuristics. Language-specific tooling is in languages/*.md.
 ---
 
@@ -20,7 +21,8 @@ description: >
 ```mermaid
 graph LR
     P1[Profile] --> P2[Analyze]
-    P2 --> P3[Prioritize]
+    P2 --> P2b[Opportunity Scan]
+    P2b --> P3[Prioritize]
     P3 --> P4[Optimize]
     P4 --> P5[Benchmark]
     P5 --> P6{Improvement?}
@@ -45,6 +47,45 @@ Read the profile. Focus on these principles (universal across all runtimes):
 
 **Output:** Structured analysis document in `docs/research_logs/{component}-perf-analysis.md`.
 
+### Step 2b: Opportunity Scan
+
+**Scope:** Apply this checklist ONLY within the hot paths identified by the profiler in Step 2. Do NOT scan the entire codebase — that leads to premature optimization. The profiler pointed you at specific modules; now systematically scan those modules for these categories of waste.
+
+**Concurrency & Parallelism:**
+- Sequential I/O calls that could run concurrently (parallel fetch, gather, join)
+- Task/goroutine/thread spawn overhead exceeding the work itself
+- Locks held across I/O boundaries (database calls, network, file system)
+- Unbounded queues or channels causing memory pressure under load
+- CPU-bound work running on an async/event-loop runtime instead of a worker pool
+
+**Memory & Allocation:**
+- Heap allocations inside hot loops (new objects per iteration)
+- Missing pre-sized collections (growing arrays/maps from zero)
+- Unnecessary copies where borrowing, referencing, or copy-on-write suffices
+- Temporary objects that could be reused across iterations (buffer pools)
+- Large structures passed by value instead of by reference
+
+**Data Structures & Algorithms:**
+- Linear scans (O(n)) where hash-based lookups (O(1)) would work
+- Nested iterations creating O(n²) behavior replaceable with single-pass or hash-based approaches
+- Missing early returns or short-circuit evaluation skipping unnecessary work
+- Redundant sorting of already-sorted data or where ordering is not required
+- Inefficient string building (concatenation in loops instead of buffered writes)
+
+**Serialization & I/O:**
+- Full deserialization when only a subset of fields is needed
+- Missing buffered I/O on file or network streams
+- Repeated serialization of the same unchanged data (cache the serialized bytes)
+- Synchronous/blocking I/O on an async runtime
+- Excessive debug/trace logging in hot paths without level gating
+
+**Caching & Lazy Initialization:**
+- Repeated expensive computations with identical inputs (regex compilation, template parsing, config loading)
+- Missing lazy initialization for rarely-used resources
+- Redundant work that could be memoized or pre-computed at startup
+
+**Output:** Append opportunity scan findings to the analysis document. Each finding must reference the profiler evidence that led to the hot path.
+
 ### Step 3: Prioritize
 
 Rank fixes by **impact/risk ratio**:
@@ -63,10 +104,26 @@ Rank fixes by **impact/risk ratio**:
 Implement one fix at a time. For each fix:
 1. Write tests FIRST (TDD — Red → Green → Refactor)
 2. Implement the fix
-3. Run all existing tests to verify no regression
-4. Benchmark immediately
+3. Add `PERF:` inline comments explaining the optimization rationale — what the profiler showed and why the new approach is faster. Without these, a future developer may "clean up" the optimization thinking it's unnecessary complexity.
+4. Run all existing tests to verify no regression
+5. Benchmark immediately
+6. Run quality checks (formatter, linter, security scanner)
+7. Commit independently using the structured format below
 
 **Never batch multiple optimizations into one commit.** Each fix must be independently verifiable and revertable.
+
+**Commit format:**
+
+```
+perf(scope): one-line description
+
+What: <the optimization implemented>
+Why: <what the profiler showed — the performance problem it solves>
+Impact: <expected improvement, e.g., "Eliminates ~500 allocations per request">
+Measurement: <how to verify, e.g., "Run BenchmarkX, compare allocs/op">
+```
+
+**Size guidance:** Each fix should be a focused, minimal change. If a fix requires > ~100 lines of changes or touches > 3 files, re-evaluate whether it's actually a refactor in disguise — and if so, use the `/refactor` workflow instead. Performance commits are surgical; architectural restructuring is a separate concern.
 
 ### Step 5: Benchmark
 
@@ -82,6 +139,14 @@ Compare before/after with the **exact same benchmark configuration** (same `-ben
 - Remaining allocations are from the language runtime itself (GC, goroutine stacks, HTTP server internals)
 - The fix requires a custom implementation of a well-audited library — the security/maintenance risk outweighs the perf gain
 - The measured improvement is < 5% and within benchmark noise
+- The remaining optimization requires a large architectural refactor (> 3 files, > 100 lines) — defer to a dedicated `/refactor` session with its own testing and verification
+
+> **Documenting failures:** Record optimizations that were **tried but didn't work** in the
+> research log (`docs/research_logs/{component}-perf-analysis.md`). For each failed or skipped
+> optimization, document: (1) what was tried, (2) expected improvement, (3) actual result,
+> and (4) why it didn't work. This prevents future sessions from repeating the same failed
+> experiments. Also note any surprising profiler findings that reveal codebase-specific
+> performance characteristics.
 
 ---
 
