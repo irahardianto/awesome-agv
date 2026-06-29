@@ -59,15 +59,15 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 - When dispatching a worker, set a timer using the `schedule` tool.
 - Timer duration: proportional to expected task complexity.
 
-| Task Complexity | Timer Duration |
-|-----------------|----------------|
-| Atomic          | 5 min          |
-| Standard        | 10 min         |
-| Complex         | 15 min         |
+| Task Complexity | Initial Timer | Extension (if progressing) |
+|-----------------|---------------|---------------------------|
+| Atomic          | 5 min         | +3 min                    |
+| Standard        | 15 min        | +5 min                    |
+| Complex         | 30 min        | +10 min                   |
 
 - If the timer fires before the worker responds → check worker status.
-- If the worker is stuck → apply Level 1 (RETRY).
-- If the worker is progressing → extend the timer.
+- If the worker is stuck (no new tool calls, no file changes) → apply Level 1 (RETRY).
+- If the worker is progressing (active tool calls, files being written) → extend by the Extension amount.
 
 ## §3. State Preservation During Recovery
 
