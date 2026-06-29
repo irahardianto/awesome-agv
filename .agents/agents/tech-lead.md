@@ -70,6 +70,10 @@ When dispatched as `@tech-lead[integration]` by @rally-lead:
 - **Runs After**: All @mission-lead instances have produced PASS verdicts
 - **Write Scope**: Aggregation files only — routers, registries, configs, shared entry points
 - **Read Scope**: Mission handoff summaries (received via messages from rally-lead) + mission branches
-- **Actions**: Merge mission branches into main, resolve interface seams, wire new modules into existing registries
-- **Gate**: A final @arbiter runs cross-mission verification after integration completes
+- **Actions**:
+  - **Deep route (N missions)**: Merge mission branches into main in dependency order, resolve interface seams, wire new modules into existing registries
+  - **Shallow route (1 mission)**: Merge single mission branch into main. No cross-mission wiring needed — just merge and verify build passes.
+- **On completion**: Write `.agentwork/integration-handoff.md` with merge results (conflicts resolved, build/tests passing, files changed) and message rally-lead: `.agentwork/integration-handoff.md ready`. Note: uses `integration-handoff.md` (not `handoff.md`) to avoid collision with rally-lead's own `.agentwork/handoff.md` in the shared workspace.
+- **On semantic conflict**: Escalate to rally-lead for re-plan (do NOT attempt to resolve design-level conflicts independently)
+- **Gate (Deep only)**: A final @arbiter runs cross-mission verification after integration completes. Skipped for Shallow route (single mission already passed its own arbiter).
 
