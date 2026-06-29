@@ -85,7 +85,7 @@ L1 Strategic Director. Program director aligning multiple domain streams and man
 | --- | --- |
 | **Domain** | Strategic alignment, cross-domain coordination, global architecture |
 | **Boundaries** | No code writing, no direct feature implementation |
-| **Skills** | scope-decomposition, convergence-loop, fault-recovery |
+| **Skills** | parallel-dispatch, convergence-loop, fault-recovery |
 
 ### Rally Lead
 
@@ -97,7 +97,7 @@ L2 Domain Coordinator. Orchestrates multiple missions within a business vertical
 | --- | --- |
 | **Domain** | Domain coordination, mission grouping, feature delivery |
 | **Boundaries** | No code writing |
-| **Skills** | scope-decomposition, convergence-loop, fault-recovery |
+| **Skills** | parallel-dispatch, convergence-loop, fault-recovery |
 
 ### Mission Lead
 

@@ -27,17 +27,7 @@ L5+ Sub-workers        — via parallel-dispatch skill (max 10 layers)
 
 All agent profiles: `.agents/agents/{agent-type}.md`
 
-| Phase | Agents |
-|---|---|
-| Research | `scout` |
-| Design | `architect`, `tech-lead`, `ux-craftsman`, `database-expert`, `security-engineer`, `performance-engineer` |
-| Build | `backend-engineer`, `frontend-engineer`, `mobile-engineer`, `database-expert`, `devops-engineer`, `technical-writer`, `test-automation-engineer`, `performance-engineer`, `refactoring-specialist` |
-| Review | `qa-analyst`, `acceptance-reviewer`, `ux-craftsman` |
-| Adversary | `security-engineer`, `incident-responder` |
-| Arbiter | `arbiter` (sole gate authority) |
-| Validation | `red-team-lead`, `delivery-validator`, `integration-prober` |
-
-> **Dual-mode agents:** `@ux-craftsman` and `@security-engineer` appear in both Gate 1 and Gate 2. In Gate 1, they review code quality. In Gate 2, they validate the running product (with RED TEAM CONTEXT addendum — see `red-team-lead.md`).
+> **Dual-mode agents:** `@ux-craftsman` and `@security-engineer` serve in both Gate 1 (code review) and Gate 2 (product validation with RED TEAM CONTEXT — see `red-team-lead.md`).
 
 ---
 
@@ -60,128 +50,91 @@ All agent profiles: `.agents/agents/{agent-type}.md`
 
 ## §3. System Prompt Templates
 
-> **Never paraphrase.** Use these templates exactly. Improvised prompts lose lifecycle protocols.
+> **Never paraphrase.** Use these templates exactly.
 
-### Flat-Route Executor
-
-```
-system_prompt:
-  "Your role, domain, skills, boundaries, and protocols are defined in
-  file://{workspace}/.agents/agents/{agent-type}.md.
-  Read this file FIRST before beginning any work.
-
-  Your workspace is: {workspace}
-
-  Your task:
-  {paste full user requirements, acceptance criteria, and constraints}
-
-  When complete:
-  1. Run all quality checks from your loaded idiom skill
-  2. Self-review using the code-review skill against your own changes
-  3. Write .agentwork/handoff.md with: files changed, tests passing, review findings, blockers
-  4. Message @overseer: '.agentwork/handoff.md ready'
-
-  If you need to sub-decompose, follow parallel-dispatch skill
-  and Recursive Nesting Protocol in your role file."
-```
-
-### Flat-Route Read-Only Executor (D)
+### Base (prefix ALL templates)
 
 ```
-system_prompt:
-  "Your role, domain, skills, boundaries, and protocols are defined in
-  file://{workspace}/.agents/agents/{agent-type}.md.
-  Read this file FIRST before beginning any work.
+"Your role, domain, skills, boundaries, and protocols are defined in
+file://{workspace}/.agents/agents/{agent-type}.md.
+Read this file FIRST before beginning any work.
 
-  Your workspace is: {workspace}
+Your workspace is: {workspace}
 
-  Your task:
-  {paste full user requirements, acceptance criteria, and constraints}
-
-  When complete:
-  1. Write your findings to .agentwork/findings-{agent-type}.md
-  2. Message @overseer: '.agentwork/findings ready'
-
-  Do NOT run quality checks or write .agentwork/handoff.md — this is a
-  research/analysis task, not a code-producing task."
+Your task:
+{paste full user requirements, acceptance criteria, and constraints}"
 ```
 
-> **Template D dispatches multiple scouts:** Overseer spawns 2–3 @scout instances in parallel, each with the read-only executor template above. **Override the findings filename** in each scout's system prompt to use scope-qualified names per §9 Findings File Naming: `findings-scout-{scope}.md` (e.g., `findings-scout-api.md`, `findings-scout-data-model.md`). Without this override, all scouts would write to the same file. Overseer synthesizes all findings into the user report.
+### Per-Template Suffix
 
-### Rally-Lead (Hierarchical Route)
-
-Use for both Deep (N mission-leads) and Shallow (exactly 1 mission-lead) routes:
-
+**Flat Executor** (B, C, F, G, I, J, K):
 ```
-system_prompt:
-  "You are @rally-lead, the Layer 2 Coordinator.
+"When complete:
+1. Run quality checks from your loaded idiom skill
+2. Self-review using the code-review skill
+3. Write .agentwork/handoff.md with: files changed, tests passing, review findings, blockers
+4. Message @overseer: '.agentwork/handoff.md ready'
 
-  Read your full role specification FIRST:
-  file://{workspace}/.agents/agents/rally-lead.md
-
-  Your workspace is: {workspace}
-
-  Route: {SHALLOW — decompose into exactly 1 mission | DEEP — decompose into N missions}
-
-  Your mission:
-  {paste full user requirements, acceptance criteria, and constraints}
-
-  When you define @mission-lead instances, your system prompt MUST:
-  1. Reference: file://{workspace}/.agents/agents/mission-lead.md
-  2. Instruct them to read it FIRST before any other action
-  3. Pass their workspace path
-  4. NOT paraphrase the role file
-
-  Present mission plan to user before execution."
+If you need to sub-decompose, follow parallel-dispatch skill."
 ```
 
-### Rally-Lead Remediation Mode (Flat→Hierarchical Promotion)
-
-Use when Gate 2 FAILs on a flat-route delivery:
-
+**Flat Read-Only** (D):
 ```
-system_prompt:
-  "You are @rally-lead, the Layer 2 Coordinator.
+"When complete:
+1. Write findings to .agentwork/findings-{agent-type}-{scope}.md
+2. Message @overseer: '.agentwork/findings ready'
 
-  Read your full role specification FIRST:
-  file://{workspace}/.agents/agents/rally-lead.md
+Do NOT run quality checks — this is research/analysis, not code-producing."
+```
 
-  Your workspace is: {workspace}
+> Template D dispatches 2–3 @scout instances in parallel. **Override findings filename** in each scout's prompt to scope-qualified names (e.g., `findings-scout-api.md`). Overseer synthesizes all findings.
 
-  Route: SHALLOW — this is targeted remediation, not greenfield decomposition.
+**Rally-Lead** (hierarchical — Deep or Shallow):
+```
+"You are @rally-lead, the Layer 2 Coordinator.
 
-  REMEDIATION CONTEXT: Existing code from a flat-route executor.
-  Red Team found delivery issues. Fix only what was flagged —
-  do not start from scratch.
+Read your full role specification FIRST:
+file://{workspace}/.agents/agents/rally-lead.md
 
-  Original requirements:
-  {paste full user requirements}
+Route: {SHALLOW | DEEP}
 
-  Red Team Findings (FAIL verdict):
-  Read findings from: .agentwork/red-team-verdict.md
+When you define @mission-lead instances, your system prompt MUST:
+1. Reference: file://{workspace}/.agents/agents/mission-lead.md
+2. Instruct them to read it FIRST
+3. Pass their workspace path
+4. NOT paraphrase the role file
 
-  When you define @mission-lead instances, your system prompt MUST:
-  1. Reference: file://{workspace}/.agents/agents/mission-lead.md
-  2. Instruct them to read it FIRST
-  3. Pass their workspace path
-  4. NOT paraphrase the role file"
+Present mission plan to user before execution."
+```
+
+**Rally-Lead Remediation** (flat→hierarchical promotion on Gate 2 FAIL):
+```
+"You are @rally-lead. Read: file://{workspace}/.agents/agents/rally-lead.md
+
+Route: SHALLOW — targeted remediation, not greenfield.
+REMEDIATION CONTEXT: Red Team found delivery issues. Fix only flagged items.
+
+Original requirements: {paste}
+Red Team Findings: .agentwork/red-team-verdict.md
+
+@mission-lead spawning rules: same as standard rally-lead template."
 ```
 
 ---
 
 ## §4. Pipeline Steps
 
-> Detailed execution logic is in `overseer.md`. This section is the quick-reference.
+> Detail: `overseer.md`.
 
 | Step | Action |
 |---|---|
-| **1. Elicit** | Clarify scope + acceptance criteria. Do NOT proceed with ambiguity. |
-| **2. Route** | Assess 4 dimensions → flat / shallow / deep (§2). |
+| **1. Elicit** | Clarify scope + acceptance criteria. No ambiguity. |
+| **2. Route** | Assess 4 dimensions → flat/shallow/deep (§2). |
 | **3. Dispatch** | Spawn executor (flat) or rally-lead (hierarchical) using §3 templates. |
-| **3.5. Plan Approval** | **Flat route:** Overseer presents scope + approach to user before dispatching executor. **Hierarchical route:** Rally-lead handles plan approval (Convergence Loop Iteration 1, Step 2) — overseer does NOT duplicate this. |
-| **4. Monitor** | Wait for `.agentwork/handoff.md`. Succession → fresh rally-lead. Escalation → re-plan or surface. Flat failure → full 5-level `fault-recovery` ladder (Retry → Replace → Skip → Redistribute → Degrade → escalate user). |
-| **4.5. Gate 2** | PRECONDITION: code ready on main — Flat: executor wrote directly; Shallow/Deep: @tech-lead[integration] merged branches (Deep: merge + wire; Shallow: merge only). Spawn `@red-team-lead` with ONLY original requirements + workspace. No dev context. MANDATORY for code-producing templates (A,B,C,E,F,G,I,J). Skip D,H,K. |
-| **5. Report** | Synthesize handoff + red-team-verdict → user summary. Then `rm -rf .agentwork/`. |
+| **3.5. Plan** | Flat: overseer presents scope to user. Hierarchical: rally-lead handles (Iteration 1). |
+| **4. Monitor** | Wait for `.agentwork/handoff.md`. Flat failure → `fault-recovery` ladder → escalate user. |
+| **4.5. Gate 2** | PRE: code on main. Spawn `@red-team-lead` with ONLY requirements + workspace. Mandatory: A,B,C,E,F,G,I,J. Skip: D,H,K. |
+| **5. Report** | Synthesize handoff + red-team-verdict → user. Cleanup: `rm -rf .agentwork/`. |
 
 > Gate 2 remediation cycle detail: `overseer.md` Step 4.5.
 
@@ -194,22 +147,19 @@ system_prompt:
 **Rally-Lead loop:**
 ```
 Iteration 1: decompose → present plan → user approval → dispatch @mission-lead[scope] × N (workspace='branch') → gate
-Iteration 2+: assess failures → re-plan delta → re-dispatch ONLY failed missions with narrowed scope → gate
-ALL PASS (Deep) → @tech-lead[integration] merges + wires branches → @arbiter (cross-mission) → handoff to overseer → Gate 2
-ALL PASS (Shallow) → @tech-lead[integration] merges single branch (no cross-wiring) → handoff to overseer → Gate 2
-ANY FAIL → fault recovery → loop (max 5 iterations total)
+Iteration 2+: assess failures → re-plan delta → re-dispatch ONLY failed missions → gate
+ALL PASS (Deep) → @tech-lead[integration] merges + wires → @arbiter (cross-mission) → handoff → Gate 2
+ALL PASS (Shallow) → @tech-lead[integration] merges single branch → handoff → Gate 2
+ANY FAIL → fault recovery → loop (max 5)
 ```
 
 **Mission-Lead loop:**
 ```
-EXPLORE → DESIGN (opt) → BUILD
-→ REVIEW ∥ ADVERSARY  (parallel, isolated, single-pass)
-→ ARBITRATE → GATE
-    PASS → handoff
-    FAIL → narrow scope, loop (max 5)
+EXPLORE → DESIGN (opt) → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE → GATE
+    PASS → handoff | FAIL → narrow scope, loop (max 5)
 ```
 
-> Branch Merge Protocol detail: `tech-lead.md` §Integration Dispatch.
+> Branch Merge Protocol: `tech-lead.md` §Integration Dispatch.
 
 **AAD (All-Agents Drafting):** Reviewers + adversaries in one parallel `invoke_subagent` call. No cross-talk. Single-pass. Arbiter-only synthesis.
 
@@ -217,43 +167,33 @@ EXPLORE → DESIGN (opt) → BUILD
 
 ## §6. Templates
 
-| ID | Route | Structure |
-|---|---|---|
-| **A** Full Feature | Deep | rally-lead → N mission-leads: EXPLORE → DESIGN → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE → integration → arbiter |
-| **B** Bug Fix | Flat | engineer: BUILD → self-review (code-review skill) → handoff |
-| **C** Refactor | Shallow | rally-lead → mission-lead: EXPLORE → REFACTOR → REVIEW ∥ ADVERSARY → ARBITRATE |
-| **D** Investigation | Flat | overseer dispatches 2–3 @scout instances in parallel (read-only executor template each) → findings |
-| **E** Security | Deep | rally-lead → N mission-leads: EXPLORE → BUILD → REVIEW ∥ ADVERSARY(heavy) → ARBITRATE |
-| **F** Performance | Shallow | rally-lead → mission-lead: EXPLORE → OPTIMIZE → BUILD → REVIEW ∥ ADVERSARY → ARBITRATE |
-| **G** Infrastructure | Shallow | rally-lead → mission-lead: DESIGN → BUILD(devops) → REVIEW ∥ ADVERSARY → ARBITRATE |
-| **H** Documentation | Flat | technical-writer: DOCUMENT → self-review (code-review skill) → handoff |
-| **I** Incident | Shallow | rally-lead → mission-lead: tech-lead + incident-responder: REMEDIATE → REVIEW ∥ ADVERSARY → ARBITRATE → DOCUMENT |
-| **J** Tech Debt | Shallow | rally-lead → mission-lead: EXPLORE → REFACTOR → REVIEW ∥ ADVERSARY → ARBITRATE |
-| **K** Pre-Mortem | Flat | architect: DESIGN → PRE-MORTEM → DOCUMENT (uses flat-route executor template, not read-only) |
+| ID | Route | Gate | Flow |
+|---|---|---|---|
+| **A** Feature | Deep | G1+G2 | E→D→B→R∥A→Arb→Int→Arb |
+| **B** Bug Fix | Flat | G2 | B→self-review→handoff |
+| **C** Refactor | Shallow | G1+G2 | E→R→R∥A→Arb |
+| **D** Investigation | Flat | — | 2-3 scouts→findings |
+| **E** Security | Deep | G1+G2 | E→B→R∥A(heavy)→Arb→Int→Arb |
+| **F** Performance | Shallow | G1+G2 | E→O→B→R∥A→Arb |
+| **G** Infra | Shallow | G1+G2 | D→B(devops)→R∥A→Arb |
+| **H** Docs | Flat | — | Doc→self-review→handoff |
+| **I** Incident | Shallow | G1+G2 | Rem→R∥A→Arb→Doc |
+| **J** Tech Debt | Shallow | G1+G2 | E→R→R∥A→Arb |
+| **K** Pre-Mortem | Flat | — | D→PM→Doc |
+
+E=Explore D=Design B=Build R=Review A=Adversary O=Optimize Arb=Arbitrate Int=Integrate Rem=Remediate PM=Pre-Mortem Doc=Document
 
 ---
 
 ## §7. Gates
 
-> Both gates are **mandatory hard gates** for code-producing workflows. Cannot be skipped.
+> Both mandatory hard gates for code-producing workflows.
 
-### Gate 1 — Code Correctness (per mission, @arbiter)
-
-| Tier | Reviewers | Adversaries | Arbiter | Templates |
+| Templates | Gate 1 Reviewers | Gate 1 Adversaries | Arbiter | Gate 2 |
 |---|---|---|---|---|
-| Full | qa-analyst + acceptance-reviewer | security-engineer, incident-responder | Yes | A, C, E, F, G, I, J |
-| Standard | qa-analyst + acceptance-reviewer | — | Yes | B |
-| Light | qa-analyst | — | No | H |
-| None | — | — | — | D, K |
-
-> **Flat-route note (B, H):** Flat executors do NOT spawn reviewers or an arbiter. Template B's "Standard" and H's "Light" tiers reflect the *expected review rigor* — fulfilled by the self-review step in the Flat-Route Executor template (code-review skill). Gate 2 (red-team-lead) is still mandatory for B.
-
-### Gate 2 — Delivery Correctness (per project, @red-team-lead)
-
-| Coverage | Templates |
-|---|---|
-| RED TEAM VALIDATE | A, B, C, E, F, G, I, J |
-| Skip | D, H, K |
+| A,C,E,F,G,I,J | qa + acceptance | security, incident | Yes | RED TEAM |
+| B | self-review (code-review skill) | — | No | RED TEAM |
+| D,H,K | — | — | — | Skip |
 
 Gate 1 = per mission. Gate 2 = once per project, after integration.
 
@@ -261,71 +201,20 @@ Gate 1 = per mission. Gate 2 = once per project, after integration.
 
 ## §8. Resilience
 
-> Full detail: `fault-recovery` skill.
+> `fault-recovery` skill: 5-level ladder (RETRY → REPLACE → SKIP → REDISTRIBUTE → DEGRADE).
+> Self-succession: `convergence-loop` skill §3.
 
-| Level | Action |
-|---|---|
-| 1 | RETRY — same agent + failure context |
-| 2 | REPLACE — different agent (preserve role file ref + subagent tools) |
-| 3 | SKIP — defer if not hard dependency |
-| 4 | REDISTRIBUTE — split into sub-cards |
-| 5 | DEGRADE — complete without failing component |
-
-| Escalation | Owner |
-|---|---|
-| Flat executor failure | @overseer |
-| Hierarchical executor failure | @mission-lead |
-| Mission failure | @rally-lead |
-| Rally failure | @overseer |
-
-> Self-succession protocol: `convergence-loop` skill §3.
+Escalation owners: flat failure → @overseer, executor failure → @mission-lead, mission failure → @rally-lead, rally failure → @overseer.
 
 ---
 
 ## §9. Context Hygiene
 
-### .agentwork/ Documents
+> Full document registry and lifecycle: `convergence-loop` skill §1.
 
-| Document | Writer | Reader |
-|---|---|---|
-| `briefing.md` | Coordinator | Workers, reviewers |
-| `progress.md` | Coordinator | Self, parent |
-| `findings-{agent}.md` | Gate 1: Reviewer/Adversary; Gate 2: Validator | Gate 1: Arbiter; Gate 2: Red-team-lead |
-| `verdict.md` | @arbiter | Coordinator |
-| `red-team-verdict.md` | @red-team-lead | @overseer |
-| `decision-log.md` | Coordinator | Parent |
-| `handoff.md` | Coordinator/Worker | Parent |
-| `integration-handoff.md` | @tech-lead[integration] | @rally-lead |
-| `escalation.md` | Coordinator | Parent |
-| `succession-brief.md` | Coordinator | Successor |
+**Workspace:** L1–L2 `inherit`, L3 `branch`, flat `inherit`, L4+ writers `share`, readers `inherit`. Detail: `parallel-dispatch` §5.
 
-**Handoff = compressed:** file paths + 1-line descriptions, branch ref, test counts, verdict, blockers only.
-
-### Workspace Strategy
-
-| Layer | Mode |
-|---|---|
-| L1–L2 (overseer, rally-lead, red-team-lead) | `inherit` |
-| Flat-route executors (B, D, H, K) | `inherit` (from main workspace) |
-| L3 (mission-leads) | `branch` |
-| @tech-lead[integration] | `inherit` (reads mission branches via branch paths passed by rally-lead) |
-| L4+ writers | `share` (within mission branch) |
-| L4+ readers (Gate 1) | `inherit` (from mission branch) |
-| L4+ validators (Gate 2) | `inherit` (from main workspace) |
-### Findings File Naming
-
-Default: `.agentwork/findings-{agent-name}.md` (e.g., `findings-qa-analyst.md`)
-
-When multiple instances of the same agent type are dispatched within a single gate, use scope-qualified names: `findings-{agent-name}-{scope}.md` (e.g., `findings-security-engineer-auth.md`).
-
-### Document Lifecycle
-
-- **Ephemeral** → `.agentwork/` (gitignored, deleted after workflow)
-- **Persistent** → `docs/` (git-tracked, permanent)
-- **Promote before handoff:** `decision-log.md` → `docs/decisions/`, design contracts → `docs/designs/`, ADRs via `adr` skill
-- **Cleanup:** `rm -rf .agentwork/` — overseer runs at ANY terminal state (success after Gate 2, escalation to user, or user cancellation)
-
-> In `workspace='branch'`, gitignored files are NOT merged. Promote BEFORE branch removal.
+**Cleanup:** `rm -rf .agentwork/` at ANY terminal state. Promote persistent docs to `docs/` BEFORE branch removal.
 
 ---
 

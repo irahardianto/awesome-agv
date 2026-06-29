@@ -333,9 +333,8 @@ Skills are deep expertise modules loaded on demand — agents only pay the token
 *   **[Convergence Loop](.agents/skills/convergence-loop/SKILL.md)**: Iterative problem solving protocol for coordinators.
 *   **[Fault Recovery](.agents/skills/fault-recovery/SKILL.md)**: Structured fault tolerance and escalation ladder.
 *   **[Integrity Enforcement](.agents/skills/integrity-enforcement/SKILL.md)**: Zero-tolerance compliance checking for the arbiter agent.
-*   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
-*   **[Scope Decomposition](.agents/skills/scope-decomposition/SKILL.md)**: Project and mission decomposition techniques.
-*   **[Audit Checklist](.agents/skills/audit-checklist/SKILL.md)**: Consolidated audit checklists for code review and verification — loaded by `/audit` workflow and multi-agent review pipelines.
+*   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, scope sizing, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. Includes scope decomposition techniques previously in a separate skill.
+*   **[Agent Protocols](.agents/skills/agent-protocols/SKILL.md)**: Shared behavioral protocols for all agents: recursive nesting, pre-implementation restatement, agent definition cascade, and parallel dispatch format.
 *   **[Acceptance Review](.agents/skills/acceptance-review/SKILL.md)**: Spec adherence and deliverable completeness verification — ensures what was delivered matches what was requested.
 
 #### 🌐 Language & Framework Idioms (26)
