@@ -25,6 +25,29 @@ When a dispatched agent fails, follow levels IN ORDER. Do not skip levels. Exhau
 - Max: 1 retry per agent.
 - If the same agent fails twice → escalate to Level 2.
 
+### §1.1. Rate-Limit Backoff Protocol (429 / RESOURCE_EXHAUSTED)
+
+When a failure reason contains `RESOURCE_EXHAUSTED`, `429`, or `quota`, the failure is **transient** — the agent's logic is not at fault. Immediate retry will worsen the situation (thundering herd). Apply this protocol instead of the standard escalation ladder:
+
+1. **DO NOT** immediately retry, replace, or spawn rescue agents.
+2. **Use `schedule`** to set a backoff timer with exponential delay:
+
+| Attempt | Backoff Delay | Action |
+|---------|---------------|--------|
+| 1st 429 | 60 seconds | `schedule(DurationSeconds=60)` → then retry |
+| 2nd 429 | 120 seconds | `schedule(DurationSeconds=120)` → then retry |
+| 3rd 429 | 300 seconds (5 min) | `schedule(DurationSeconds=300)` → then retry |
+| 4th 429 | — | Write `.agentwork/escalation.md` with reason "persistent rate limiting" |
+
+3. **Record** each backoff attempt in `.agentwork/progress.md`:
+   ```
+   BACKOFF: [scope card] — 429 RESOURCE_EXHAUSTED at [timestamp]. Waiting [N]s before retry attempt [M/3].
+   ```
+4. **Notify parent** only once (on first 429) — do NOT send repeated failure messages that cause the parent to spawn rescue agents.
+5. This protocol **replaces** the standard Level 1→2→3 ladder for transient errors. Do NOT escalate to REPLACE or SKIP for a 429 — the replacement agent will hit the same quota limit.
+
+> **Key rule:** A 429 error means "wait and retry" — it does NOT mean "the agent failed." Treat it as a pause, not a failure.
+
 ### Level 2 — REPLACE
 
 - Dispatch a different agent type for the same task.
@@ -116,3 +139,5 @@ When all 5 levels are exhausted, write `.agentwork/escalation.md`:
 | Retrying without additional context | Exact same input produces exact same failure                    |
 | Redistributing into >3 sub-cards    | Coordination overhead exceeds the benefit of narrower scope     |
 | Degrading silently                  | Must always record in `.agentwork/handoff.md` and report to arbiter          |
+| Immediate retry on 429              | Consumes more quota, cascades into thundering herd. Use §1.1 backoff instead |
+| Spawning rescue agents on 429       | Parent creates MORE API calls, worsening the rate limit. Wait instead        |
