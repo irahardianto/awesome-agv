@@ -134,7 +134,7 @@ Coordinator → dispatch reviewers (parallel)
 
 ### Promotion Before Handoff
 
-Before writing `.agentwork/handoff.md`, promote persistent documents per `workflow-team.md` §7.5:
+Before writing `.agentwork/handoff.md`, promote persistent documents:
 
 1. If `.agentwork/decision-log.md` has entries → copy to `docs/decisions/decision-log-{scope}-{YYYY-MM-DD}.md`
 2. If design contracts were produced → copy to `docs/designs/`
@@ -188,4 +188,6 @@ After sending the handoff message to the parent coordinator:
 ```bash
 rm -rf .agentwork/
 ```
+
+> **Exception — @rally-lead and @mission-lead:** Do NOT run `rm -rf .agentwork/` immediately after sending handoff. For @rally-lead: the overseer reads `.agentwork/handoff.md` during Gate 2 (Red Team Validation, Step 4.5) before delivering the user report — cleanup is the overseer's responsibility at any terminal state (success, escalation, or cancellation). For @mission-lead: the branch workspace (including `.agentwork/`) is read by rally-lead and @tech-lead[integration] before merge — branch cleanup happens when the branch is deleted after merge.
 
