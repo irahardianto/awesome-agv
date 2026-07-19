@@ -30,6 +30,7 @@ While this configuration is originally designed for **Antigravity**, it is built
 You can drop this configuration into the context or custom rule settings of:
 
 *   **Roo Code**
+*   **[Zoo Code](https://zoocode.dev/)**, the Roo Code community successor
 *   **Claude Code**
 *   Any other agentic tool that supports custom system prompts or context loading.
 
