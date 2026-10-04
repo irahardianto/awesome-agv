@@ -1,6 +1,6 @@
 # Performance Optimization Dimensions
 
-This file defines the 6 MECE performance dimensions and the subagent system prompt template used by the `/perf-optimize` workflow.
+This file defines the 6 MECE performance dimensions and the subagent system prompt template used by the `/perf-optimize` skill.
 
 ## Subagent System Prompt Template
 
@@ -45,7 +45,7 @@ Severity Taxonomy:
 
 When complete:
 1. Write findings to .agentwork/findings-perf-{dimension-key}.md
-2. Message @coordinator (the main agent running this /perf-optimize workflow): 'findings ready'
+2. Message @coordinator (the main agent running this /perf-optimize skill): 'findings ready'
 
 Do NOT implement fixes. Do NOT modify production or test code.
 Produce findings with profiler evidence, estimated impact, and

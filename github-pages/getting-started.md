@@ -113,7 +113,7 @@ For any tool that supports custom system prompts or context loading:
 
 1. Load all files from `.agents/rules/` into the system prompt
 2. Optionally load `.agents/skills/` for specialized capabilities
-3. Optionally load `.agents/workflows/` for structured development processes
+3. Optionally invoke command skills in `.agents/skills/` for structured development processes
 
 ## Verifying Installation
 
@@ -130,15 +130,15 @@ After installation, test that your agent is picking up the rules:
 
 Once installed, the setup activates automatically:
 
-| Component      | Activation     | Effect                                                                                      |
-| -------------- | -------------- | ------------------------------------------------------------------------------------------- |
-| **Mandates**   | Always loaded  | Agent always validates code, adds logging, follows security rules                           |
-| **Principles** | Contextual     | Agent applies database rules when writing queries, CI/CD rules when editing pipelines, etc. |
-| **Skills**     | On demand      | Agent uses debugging protocol when stuck, guardrails before/after writing code              |
-| **Workflows**  | Slash commands | Use `/workflow-solo` for features, `/bugfix` for bugs, `/audit` for reviews               |
+| Component          | Activation     | Effect                                                                                      |
+| ------------------ | -------------- | ------------------------------------------------------------------------------------------- |
+| **Mandates**       | Always loaded  | Agent always validates code, adds logging, follows security rules                           |
+| **Principles**     | Contextual     | Agent applies database rules when writing queries, CI/CD rules when editing pipelines, etc. |
+| **Skills**         | On demand      | Agent uses debugging protocol when stuck, guardrails before/after writing code              |
+| **Command Skills** | Slash commands | Use `/workflow-solo` for features, `/bugfix` for bugs, `/audit` for reviews                 |
 
 {: .note }
-> **Everything is modular.** Rules and skills work independently — you don't need workflows to benefit from them. Use only the rules you want, build your own workflows, or skip workflows entirely. The setup is a toolkit, not a framework.
+> **Everything is modular.** Rules and skills work independently — you don't need command skills to benefit from them. Use only the rules you want, build your own command skills, or skip them entirely. The setup is a toolkit, not a framework.
 
 ## Quick Tour
 
@@ -180,6 +180,6 @@ This produces a structured findings report graded by severity (Critical → Majo
 ## Next Steps
 
 - [**Rules Reference**](/awesome-agv/rules) — Explore all 25 rules
-- [**Skills Reference**](/awesome-agv/skills) — Learn about 58 specialized skills
-- [**Workflows Reference**](/awesome-agv/workflows) — Understand the 11 development workflows
+- [**Skills Reference**](/awesome-agv/skills) — Learn about 68 skills (including 11 command skills)
+- [**Command Skills Reference**](/awesome-agv/workflows) — Understand the 11 command skills (formerly workflows)
 - [**Adapting**](/awesome-agv/adapting) — Customize for your project type

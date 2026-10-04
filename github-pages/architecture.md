@@ -28,7 +28,7 @@ Awesome AGV solves this with a **three-tier loading system** inspired by how ope
 The three tiers are:
 1. **Mandates** — always-on, loaded every session
 2. **Principles** — contextual rules, agent-activated
-3. **Skills** — procedural capabilities, loaded by agent or workflow when needed
+3. **Skills** — procedural capabilities, loaded on demand or invoked as command skills
 
 ---
 
@@ -138,13 +138,13 @@ When rules conflict, the priority system resolves them:
 
 ```
 ┌───────────────────────────────────────────┐
-│  Workflows                                  │
+│  Command Skills (formerly Workflows)       │
 │  (Orchestrate the development lifecycle)    │
 │                                             │
 │  /workflow-solo → phases → ship            │
 │  /workflow-team → agents → primitives       │
 ├───────────────────────────────────────────┤
-│  Tier 3: Skills (58)                        │
+│  Tier 3: Skills (68 total, 11 command)      │
 │  (Procedural capabilities, on demand)       │
 │                                             │
 │  Language Idioms (27), parallel-dispatch,   │
@@ -168,7 +168,7 @@ When rules conflict, the priority system resolves them:
 - **Mandates (Tier 1)** form the foundation — always active
 - **Principles (Tier 2)** sit above, activated by context
 - **Skills (Tier 3)** are procedural capabilities: language idioms, CI/CD patterns, parallel dispatch, debugging protocols, and more
-- **Workflows** orchestrate everything into structured development cycles
+- **Command Skills (formerly Workflows)** orchestrate everything into structured development cycles
 
 ---
 
@@ -188,9 +188,18 @@ When rules conflict, the priority system resolves them:
 3. Add detailed instructions, templates, and examples
 4. Optionally add `scripts/`, `examples/`, or `resources/` directories
 
-### Adding a New Workflow
+### Adding a New Command Skill
 
-1. Create a markdown file in `.agents/workflows/`
-2. Add YAML frontmatter with a `description`
-3. Define phases with clear completion criteria
-4. Reference applicable rules and skills
+1. Create a directory in `.agents/skills/{skill-name}/`
+2. Create `SKILL.md` with YAML frontmatter:
+   ```yaml
+   ---
+   name: {skill-name}
+   description: >-
+     Third-person summary. User-invoked entry point via /{skill-name}; not for autonomous or subagent use.
+   disable-model-invocation: true
+   ---
+   ```
+3. Add an entry-point guard directly following the H1 title:
+   `> **Entry-point guard:** This is a user-invoked command skill (/{skill-name}). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.`
+4. Define phases with clear completion criteria and reference applicable rules and skills

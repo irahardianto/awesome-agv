@@ -24,12 +24,11 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 
 ## At a Glance
 
-| Component     | Count | Purpose                                                                           |
-| ------------- | ----- | --------------------------------------------------------------------------------- |
-| **Rules**     | 25    | Security, reliability, architecture, and maintainability |
-| **Skills**    | 58    | Specialized capabilities for debugging, design, performance optimization, language idioms, and more |
-| **Workflows** | 11    | End-to-end development processes from research to ship                             |
-| **Agents**    | 21    | Specialized personas for multi-agent orchestration arranged in a 4-tier hierarchy |
+| Component  | Count | Purpose                                                                                             |
+| ---------- | ----- | --------------------------------------------------------------------------------------------------- |
+| **Rules**  | 25    | Security, reliability, architecture, and maintainability                                            |
+| **Skills** | 68    | Specialized capabilities (including 11 command skills) for workflows, debugging, design, and idioms |
+| **Agents** | 21    | Specialized personas for multi-agent orchestration arranged in a 4-tier hierarchy                   |
 
 ## Core Philosophy
 
@@ -60,7 +59,7 @@ Detailed guidance activated only when the agent is working on relevant areas:
 - Accessibility rules activate when building UIs
 
 ### Tier 3: Skills (On-Demand)
-Procedural capabilities loaded by the agent or workflow when needed:
+Procedural capabilities loaded on demand or invoked as command skills:
 - Language idioms (Go, TypeScript, Vue, Flutter, Rust, Python + 18 more)
 - Debugging protocol, code review, guardrails
 - CI/CD patterns, feature flags, parallel dispatch
@@ -101,8 +100,7 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 .agents/
 ├── rules/             # 25 rules (mandates + principles)
 ├── agents/            # 21 agent personas
-├── skills/            # 58 specialized skills
-└── workflows/         # 11 development workflows
+└── skills/            # 68 skills (57 specialized skills + 11 command skills)
 ```
 
 </div>
@@ -110,8 +108,8 @@ While originally designed for **Antigravity**, the setup is built on standard ma
 Explore each component in detail:
 
 - [**Rules Reference**](/awesome-agv/rules) — All 25 rules organized by category
-- [**Skills Reference**](/awesome-agv/skills) — All 58 specialized skills
-- [**Workflows Reference**](/awesome-agv/workflows) — All 11 development workflows
+- [**Skills Reference**](/awesome-agv/skills) — All 68 specialized skills (including 11 command skills)
+- [**Command Skills Reference**](/awesome-agv/workflows) — All 11 command skills (formerly workflows)
 - [**Agent Personas**](/awesome-agv/agents) — 21 specialized agent personas for multi-agent orchestration
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup

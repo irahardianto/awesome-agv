@@ -20,12 +20,12 @@ description: >
 
 | Reference | Purpose | Used By |
 |---|---|---|
-| `references/perf-dimensions.md` | 6 MECE performance dimension scope cards + subagent prompt template | Coordinator dispatching parallel subagents in `/perf-optimize` workflow |
+| `references/perf-dimensions.md` | 6 MECE performance dimension scope cards + subagent prompt template | Coordinator dispatching parallel subagents in `/perf-optimize` skill |
 | `references/perf-report-template.md` | Structured report template for performance analysis and results output | Coordinator writing Phase 3 analysis report and Phase 6 results |
 
 ## Usage
 
-The `/perf-optimize` workflow loads this skill automatically.
+The `/perf-optimize` skill loads this skill automatically.
 
 - **Methodology & patterns:** The coordinator reads this file for the core methodology (Profile → Analyze → Optimize → Benchmark), optimization pattern catalog, anti-patterns, and when-to-stop heuristics.
 - **Dimension scope cards:** Read `references/perf-dimensions.md` to get the scope definition for each dimension (A–F) and the system prompt template for subagent dispatch.
@@ -139,7 +139,7 @@ Impact: <expected improvement, e.g., "Eliminates ~500 allocations per request">
 Measurement: <how to verify, e.g., "Run BenchmarkX, compare allocs/op">
 ```
 
-**Size guidance:** Each fix should be a focused, minimal change. If a fix requires > ~100 lines of changes or touches > 3 files, re-evaluate whether it's actually a refactor in disguise — and if so, use the `/refactor` workflow instead. Performance commits are surgical; architectural restructuring is a separate concern.
+**Size guidance:** Each fix should be a focused, minimal change. If a fix requires > ~100 lines of changes or touches > 3 files, re-evaluate whether it's actually a refactor in disguise — and if so, use the `/refactor` skill instead. Performance commits are surgical; architectural restructuring is a separate concern.
 
 ### Step 5: Benchmark
 

@@ -41,7 +41,7 @@ Algorithmic or resource issues causing non-linear degradation. Must be fixed imm
   - **Optimization Guidance:** {specific fix approach}
   - **Benchmark Target:** {which benchmark verifies this fix}
   - **Risk:** LOW / MEDIUM / HIGH
-  - **Fix workflow:** Phase 4 of this workflow, or `/refactor` if > 100 lines
+  - **Fix workflow:** Phase 4 of the `/perf-optimize` skill, or `/refactor` if > 100 lines
 
 ## High Findings
 Significant measurable waste in hot paths. Fix before release.
@@ -54,7 +54,7 @@ Significant measurable waste in hot paths. Fix before release.
   - **Optimization Guidance:** {guidance}
   - **Benchmark Target:** {target}
   - **Risk:** LOW / MEDIUM / HIGH
-  - **Fix workflow:** Phase 4 of this workflow, or `/refactor` if > 100 lines
+  - **Fix workflow:** Phase 4 of the `/perf-optimize` skill, or `/refactor` if > 100 lines
 
 ## Medium Findings
 Moderate waste detectable in profiles. Fix near term.

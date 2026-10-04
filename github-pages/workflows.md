@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Workflows Reference
+title: Command Skills Reference
 nav_order: 5
 ---
 
-# Workflows Reference
+# Command Skills Reference (formerly Workflows)
 {: .no_toc }
 
-All 11 development workflows — from feature delivery to code audits.
+All 11 command skills — from feature delivery to code audits.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -19,28 +19,33 @@ All 11 development workflows — from feature delivery to code audits.
 
 ---
 
-## What Are Workflows?
+## What Are Command Skills?
 
-Workflows are structured, multi-phase development processes defined in `.agents/workflows/`. They chain rules and skills together into repeatable, quality-enforced development cycles.
+Command skills (formerly workflows) are structured, multi-phase development processes defined in `.agents/skills/<name>/SKILL.md`. They chain rules and skills together into repeatable, quality-enforced development cycles.
 
-Each workflow is invoked as a **slash command** (e.g., `/workflow-solo`, `/bugfix`) and guides the agent through specific phases with completion criteria at each step.
+Each command skill is invoked as a **slash command** (e.g., `/workflow-solo`, `/bugfix`) and guides the agent through specific phases with completion criteria at each step. They are configured with `disable-model-invocation: true` so they can only be triggered manually by the user, preventing unintended recursive execution by agents or subagents.
 
-### Choosing the Right Workflow
+### Choosing the Right Command Skill
 
-| Situation                      | Workflow                            |
+| Situation                      | Command Skill                       |
 | ------------------------------ | ----------------------------------- |
-| Building a new feature         | `/workflow-solo`                     |
+| Building a new feature         | `/workflow-solo`                    |
 | Fixing a bug                   | `/bugfix`                           |
 | Restructuring code             | `/refactor`                         |
 | Reviewing code quality         | `/audit`                            |
 | Optimizing performance         | `/perf-optimize`                    |
-| Multi-agent orchestration      | `/workflow-team`                            |
+| Security vulnerability review  | `/security-audit`                   |
+| Retroactive unit test coverage | `/test-unit`                        |
+| Integration adapter testing    | `/test-integration`                 |
+| End-to-end user journeys       | `/test-e2e`                         |
+| Test scenario derivation       | `/test-scenarios`                   |
+| Multi-agent orchestration      | `/workflow-team`                    |
 
 ---
 
 ## 🏭 Feature Workflow — Single Agent (`/workflow-solo`)
 
-**File:** `.agents/workflows/workflow-solo.md`
+**File:** `.agents/skills/workflow-solo/SKILL.md`
 
 The primary workflow for building features. Treats the development lifecycle as a **state machine** — no phase can be skipped.
 
@@ -80,7 +85,7 @@ If a phase fails:
 
 ## Phase 1: Research
 
-**Section:** Research (inside `.agents/workflows/workflow-solo.md`)
+**Section:** Research (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Understand the request context and gather knowledge before writing any code.
 
@@ -103,7 +108,7 @@ Understand the request context and gather knowledge before writing any code.
 
 ## Phase 2: Implement
 
-**Section:** Implement (inside `.agents/workflows/workflow-solo.md`)
+**Section:** Implement (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Write production code following Test-Driven Development (TDD).
 
@@ -126,7 +131,7 @@ Write production code following Test-Driven Development (TDD).
 
 ## Phase 3: Integrate
 
-**Section:** Integrate (inside `.agents/workflows/workflow-solo.md`)
+**Section:** Integrate (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Test adapter implementations with real infrastructure using Testcontainers.
 
@@ -145,7 +150,7 @@ Test adapter implementations with real infrastructure using Testcontainers.
 
 ## Phase 3.5: E2E Test
 
-**Section:** E2E Test (inside `.agents/workflows/workflow-solo.md`)
+**Section:** E2E Test (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Validate complete user journeys through the full system using Playwright MCP.
 
@@ -169,7 +174,7 @@ Validate complete user journeys through the full system using Playwright MCP.
 
 ## Phase 4: Verify
 
-**Section:** Verify (inside `.agents/workflows/workflow-solo.md`)
+**Section:** Verify (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Run all linters, static analysis, and tests to ensure code quality.
 
@@ -205,7 +210,7 @@ pnpm run build
 
 ## Phase 5: Ship
 
-**Section:** Ship (inside `.agents/workflows/workflow-solo.md`)
+**Section:** Ship (inside `.agents/skills/workflow-solo/SKILL.md`)
 
 Commit completed work with proper conventional commit format.
 
@@ -230,7 +235,7 @@ Commit completed work with proper conventional commit format.
 
 ## 🔧 Bug-Fix Workflow (`/bugfix`)
 
-**File:** `.agents/workflows/bugfix.md`
+**File:** `.agents/skills/bugfix/SKILL.md`
 
 Fix bugs of any size — from hotfixes to complex debugging sessions — without the overhead of a full feature workflow.
 
@@ -250,7 +255,7 @@ Fix bugs of any size — from hotfixes to complex debugging sessions — without
 
 ## 🔧 Refactor Workflow (`/refactor`)
 
-**File:** `.agents/workflows/refactor.md`
+**File:** `.agents/skills/refactor/SKILL.md`
 
 Safely restructure existing code while preserving behavior.
 
@@ -278,7 +283,7 @@ Never break the build for more than one step at a time.
 
 ## 🔧 Audit Workflow (`/audit`)
 
-**File:** `.agents/workflows/audit.md`
+**File:** `.agents/skills/audit/SKILL.md`
 
 Inspect existing code quality without writing new features. Produces structured findings for subsequent fix workflows.
 
@@ -326,7 +331,7 @@ Run audits in a **fresh conversation** (not the one that wrote the code) to avoi
 
 ## 🔧 Performance Optimization Workflow (`/perf-optimize`)
 
-**File:** `.agents/workflows/perf-optimize.md`
+**File:** `.agents/skills/perf-optimize/SKILL.md`
 
 Profile-driven performance optimization. Always measure before optimizing — one fix at a time, independently benchmarked and committed.
 
@@ -356,7 +361,7 @@ Profile-driven performance optimization. Always measure before optimizing — on
 
 ## 🔧 Security Audit Workflow (`/security-audit`)
 
-**File:** `.agents/workflows/security-audit.md`
+**File:** `.agents/skills/security-audit/SKILL.md`
 
 A specialized, multi-agent security verification pipeline that performs a multi-dimensional vulnerability assessment in parallel.
 
@@ -377,7 +382,7 @@ A specialized, multi-agent security verification pipeline that performs a multi-
 
 ## 🏭 Multi-Agent Pipeline (`/workflow-team`)
 
-**File:** `.agents/workflows/workflow-team.md`
+**File:** `.agents/skills/workflow-team/SKILL.md`
 
 Dispatches specialized sub-agents across layers (research, design, build, review) with parallel execution support. The Pipeline Manager orchestrates — it never writes code itself.
 
@@ -519,3 +524,46 @@ git branch -D wt/<agent-name>-<scope>-<ts>
 - Sub-agent fails → 5-level escalation ladder (Retry → Replace → Skip → Redistribute → Degrade)
 - Exhaustion → dead-man timers trigger escalation to parent
 - Coordinators self-succeed at 70% context capacity, >3 iterations, or coherence degradation using the built-in self-succession protocol.
+
+---
+
+## 🧪 Testing Command Skills
+
+Specialized command skills for retroactive testing improvements on existing codebases.
+
+### Unit Testing (`/test-unit`)
+
+**File:** `.agents/skills/test-unit/SKILL.md`
+
+Coverage-gap-first unit test improvement — analyzes gaps, prioritizes by business risk and git churn, and refactors for testability if needed.
+
+- **Pipeline:** ANALYZE → PRIORITIZE → REFACTOR → TEST → VERIFY
+- **When to Use:** Raising unit test coverage on critical business logic or reducing churn regression risk.
+
+### Integration Testing (`/test-integration`)
+
+**File:** `.agents/skills/test-integration/SKILL.md`
+
+Adapter audit — scans for I/O boundaries, provisions Testcontainers or test adapters, and writes contract-compliance tests.
+
+- **Pipeline:** AUDIT → INFRASTRUCTURE → TEST → VERIFY
+- **When to Use:** Verifying database queries, third-party API clients, and network message queues against real dependencies.
+
+### End-to-End Testing (`/test-e2e`)
+
+**File:** `.agents/skills/test-e2e/SKILL.md`
+
+Platform-adaptive E2E testing for web (Playwright) and mobile (Flutter/Patrol/Maestro), journey-based with screenshot and artifact evidence capture.
+
+- **Pipeline:** PLAN → SETUP → AUTHOR → EXECUTE → REPORT
+- **When to Use:** Validating end-to-end critical user journeys across desktop browsers and mobile devices.
+
+### Test Scenarios (`/test-scenarios`)
+
+**File:** `.agents/skills/test-scenarios/SKILL.md`
+
+Hybrid structured derivation and mutation-informed expansion — generates prioritized test scenarios that feed into the testing pipelines.
+
+- **Pipeline:** INPUT → INVENTORY → ANALYZE → DERIVE → EXPAND → ORGANIZE → OUTPUT → HUMAN REVIEW
+- **When to Use:** Systematically discovering edge cases, boundary values, and regression vectors before test implementation.
+

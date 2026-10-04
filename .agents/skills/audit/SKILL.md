@@ -1,11 +1,16 @@
 ---
-description: Code audit workflow — multi-dimensional code quality, security, and integrity review with parallel subagents
+name: audit
+description: >-
+  Runs a multi-dimensional code quality, security, and integrity review with parallel subagents. User-invoked entry point via /audit; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
-# Audit Workflow
+# Audit Skill
+
+> **Entry-point guard:** This is a user-invoked command skill (`/audit`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 ## Purpose
-Comprehensive, multi-dimensional code audit of existing code. Dispatches parallel subagents across orthogonal code quality, architectural, security, and integrity dimensions for maximum coverage. This workflow identifies issues — it does not write new features or fixes.
+Comprehensive, multi-dimensional code audit of existing code. Dispatches parallel subagents across orthogonal code quality, architectural, security, and integrity dimensions for maximum coverage. This skill identifies issues — it does not write new features or fixes.
 
 ## When to Use
 - After another agent's feature is committed (cross-agent review)
@@ -20,8 +25,8 @@ Comprehensive, multi-dimensional code audit of existing code. Dispatches paralle
 - When fixing known bugs → `/bugfix`
 - When restructuring code → `/refactor`
 
-## Prerequisite Skill
-Load: `code-audit` skill (`.agents/skills/code-audit/SKILL.md`) — contains dimension scope cards, subagent prompt template, and report template.
+## References
+`references/audit-dimensions.md` and `references/audit-report-template.md` — contains dimension scope cards, subagent prompt template, and report template.
 
 ## Pre-Audit Checklist
 Before starting the audit, you MUST:
@@ -82,7 +87,7 @@ Use `invoke_subagent` to spawn all activated dimension agents in a **single call
 - **TypeName:** `self` (universal spawn mechanism — ensures subagents inherit full toolsets per `agent-protocols` §3)
 - **Role:** `Code Auditor — Dimension {KEY}` (e.g., `Code Auditor — Dimension A`)
 - **Workspace:** `inherit`
-- **Prompt:** Build from the system prompt template in `code-audit` skill → `references/audit-dimensions.md`. Fill in: dimension name, scope card, and reconnaissance context from Phase 0.
+- **Prompt:** Build from the system prompt template in `references/audit-dimensions.md`. Fill in: dimension name, scope card, and reconnaissance context from Phase 0.
 
 Each subagent receives in its prompt:
 1. **Dimension scope card** — from `references/audit-dimensions.md`
@@ -149,7 +154,7 @@ You MUST save the report to the repo (not just as a conversation artifact) so it
 
 **Steps:**
 1. Create the `docs/audits/` directory if it doesn't exist
-2. Read the report template from `code-audit` skill → `references/audit-report-template.md`
+2. Read the report template from `references/audit-report-template.md`
 3. Fill all sections with Phase 3 findings
 4. Write the report to `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 

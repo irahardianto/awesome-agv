@@ -7,7 +7,7 @@ nav_order: 4
 # Skills Reference
 {: .no_toc }
 
-All 58 specialized skills that extend your agent's capabilities.
+All 68 skills (57 specialized skills and 11 command skills) that extend your agent's capabilities.
 {: .fs-6 .fw-300 }
 
 <details open markdown="block">
@@ -27,7 +27,7 @@ Skills differ from rules in that they are **procedural** — they describe a *pr
 
 ---
 
-## Core Engineering Skills (10)
+## Core Engineering Skills (9)
 
 ### Debugging Protocol
 
@@ -90,8 +90,8 @@ A tool for dynamic, reflective problem-solving through iterative thought chains.
 A structured protocol for inspecting code quality against the full awesome-agv rule set. Catches issues that linters miss: architectural violations, missing observability, business logic errors, and pattern inconsistencies.
 
 **When to Use:**
-- During the `/audit` workflow (Phase 1)
-- When asked for a code review outside any workflow
+- During the `/audit` command skill (Phase 1)
+- When asked for a code review outside any command skill
 - **Best practice:** use in a fresh conversation to avoid confirmation bias
 
 **Review Categories (Priority Order):**
@@ -228,7 +228,7 @@ Safe refactoring pattern catalog: code smell taxonomy, transformation techniques
 - Code smell detection and elimination
 - Pattern migration (e.g., callback → async/await)
 - Complexity reduction
-- During the `/refactor` workflow
+- During the `/refactor` command skill
 
 ---
 
@@ -242,19 +242,7 @@ Structured research protocol for investigating technologies, patterns, and APIs 
 - Technology evaluation (new libraries, frameworks)
 - Pattern discovery before implementation
 - API investigation and compatibility analysis
-- During the Research phase of any workflow
-
----
-
-### Code Audit
-
-**File:** `.agents/skills/code-audit/SKILL.md`
-
-Orchestration reference for the `/audit` workflow. Contains dimension scope cards for parallel subagent dispatch, subagent system prompt templates, and code audit report templates.
-
-**When to Use:**
-- When executing a multi-dimensional code audit using the `/audit` workflow
-- To define scoping dimensions and prompt subagents for parallel code auditing
+- During the Research phase of feature delivery
 
 ---
 
@@ -358,7 +346,7 @@ MECE task decomposition, file ownership enforcement, DAG-based execution, and sa
 
 ---
 
-## Architecture & Infrastructure Skills (6)
+## Architecture & Infrastructure Skills (5)
 
 Cross-cutting skills loaded via rule references — they apply to all languages and load regardless of file type.
 
@@ -414,18 +402,6 @@ Release flags, ops kill switches, experiment flags, and permission gating. Inclu
 **PRD-gated** — load only when PRD or technical architecture explicitly requires gradual rollout, A/B testing, or kill switches.
 
 *Auto-loads on `feature*flag*`, `feature*toggle*` file patterns.*
-
----
-
-### Security Audit
-
-**File:** `.agents/skills/security-audit/SKILL.md`
-
-Orchestration reference for the `/security-audit` workflow. Contains dimension scope cards for parallel subagent dispatch, subagent system prompt templates, and security audit report templates.
-
-**When to Use:**
-- When executing a security audit using the `/security-audit` workflow
-- To define scoping dimensions and prompt subagents for security auditing
 
 ---
 
@@ -580,3 +556,30 @@ PCI DSS compliance, payment gateway integration, tokenization, webhook reliabili
 **File:** `.agents/skills/supply-chain-security/SKILL.md`
 
 SBOM generation, CVE scanning, supply chain attack detection, license compliance, dependency pinning, and artifact verification.
+
+---
+
+## Command Skills (11)
+
+Command skills (formerly workflows) provide structured, multi-phase development lifecycles. They are user-invoked entry points via slash commands, configured with `disable-model-invocation: true` to prevent automatic triggering by models or subagents.
+
+See the [Command Skills Reference](/awesome-agv/workflows) for full details on each pipeline.
+
+### Feature & Team Orchestration
+- **workflow-solo** (`/workflow-solo`): Single-agent feature pipeline with adaptive complexity routing (Light / Standard / Thorough).
+- **workflow-team** (`/workflow-team`): Multi-agent hierarchical orchestration across 4 pipeline layers (Supervisor, Conductor, Leads, Builders, Reviewers).
+
+### Quality & Maintenance
+- **audit** (`/audit`): Code review and quality inspection. Reference scope cards and report templates live in `.agents/skills/audit/references/`.
+- **security-audit** (`/security-audit`): Structured security review using parallel subagents across vulnerability dimensions.
+- **perf-optimize** (`/perf-optimize`): Profile-driven performance optimization (prerequisite: `perf-optimization` knowledge skill).
+- **bugfix** (`/bugfix`): Lean 3-phase bug fix lifecycle (Diagnose → Fix + Test → Verify + Ship).
+- **refactor** (`/refactor`): Safe code restructuring with behavior preservation and TDD.
+
+### Retroactive Testing
+- **test-unit** (`/test-unit`): Coverage-gap-first unit test improvement.
+- **test-integration** (`/test-integration`): Adapter audit and contract-compliance integration testing.
+- **test-e2e** (`/test-e2e`): Platform-adaptive E2E testing (Playwright for web, Patrol/Maestro for mobile).
+- **test-scenarios** (`/test-scenarios`): Test scenario derivation and mutation-informed expansion.
+
+

@@ -1,8 +1,13 @@
 ---
-description: Refactor workflow for safely restructuring existing code
+name: refactor
+description: >-
+  Safely restructures existing code while preserving behavior through impact analysis and TDD. User-invoked entry point via /refactor; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
-# Refactor Workflow
+# Refactor Skill
+
+> **Entry-point guard:** This is a user-invoked command skill (`/refactor`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 ## Purpose
 Safely restructure existing code while preserving behavior. Uses a different mindset than greenfield feature development: understand first, then change structure.

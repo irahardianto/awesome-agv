@@ -1,6 +1,6 @@
 # Code Audit Dimensions
 
-This file defines the 7 MECE code audit dimensions and the subagent system prompt template used by the `/audit` workflow.
+This file defines the 7 MECE code audit dimensions and the subagent system prompt template used by the `/audit` skill.
 
 ## Subagent System Prompt Template
 
@@ -29,7 +29,7 @@ finding, classify severity using the Severity Taxonomy below:
 
 When complete:
 1. Write findings to .agentwork/findings-audit-{dimension-key}.md
-2. Message @coordinator (the main agent running this /audit workflow): 'findings ready'
+2. Message @coordinator (the main agent running this /audit skill): 'findings ready'
 
 Do NOT fix issues. Do NOT modify production or test code.
 Produce findings with clear evidence, rule references, and remediation guidance only.

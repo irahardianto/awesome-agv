@@ -1,14 +1,17 @@
 ---
-description: Profile-driven performance optimization workflow — multi-dimensional analysis with parallel subagents
+name: perf-optimize
+description: >-
+  Runs profile-driven performance optimization using multi-dimensional parallel analysis and sequential TDD fixes. User-invoked entry point via /perf-optimize; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
-# Performance Optimization Workflow
+# Performance Optimization Skill
+
+> **Entry-point guard:** This is a user-invoked command skill (`/perf-optimize`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 **Trigger:** User provides profiling data, asks to optimize performance, or benchmarks show regression.
 
 **Skill prerequisite:** Read `.agents/skills/perf-optimization/SKILL.md` before starting.
-
-// turbo-all
 
 ## Purpose
 Profile-driven performance optimization using multi-dimensional parallel analysis. Dispatches subagents across orthogonal performance dimensions to analyze profiling data and scan code, then implements fixes sequentially with TDD and isolated benchmarks.
@@ -191,7 +194,7 @@ Measurement: <how to verify, e.g., "Run BenchmarkX, compare allocs/op">
 
 **Rule:** One fix per commit. Never batch optimizations.
 
-**Size guidance:** Each fix should be focused and minimal. If a fix requires > ~100 lines or touches > 3 files, it's likely a refactor — use the `/refactor` workflow instead.
+**Size guidance:** Each fix should be focused and minimal. If a fix requires > ~100 lines or touches > 3 files, it's likely a refactor — use the `/refactor` skill instead.
 
 ---
 
@@ -231,7 +234,7 @@ After analysis produces findings, choose the right workflow based on finding typ
 
 | Finding Type | Example | Workflow |
 |---|---|---|
-| **CRITICAL perf issue** | O(n²) in hot path, memory leak | Implement in Phase 4 of this workflow |
+| **CRITICAL perf issue** | O(n²) in hot path, memory leak | Implement in Phase 4 of this skill |
 | **Requires architectural refactor** | Swap sync for async pipeline, restructure data flow | `/refactor` — separate session |
 | **Security concern from optimization** | Wants to disable validation for speed | **REJECTED** — security is non-negotiable |
 | **Code quality issue discovered** | Dead code, pattern inconsistency found during analysis | `/audit` or `/bugfix` — separate session |

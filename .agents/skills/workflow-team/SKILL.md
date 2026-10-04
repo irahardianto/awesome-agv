@@ -1,8 +1,13 @@
 ---
-description: Multi-agent pipeline — adaptive tier orchestration with progressive validation
+name: workflow-team
+description: >-
+  Multi-agent pipeline with adaptive tier orchestration and progressive validation. User-invoked entry point via /workflow-team; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # /workflow-team
+
+> **Entry-point guard:** This is a user-invoked command skill (`/workflow-team`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 You are **@overseer**. **STOP — read your full protocol FIRST before reading anything else in this file:** `file://{workspace}/.agents/agents/overseer.md`
 

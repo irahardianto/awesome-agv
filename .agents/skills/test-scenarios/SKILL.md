@@ -1,11 +1,16 @@
 ---
-description: Test scenario generator — systematically derive test scenarios from requirements using structured analysis and mutation-informed expansion
+name: test-scenarios
+description: >-
+  Systematically derives test scenarios from requirements using structured analysis and mutation-informed expansion. User-invoked entry point via /test-scenarios; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # Test Scenario Generator
 
+> **Entry-point guard:** This is a user-invoked command skill (`/test-scenarios`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
+
 ## Purpose
-Systematically derive test scenarios from requirements, code, or specifications. Uses a hybrid of structured derivation techniques and mutation-informed expansion to maximize coverage. Output feeds into `/test-unit`, `/test-integration`, or `/test-e2e` after human review.
+Systematically derive test scenarios from requirements, code, or specifications. Uses a hybrid of structured derivation techniques and mutation-informed expansion to maximize coverage. Output feeds into the `/test-unit`, `/test-integration`, or `/test-e2e` skills after human review.
 
 ## When to Use
 - Starting testing on a new feature or module
@@ -162,17 +167,17 @@ Scenarios requiring human judgment, physical devices, or exploratory thinking:
 | M001 | _description_ | _reason automation is insufficient_ | P0–P3 |
 
 #### 4. Feed-Ready Checklists
-Scenarios pre-organized as checklists for downstream workflows:
+Scenarios pre-organized as checklists for downstream skills:
 - **For `/test-unit`:** Unit-level scenarios grouped by module
 - **For `/test-integration`:** Integration-level scenarios grouped by adapter
 - **For `/test-e2e`:** E2E-level scenarios grouped by user journey
 
 **Gate:** Test scenario document produced.
 
-**Persistent output:** Save the test scenario document to `docs/testing/test-scenarios-{feature}-{YYYY-MM-DD}.md` so it can be referenced by downstream `/test-unit`, `/test-integration`, and `/test-e2e` workflows. Create the `docs/testing/` directory if it doesn't exist.
+**Persistent output:** Save the test scenario document to `docs/testing/test-scenarios-{feature}-{YYYY-MM-DD}.md` so it can be referenced by downstream `/test-unit`, `/test-integration`, and `/test-e2e` skills. Create the `docs/testing/` directory if it doesn't exist.
 
 ### Phase 8: HUMAN REVIEW (Mandatory Gate)
-**This gate is mandatory. Do not feed scenarios into testing workflows without user approval.**
+**This gate is mandatory. Do not feed scenarios into testing skills without user approval.**
 
 1. Present the full Test Scenario Document to the user
 2. Highlight key metrics:
@@ -181,7 +186,7 @@ Scenarios pre-organized as checklists for downstream workflows:
    - Recommended manual testing scenarios
    - Suggested first batch for implementation
 3. User can:
-   - **Approve** and select which workflow to feed into (`/test-unit`, `/test-integration`, `/test-e2e`)
+   - **Approve** and select which skill to feed into (`/test-unit`, `/test-integration`, `/test-e2e`)
    - **Adjust** priorities up or down
    - **Add/remove** scenarios based on domain knowledge
    - **Request** deeper analysis on specific areas
