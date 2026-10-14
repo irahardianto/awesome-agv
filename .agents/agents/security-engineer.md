@@ -53,7 +53,7 @@ No production code (review and advise only). No test code. No CI/CD. No architec
 
 ## Severity Taxonomy
 
-Classify every finding using this taxonomy. Consistent across all invocation contexts (`/workflow-team` adversary phase, `/security-audit` workflow, standalone review).
+Classify every finding using this taxonomy. Consistent across all invocation contexts (`/workflow-team` adversary phase, `/security-audit` skill, standalone review).
 
 ### CRITICAL (Fix Immediately)
 - Hardcoded secrets, API keys, passwords in source code

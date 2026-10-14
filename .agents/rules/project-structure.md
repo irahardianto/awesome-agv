@@ -3,7 +3,7 @@ trigger: always_on
 ---
 
 > **This file is the SINGLE SOURCE OF TRUTH for project organization.**
-> All other rules and workflows that reference paths should defer to this file.
+> All other rules and skills that reference paths should defer to this file.
 > To adapt the setup for a different project type, edit this file only.
 
 ## Project Structure

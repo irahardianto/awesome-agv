@@ -1,11 +1,16 @@
 ---
-description: E2E testing workflow — plan, author, and execute end-to-end tests for mobile and web platforms
+name: test-e2e
+description: >-
+  Plans, authors, and executes end-to-end tests for mobile and web platforms. User-invoked entry point via /test-e2e; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # End-to-End Testing — Mobile & Web
 
+> **Entry-point guard:** This is a user-invoked command skill (`/test-e2e`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
+
 ## Purpose
-Platform-adaptive E2E testing for complete user journeys. Covers web (desktop and mobile browsers) and native mobile (iOS, Android). Use `/test-unit` for unit tests and `/test-integration` for integration tests.
+Platform-adaptive E2E testing for complete user journeys. Covers web (desktop and mobile browsers) and native mobile (iOS, Android). Use the `/test-unit` skill for unit tests and the `/test-integration` skill for integration tests.
 
 ## When to Use
 - New feature affecting user-facing flows
@@ -14,9 +19,9 @@ Platform-adaptive E2E testing for complete user journeys. Covers web (desktop an
 - Cross-platform feature parity validation
 
 ## When NOT to Use
-- Unit test gaps — use `/test-unit`
-- Integration test gaps — use `/test-integration`
-- Need test scenarios first — use `/test-scenarios`
+- Unit test gaps — use `/test-unit` skill
+- Integration test gaps — use `/test-integration` skill
+- Need test scenarios first — use `/test-scenarios` skill
 
 ## Phases
 

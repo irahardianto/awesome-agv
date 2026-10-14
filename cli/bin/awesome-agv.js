@@ -3,11 +3,10 @@
 'use strict';
 
 const https = require('https');
-const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { createInterface } = require('readline');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const os = require('os');
 
 // ── ANSI Colors (zero-dependency) ──────────────────────────────────────────────
@@ -45,6 +44,9 @@ const BRANCH = 'main';
 const TARBALL_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${BRANCH}.tar.gz`;
 const AGENT_DIR = '.agents';
 const CONFIG_FILE = '.agvrc';
+const BACKUP_DIR_NAME = '.agv-backup';
+const BACKUP_PATTERN = /^agents-\d{8}-\d{6}(?:-\d+)?$/;
+const GITIGNORE_ENTRIES = ['.agentwork/', '.agv-backup/'];
 
 // ── CLI Argument Parsing ───────────────────────────────────────────────────────
 function parseArgs(argv) {
@@ -88,7 +90,6 @@ function parseArgs(argv) {
 function printBanner() {
   const { version } = require('../package.json');
 
-  // Gradient: magenta → cyan → white
   const m = c.magenta + c.bold;
   const cy = c.cyan + c.bold;
   const w = c.white + c.bold;
@@ -127,8 +128,19 @@ ${c.bold}ARGUMENTS${c.reset}
 ${c.bold}OPTIONS${c.reset}
   --stacks <list>     Comma-separated stacks to include (additive with existing .agvrc)
   --all               Install everything (all stacks, same as Default mode)
-  -f, --force         Replace existing .agents/ — re-prompts from scratch
+  -f, --force         Skip the overwrite prompt and ignore the saved .agvrc (fresh selection).
+                      The existing .agents/ is still backed up and custom items carried over.
   -h, --help          Show this help message
+
+${c.bold}ENVIRONMENT${c.reset}
+  AGV_LOCAL_TARBALL   Install from a local .tar.gz instead of downloading from GitHub.
+                      The archive must contain awesome-agv-main/.agents/ and agv.config.json.
+
+${c.bold}UPGRADES${c.reset}
+  Re-running the installer updates .agents/ in place. The previous copy is moved to
+  .agv-backup/agents-<timestamp>/ (5 most recent kept), and your own skills, rules and
+  agents (names not shipped upstream) are carried over. Edits to shipped files are not
+  carried over — recover them from the backup.
 
 ${c.bold}INSTALL MODES${c.reset}
   ${icon.rocket}  ${c.bold}Default${c.reset}    Install everything. The full arsenal.
@@ -172,7 +184,6 @@ function promptSelect(title, options) {
     let selected = 0;
 
     function render() {
-      // Move cursor up to clear previous render (except first render)
       const totalLines = options.length + 2;
       process.stdout.write(`\x1b[${totalLines}A\x1b[J`);
       console.log(`  ${c.bold}${title}${c.reset}\n`);
@@ -186,7 +197,6 @@ function promptSelect(title, options) {
       }
     }
 
-    // Print initial blank lines so the first render can overwrite
     console.log(`  ${c.bold}${title}${c.reset}\n`);
     for (const opt of options) {
       console.log(`    ${c.dim}${opt.label}${c.reset}`);
@@ -199,22 +209,18 @@ function promptSelect(title, options) {
 
     const onData = (key) => {
       if (key === '\x1b[A') {
-        // Up arrow
         selected = (selected - 1 + options.length) % options.length;
         render();
       } else if (key === '\x1b[B') {
-        // Down arrow
         selected = (selected + 1) % options.length;
         render();
       } else if (key === '\r' || key === '\n') {
-        // Enter
         process.stdin.setRawMode(false);
         process.stdin.pause();
         process.stdin.removeListener('data', onData);
         console.log('');
         resolve(options[selected].value);
       } else if (key === '\x03') {
-        // Ctrl+C
         process.stdin.setRawMode(false);
         process.exit(0);
       }
@@ -226,17 +232,14 @@ function promptSelect(title, options) {
 
 // ── Multi-Select Menu (arrow keys, space, enter) ───────────────────────────────
 function promptMultiSelect(title, items, footerFn) {
-  // items: [{ key, label, indent, checked, disabled, warning }]
   return new Promise((resolve) => {
     let cursor = 0;
-    // Skip to first non-disabled item
     while (cursor < items.length && items[cursor].disabled) cursor++;
 
     function render() {
-      const totalLines = items.length + 4; // title + blank + items + footer + blank
+      const totalLines = items.length + 4;
       process.stdout.write(`\x1b[${totalLines}A\x1b[J`);
-      console.log(`  ${c.bold}${title}${c.reset}`);
-      console.log('');
+      console.log(`  ${c.bold}${title}${c.reset}\n`);
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         const pointer = i === cursor ? `${c.cyan}❯${c.reset}` : ' ';
@@ -270,14 +273,11 @@ function promptMultiSelect(title, items, footerFn) {
       }
     }
 
-    // Initial blank lines
-    console.log(`  ${c.bold}${title}${c.reset}`);
-    console.log('');
+    console.log(`  ${c.bold}${title}${c.reset}\n`);
     for (const item of items) {
       console.log('');
     }
-    console.log('');
-    console.log('');
+    console.log('\n');
     render();
 
     process.stdin.setRawMode(true);
@@ -286,7 +286,6 @@ function promptMultiSelect(title, items, footerFn) {
 
     const onData = (key) => {
       if (key === '\x1b[A') {
-        // Up — skip separators and disabled
         let next = (cursor - 1 + items.length) % items.length;
         let attempts = 0;
         while ((items[next].separator || items[next].disabled) && attempts < items.length) {
@@ -296,7 +295,6 @@ function promptMultiSelect(title, items, footerFn) {
         cursor = next;
         render();
       } else if (key === '\x1b[B') {
-        // Down — skip separators and disabled
         let next = (cursor + 1) % items.length;
         let attempts = 0;
         while ((items[next].separator || items[next].disabled) && attempts < items.length) {
@@ -306,11 +304,9 @@ function promptMultiSelect(title, items, footerFn) {
         cursor = next;
         render();
       } else if (key === ' ') {
-        // Space — toggle
         const item = items[cursor];
         if (!item.separator && !item.disabled) {
           item.checked = !item.checked;
-          // Handle requires: selecting a child auto-selects parent
           if (item.checked && item.requires) {
             for (const reqKey of item.requires) {
               const parent = items.find((i) => i.key === reqKey);
@@ -319,14 +315,12 @@ function promptMultiSelect(title, items, footerFn) {
               }
             }
           }
-          // Handle requires: deselecting a parent auto-deselects all transitive children
           if (!item.checked) {
             let cascadeChanged = true;
             while (cascadeChanged) {
               cascadeChanged = false;
               for (const child of items) {
                 if (child.checked && child.requires) {
-                  // If any required parent is unchecked, deselect this child
                   const allReqsMet = child.requires.every((reqKey) => {
                     const parent = items.find((i) => i.key === reqKey);
                     return parent && parent.checked;
@@ -342,7 +336,6 @@ function promptMultiSelect(title, items, footerFn) {
           render();
         }
       } else if (key === '\r' || key === '\n') {
-        // Enter — confirm
         process.stdin.setRawMode(false);
         process.stdin.pause();
         process.stdin.removeListener('data', onData);
@@ -363,35 +356,31 @@ function detectStacks(targetDir, manifest) {
   const detected = new Set();
   const stacks = manifest.skills.stacks;
 
-  // Gather all detection patterns
   const detectionMap = {};
   for (const [key, stack] of Object.entries(stacks)) {
     if (!stack.detect || stack.detect.length === 0) continue;
     for (const pattern of stack.detect) {
       if (!pattern.includes('*')) {
-        // Exact filename match
         if (!detectionMap[pattern]) detectionMap[pattern] = [];
         detectionMap[pattern].push(key);
       }
     }
   }
 
-  // Scan root directory
   const scanDirs = [targetDir];
   const subDirs = ['apps', 'src', 'packages', 'services'];
   for (const sub of subDirs) {
     const subPath = path.join(targetDir, sub);
     if (fs.existsSync(subPath) && fs.statSync(subPath).isDirectory()) {
       scanDirs.push(subPath);
-      // One more level for monorepo detection
       try {
         for (const entry of fs.readdirSync(subPath, { withFileTypes: true })) {
           if (entry.isDirectory()) {
             scanDirs.push(path.join(subPath, entry.name));
           }
         }
-      } catch {
-        // Permission error, skip
+      } catch (err) {
+        // Skip unreadable subdirectories
       }
     }
   }
@@ -400,22 +389,20 @@ function detectStacks(targetDir, manifest) {
     let entries;
     try {
       entries = fs.readdirSync(dir);
-    } catch {
+    } catch (err) {
       continue;
     }
     for (const entry of entries) {
-      // Check exact filename match
       if (detectionMap[entry]) {
         for (const stackKey of detectionMap[entry]) {
           detected.add(stackKey);
         }
       }
-      // Check glob patterns (*.ext)
       for (const [key, stack] of Object.entries(stacks)) {
         if (!stack.detect) continue;
         for (const pattern of stack.detect) {
           if (pattern.startsWith('*.')) {
-            const ext = pattern.slice(1); // e.g. ".vue"
+            const ext = pattern.slice(1);
             if (entry.endsWith(ext)) {
               detected.add(key);
             }
@@ -470,7 +457,6 @@ function buildStackTree(manifest) {
   const stacks = manifest.skills.stacks;
   const tree = [];
 
-  // Separate languages (no requires) from frameworks (has requires)
   const languages = {};
   const frameworks = {};
 
@@ -482,11 +468,9 @@ function buildStackTree(manifest) {
     }
   }
 
-  // Group: core languages first, then community
   const coreLanguages = Object.entries(languages).filter(([, s]) => s.group === 'core');
   const communityLanguages = Object.entries(languages).filter(([, s]) => s.group === 'community');
 
-  // Find direct children of a language
   function getChildren(parentKey) {
     const children = [];
     for (const [key, fw] of Object.entries(frameworks)) {
@@ -497,8 +481,6 @@ function buildStackTree(manifest) {
     return children;
   }
 
-
-  // Add a language and its framework children recursively
   function addWithChildren(key, stack, indent) {
     tree.push({ key, indent, label: `${stack.label.padEnd(14)}— ${stack.description}`, requires: stack.requires || null });
     const children = getChildren(key);
@@ -507,13 +489,11 @@ function buildStackTree(manifest) {
     }
   }
 
-  // Core stacks section
   tree.push({ separator: true, label: '── Core Stacks ──────────────────────────────────────' });
   for (const [key, stack] of coreLanguages) {
     addWithChildren(key, stack, 0);
   }
 
-  // Community languages section
   if (communityLanguages.length > 0) {
     tree.push({ separator: true, label: '── Community Languages ──────────────────────────────' });
     for (const [key, stack] of communityLanguages) {
@@ -524,65 +504,202 @@ function buildStackTree(manifest) {
   return tree;
 }
 
-// ── HTTP Download with Redirect Following ──────────────────────────────────────
-function downloadToFile(url, destPath, maxRedirects = 5) {
+// ── HTTP Download with Redirect Following & Timeout (SEC-02, SEC-05) ───────────
+function downloadToFile(urlStr, destPath, maxRedirects = 5) {
   return new Promise((resolve, reject) => {
-    if (maxRedirects <= 0) {
-      reject(new Error('Too many redirects'));
-      return;
+    let currentUrl;
+    try {
+      currentUrl = new URL(urlStr);
+    } catch (urlErr) {
+      return reject(new Error(`Invalid URL: ${urlStr} (${urlErr.message})`));
     }
 
-    const client = url.startsWith('https') ? https : http;
-    client
-      .get(url, (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          res.resume();
-          downloadToFile(res.headers.location, destPath, maxRedirects - 1)
-            .then(resolve)
-            .catch(reject);
-          return;
+    if (currentUrl.protocol !== 'https:') {
+      return reject(
+        new Error(`Insecure download protocol rejected: ${currentUrl.protocol} (only https: is permitted)`)
+      );
+    }
+
+    if (maxRedirects <= 0) {
+      return reject(new Error('Too many redirects while downloading archive'));
+    }
+
+    const cleanupDest = () => {
+      try {
+        if (fs.existsSync(destPath)) fs.unlinkSync(destPath);
+      } catch (err) {
+        // Ignore unlink error on cleanup
+      }
+    };
+
+    const req = https.get(currentUrl, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        res.resume();
+        let redirectUrl;
+        try {
+          redirectUrl = new URL(res.headers.location, currentUrl).href;
+        } catch (redirectErr) {
+          cleanupDest();
+          return reject(
+            new Error(`Invalid redirect Location: ${res.headers.location} (${redirectErr.message})`)
+          );
         }
 
-        if (res.statusCode !== 200) {
-          res.resume();
-          reject(new Error(`Failed to download: HTTP ${res.statusCode}`));
-          return;
-        }
+        downloadToFile(redirectUrl, destPath, maxRedirects - 1)
+          .then(resolve)
+          .catch((err) => {
+            cleanupDest();
+            reject(err);
+          });
+        return;
+      }
 
-        const fileStream = fs.createWriteStream(destPath);
-        res.pipe(fileStream);
-        fileStream.on('finish', () => {
-          fileStream.close(resolve);
-        });
-        fileStream.on('error', (err) => {
-          fs.unlinkSync(destPath);
-          reject(err);
-        });
-      })
-      .on('error', reject);
+      if (res.statusCode !== 200) {
+        res.resume();
+        cleanupDest();
+        return reject(new Error(`Failed to download: HTTP ${res.statusCode}`));
+      }
+
+      const fileStream = fs.createWriteStream(destPath);
+      res.pipe(fileStream);
+
+      fileStream.on('finish', () => {
+        fileStream.close(resolve);
+      });
+
+      fileStream.on('error', (err) => {
+        cleanupDest();
+        reject(err);
+      });
+
+      res.on('error', (err) => {
+        cleanupDest();
+        reject(err);
+      });
+    });
+
+    req.setTimeout(30000, () => {
+      req.destroy();
+      cleanupDest();
+      reject(new Error('Download timed out after 30 seconds'));
+    });
+
+    req.on('error', (err) => {
+      cleanupDest();
+      reject(err);
+    });
   });
 }
 
-// ── Recursive directory copy ───────────────────────────────────────────────────
-function copyDirRecursive(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
+// ── Tarball Resolution (C-CLI-ENV) ─────────────────────────────────────────────
+function resolveTarballSource() {
+  const envVal = process.env.AGV_LOCAL_TARBALL;
+  if (envVal !== undefined && envVal !== '') {
+    if (!envVal.endsWith('.tar.gz')) {
+      throw new Error(`AGV_LOCAL_TARBALL must end with '.tar.gz': received '${envVal}'`);
     }
+    let resolved;
+    try {
+      resolved = fs.realpathSync(envVal);
+    } catch (err) {
+      throw new Error(`AGV_LOCAL_TARBALL file does not exist or cannot be resolved: '${envVal}' (${err.message})`);
+    }
+    let stat;
+    try {
+      stat = fs.lstatSync(resolved);
+    } catch (err) {
+      throw new Error(`Cannot stat AGV_LOCAL_TARBALL: '${resolved}' (${err.message})`);
+    }
+    if (stat.isSymbolicLink()) {
+      try {
+        stat = fs.statSync(resolved);
+      } catch (err) {
+        throw new Error(`Cannot resolve symlink target for AGV_LOCAL_TARBALL: '${resolved}' (${err.message})`);
+      }
+    }
+    if (!stat.isFile()) {
+      throw new Error(`AGV_LOCAL_TARBALL is not a regular file: '${resolved}'`);
+    }
+    console.log(`  ${icon.arrow} Using local tarball (AGV_LOCAL_TARBALL): ${resolved}`);
+    return { tarballPath: resolved, isLocal: true };
+  }
+  return { tarballPath: null, isLocal: false };
+}
+
+// ── Path & Entry Validation ────────────────────────────────────────────────────
+function isValidEntryName(name) {
+  if (typeof name !== 'string' || name.length === 0) return false;
+  if (name.includes('/') || name.includes('\\')) return false;
+  if (name === '.' || name === '..' || name.includes('..')) return false;
+  return true;
+}
+
+// ── Safe Recursive Copy (Skips Symlinks) ────────────────────────────────────────
+function copySafeNoSymlinks(src, dest) {
+  let stat;
+  try {
+    stat = fs.lstatSync(src);
+  } catch (err) {
+    console.log(`  ${icon.warn}  ${c.yellow}Could not access path:${c.reset} ${src} (${err.message})`);
+    return;
+  }
+
+  if (stat.isSymbolicLink()) {
+    console.log(`  ${icon.warn}  ${c.yellow}Skipping symlink:${c.reset} ${src}`);
+    return;
+  }
+
+  if (stat.isDirectory()) {
+    fs.mkdirSync(dest, { recursive: true });
+    let entries;
+    try {
+      entries = fs.readdirSync(src);
+    } catch (err) {
+      console.log(`  ${icon.warn}  ${c.yellow}Could not read directory:${c.reset} ${src} (${err.message})`);
+      return;
+    }
+    for (const entry of entries) {
+      if (!isValidEntryName(entry)) {
+        console.log(`  ${icon.warn}  ${c.yellow}Skipping unsafe entry name:${c.reset} ${entry}`);
+        continue;
+      }
+      copySafeNoSymlinks(path.join(src, entry), path.join(dest, entry));
+    }
+  } else if (stat.isFile()) {
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(src, dest);
   }
 }
 
-// ── Count files recursively ────────────────────────────────────────────────────
+// ── Copy Directory with Exclusion Filter ───────────────────────────────────────
+function copyDirFiltered(src, dest, excludeSet) {
+  fs.mkdirSync(dest, { recursive: true });
+  let entries;
+  try {
+    entries = fs.readdirSync(src);
+  } catch (err) {
+    console.log(`  ${icon.warn}  ${c.yellow}Could not read directory:${c.reset} ${src} (${err.message})`);
+    return;
+  }
+  for (const entry of entries) {
+    if (!isValidEntryName(entry)) continue;
+    const baseName = entry.replace(/\.md$/, '');
+    if (excludeSet && excludeSet.has(baseName)) continue;
+
+    copySafeNoSymlinks(path.join(src, entry), path.join(dest, entry));
+  }
+}
+
+// ── Count Files Recursively ────────────────────────────────────────────────────
 function countFiles(dirPath) {
   let count = 0;
   if (!fs.existsSync(dirPath)) return count;
-  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  let entries;
+  try {
+    entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  } catch (err) {
+    return count;
+  }
   for (const entry of entries) {
     const fullPath = path.join(dirPath, entry.name);
     if (entry.isDirectory()) {
@@ -594,58 +711,157 @@ function countFiles(dirPath) {
   return count;
 }
 
-// ── Extract with filtering ─────────────────────────────────────────────────────
-// Returns the number of skill directories actually copied from the archive.
-function extractFiltered(tarballPath, targetDir, selectedSkills, config) {
-  const tmpExtractDir = path.join(os.tmpdir(), `awesome-agv-extract-${Date.now()}`);
-  fs.mkdirSync(tmpExtractDir, { recursive: true });
+// ── Custom Carry-Over from Existing Installation ──────────────────────────────
+function carryOverCustomEntries({ targetAgentDir, stagingDir, extractedAgents, manifest }) {
+  const carriedOver = [];
+  const legacyWorkflows = [];
+
+  if (!fs.existsSync(targetAgentDir)) {
+    return { carriedOver, legacyWorkflows, migratedWorkflowCount: 0 };
+  }
+
+  // (i) Skill directories under skills/ whose names are NOT in upstream universe
+  const tarballSkillsDir = path.join(extractedAgents, 'skills');
+  const upstreamSkillNames = new Set();
+  if (fs.existsSync(tarballSkillsDir)) {
+    for (const ent of fs.readdirSync(tarballSkillsDir, { withFileTypes: true })) {
+      if (ent.isDirectory()) upstreamSkillNames.add(ent.name);
+    }
+  }
+  if (Array.isArray(manifest.skills?.retired)) {
+    for (const r of manifest.skills.retired) upstreamSkillNames.add(r);
+  }
+
+  const existingSkillsDir = path.join(targetAgentDir, 'skills');
+  if (fs.existsSync(existingSkillsDir)) {
+    for (const ent of fs.readdirSync(existingSkillsDir, { withFileTypes: true })) {
+      if (!isValidEntryName(ent.name)) {
+        console.log(`  ${icon.warn}  ${c.yellow}Skipping invalid skill directory name:${c.reset} ${ent.name}`);
+        continue;
+      }
+      const existingSkillPath = path.join(existingSkillsDir, ent.name);
+      let stat;
+      try {
+        stat = fs.lstatSync(existingSkillPath);
+      } catch (err) {
+        console.log(`  ${icon.warn}  ${c.yellow}Could not access ${existingSkillPath}:${c.reset} ${err.message}`);
+        continue;
+      }
+      if (stat.isSymbolicLink()) {
+        console.log(`  ${icon.warn}  ${c.yellow}Skipping symlink in custom skills:${c.reset} ${existingSkillPath}`);
+        continue;
+      }
+      if (stat.isDirectory() && !upstreamSkillNames.has(ent.name)) {
+        const stagingSkillPath = path.join(stagingDir, 'skills', ent.name);
+        copySafeNoSymlinks(existingSkillPath, stagingSkillPath);
+        carriedOver.push(`skills/${ent.name}`);
+      }
+    }
+  }
+
+  // (ii) Files/dirs under rules/ and agents/ whose names do not exist in tarball's corresponding dirs
+  for (const sub of ['rules', 'agents']) {
+    const tarballSubDir = path.join(extractedAgents, sub);
+    const upstreamNames = new Set();
+    if (fs.existsSync(tarballSubDir)) {
+      for (const ent of fs.readdirSync(tarballSubDir, { withFileTypes: true })) {
+        upstreamNames.add(ent.name);
+      }
+    }
+
+    const existingSubDir = path.join(targetAgentDir, sub);
+    if (fs.existsSync(existingSubDir)) {
+      for (const ent of fs.readdirSync(existingSubDir, { withFileTypes: true })) {
+        if (!isValidEntryName(ent.name)) {
+          console.log(`  ${icon.warn}  ${c.yellow}Skipping invalid entry name in ${sub}:${c.reset} ${ent.name}`);
+          continue;
+        }
+        const existingEntryPath = path.join(existingSubDir, ent.name);
+        let stat;
+        try {
+          stat = fs.lstatSync(existingEntryPath);
+        } catch (err) {
+          console.log(`  ${icon.warn}  ${c.yellow}Could not access ${existingEntryPath}:${c.reset} ${err.message}`);
+          continue;
+        }
+        if (stat.isSymbolicLink()) {
+          console.log(`  ${icon.warn}  ${c.yellow}Skipping symlink in ${sub}:${c.reset} ${existingEntryPath}`);
+          continue;
+        }
+        if (!upstreamNames.has(ent.name)) {
+          const stagingEntryPath = path.join(stagingDir, sub, ent.name);
+          copySafeNoSymlinks(existingEntryPath, stagingEntryPath);
+          carriedOver.push(`${sub}/${ent.name}`);
+        }
+      }
+    }
+  }
+
+  // (iii) Legacy workflows/ dir is NOT carried into .agents/ (it stays in the backup).
+  // Workflows shipped upstream now exist as same-named command skills, so only
+  // custom workflows are reported — those are the ones the user must convert.
+  let migratedWorkflowCount = 0;
+  const existingWorkflowsDir = path.join(targetAgentDir, 'workflows');
+  if (fs.existsSync(existingWorkflowsDir)) {
+    try {
+      for (const ent of fs.readdirSync(existingWorkflowsDir, { withFileTypes: true })) {
+        if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
+        if (upstreamSkillNames.has(ent.name.slice(0, -'.md'.length))) {
+          migratedWorkflowCount++;
+        } else {
+          legacyWorkflows.push(ent.name);
+        }
+      }
+    } catch (err) {
+      console.log(`  ${icon.warn}  ${c.yellow}Could not read existing workflows directory:${c.reset} ${err.message}`);
+    }
+  }
+
+  return { carriedOver, legacyWorkflows, migratedWorkflowCount };
+}
+
+// ── Extract into Staging Directory with Carry-Over (SEC-01, SEC-06) ───────────
+function extractToStaging(tarballPath, stagingDir, targetAgentDir, selectedSkills, config) {
+  const tmpExtractDir = fs.mkdtempSync(path.join(os.tmpdir(), 'awesome-agv-extract-'));
+  fs.chmodSync(tmpExtractDir, 0o700);
   let skillsCopied = 0;
 
   try {
-    // Extract full tarball to temp
-    try {
-      execSync(`tar -xzf "${tarballPath}" -C "${tmpExtractDir}"`, { stdio: 'pipe' });
-    } catch {
-      const { execFileSync } = require('child_process');
-      execFileSync('tar', ['-xzf', tarballPath, '-C', tmpExtractDir], { stdio: 'pipe' });
-    }
+    execFileSync('tar', ['-xzf', tarballPath, '-C', tmpExtractDir], { stdio: 'pipe' });
 
     const extractedAgents = path.join(tmpExtractDir, `${REPO_NAME}-${BRANCH}`, AGENT_DIR);
     if (!fs.existsSync(extractedAgents)) {
-      throw new Error(`Could not find ${AGENT_DIR} in downloaded archive`);
+      throw new Error(`Could not find ${REPO_NAME}-${BRANCH}/${AGENT_DIR} in archive`);
     }
 
-    const destAgents = path.join(targetDir, AGENT_DIR);
-    fs.mkdirSync(destAgents, { recursive: true });
+    fs.mkdirSync(stagingDir, { mode: 0o700, recursive: true });
+    fs.chmodSync(stagingDir, 0o700);
 
-    // Copy core paths (rules/, workflows/, agents/)
+    // Copy core paths (rules/, agents/)
     for (const corePath of config.core.paths) {
       const src = path.join(extractedAgents, corePath);
-      const dest = path.join(destAgents, corePath);
+      const dest = path.join(stagingDir, corePath);
       if (fs.existsSync(src)) {
-        // If advanced mode deselected items, filter them
         if (config._deselectedRules && corePath === 'rules/') {
           copyDirFiltered(src, dest, config._deselectedRules);
         } else if (config._deselectedAgents && corePath === 'agents/') {
           copyDirFiltered(src, dest, config._deselectedAgents);
-        } else if (config._deselectedWorkflows && corePath === 'workflows/') {
-          copyDirFiltered(src, dest, config._deselectedWorkflows);
         } else {
-          copyDirRecursive(src, dest);
+          copyDirFiltered(src, dest, null);
         }
       }
     }
 
     // Copy selected skills only
     const skillsSrc = path.join(extractedAgents, 'skills');
-    const skillsDest = path.join(destAgents, 'skills');
+    const skillsDest = path.join(stagingDir, 'skills');
     fs.mkdirSync(skillsDest, { recursive: true });
 
     if (fs.existsSync(skillsSrc)) {
       const allSkillDirs = fs.readdirSync(skillsSrc, { withFileTypes: true });
       for (const entry of allSkillDirs) {
         if (entry.isDirectory() && selectedSkills.has(entry.name)) {
-          copyDirRecursive(
+          copySafeNoSymlinks(
             path.join(skillsSrc, entry.name),
             path.join(skillsDest, entry.name)
           );
@@ -653,34 +869,180 @@ function extractFiltered(tarballPath, targetDir, selectedSkills, config) {
         }
       }
     }
+
+    // Carry over custom entries from existing .agents/ into staging
+    const { carriedOver, legacyWorkflows, migratedWorkflowCount } = carryOverCustomEntries({
+      targetAgentDir,
+      stagingDir,
+      extractedAgents,
+      manifest: config,
+    });
+
+    return { skillsCopied, carriedOver, legacyWorkflows, migratedWorkflowCount };
   } finally {
-    fs.rmSync(tmpExtractDir, { recursive: true, force: true });
-  }
-
-  return skillsCopied;
-}
-
-// ── Copy directory with exclusion filter ───────────────────────────────────────
-function copyDirFiltered(src, dest, excludeSet) {
-  fs.mkdirSync(dest, { recursive: true });
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  for (const entry of entries) {
-    const baseName = entry.name.replace(/\.md$/, '');
-    if (excludeSet.has(baseName)) continue;
-
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
+    try {
+      fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+    } catch (err) {
+      console.log(`  ${icon.warn}  ${c.yellow}Failed to remove temp extract directory:${c.reset} ${err.message}`);
     }
   }
 }
 
+// ── Agent Directory Safety Inspection (SEC-03) ─────────────────────────────────
+function inspectAgentDir(targetAgentDir) {
+  try {
+    const stat = fs.lstatSync(targetAgentDir);
+    if (stat.isSymbolicLink()) {
+      throw new Error(
+        `Target directory '${targetAgentDir}' is a symbolic link. ` +
+        `Refusing to proceed to prevent unsafe file operations. ` +
+        `Please remove or resolve the symlink manually before installing.`
+      );
+    }
+    if (!stat.isDirectory()) {
+      throw new Error(
+        `Target '${targetAgentDir}' exists but is not a directory. ` +
+        `Please remove or resolve it manually before installing.`
+      );
+    }
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return false;
+    }
+    throw err;
+  }
+}
+
+// ── Backup Directory Safety Inspection (SEC-04) ────────────────────────────────
+function inspectBackupDir(backupDir) {
+  try {
+    const stat = fs.lstatSync(backupDir);
+    if (stat.isSymbolicLink()) {
+      throw new Error(
+        `Backup directory '${backupDir}' is a symbolic link. ` +
+        `Refusing to proceed to prevent unsafe file operations. ` +
+        `Please remove or resolve the symlink manually before installing.`
+      );
+    }
+    if (!stat.isDirectory()) {
+      throw new Error(
+        `Backup path '${backupDir}' exists but is not a directory. ` +
+        `Please remove or resolve it manually before installing.`
+      );
+    }
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return false;
+    }
+    throw err;
+  }
+}
+
+// ── Backup Timestamp & Management (C-CLI-BACKUP, SEC-04) ───────────────────────
+function formatBackupTimestamp(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0');
+  const YYYY = date.getFullYear();
+  const MM = pad(date.getMonth() + 1);
+  const DD = pad(date.getDate());
+  const HH = pad(date.getHours());
+  const mm = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
+  return `${YYYY}${MM}${DD}-${HH}${mm}${ss}`;
+}
+
+function pruneBackups(backupDir, keepCount = 5) {
+  const exists = inspectBackupDir(backupDir);
+  if (!exists) return;
+
+  let entries;
+  try {
+    entries = fs.readdirSync(backupDir);
+  } catch (err) {
+    console.log(`  ${icon.warn}  ${c.yellow}Could not read backup directory for cleanup:${c.reset} ${err.message}`);
+    return;
+  }
+
+  const matchingDirs = [];
+  for (const name of entries) {
+    if (!BACKUP_PATTERN.test(name)) continue;
+    const entryPath = path.join(backupDir, name);
+    try {
+      const stat = fs.lstatSync(entryPath);
+      if (!stat.isSymbolicLink() && stat.isDirectory()) {
+        matchingDirs.push(name);
+      }
+    } catch (err) {
+      // Ignore unreadable entries
+    }
+  }
+
+  matchingDirs.sort().reverse();
+
+  if (matchingDirs.length > keepCount) {
+    const toDelete = matchingDirs.slice(keepCount);
+    for (const dirName of toDelete) {
+      const fullPath = path.join(backupDir, dirName);
+      try {
+        fs.rmSync(fullPath, { recursive: true, force: true });
+      } catch (err) {
+        console.log(`  ${icon.warn}  ${c.yellow}Failed to prune old backup ${dirName}:${c.reset} ${err.message}`);
+      }
+    }
+  }
+}
+
+// ── Safe Swap with Rollback (SEC-03, SEC-04, SEC-06) ───────────────────────────
+function performSafeSwap(stagingDir, targetAgentDir, targetDir) {
+  let backupPath = null;
+  const existingExists = inspectAgentDir(targetAgentDir);
+
+  if (existingExists) {
+    const backupDir = path.join(targetDir, BACKUP_DIR_NAME);
+    const backupDirExists = inspectBackupDir(backupDir);
+    if (!backupDirExists) {
+      fs.mkdirSync(backupDir, { mode: 0o700, recursive: true });
+      fs.chmodSync(backupDir, 0o700);
+    }
+
+    const ts = formatBackupTimestamp();
+    let backupName = `agents-${ts}`;
+    backupPath = path.join(backupDir, backupName);
+    let counter = 1;
+    while (fs.existsSync(backupPath)) {
+      backupName = `agents-${ts}-${counter++}`;
+      backupPath = path.join(backupDir, backupName);
+    }
+
+    fs.renameSync(targetAgentDir, backupPath);
+
+    try {
+      fs.renameSync(stagingDir, targetAgentDir);
+    } catch (swapErr) {
+      try {
+        fs.renameSync(backupPath, targetAgentDir);
+      } catch (rollbackErr) {
+        console.error(
+          `  ${icon.error} ${c.red}CRITICAL: Swap failed and automatic rollback failed: ${rollbackErr.message}\n` +
+          `  Your original configuration is preserved at:\n    ${backupPath}\n` +
+          `  Please restore it manually by moving it back to:\n    ${targetAgentDir}${c.reset}`
+        );
+      }
+      throw swapErr;
+    }
+
+    pruneBackups(backupDir, 5);
+  } else {
+    fs.renameSync(stagingDir, targetAgentDir);
+  }
+
+  return backupPath;
+}
+
 // ── Write .agvrc ───────────────────────────────────────────────────────────────
-function writeAgvrc(targetDir, mode, selectedStacks, deselected) {
-  const rcPath = path.join(targetDir, AGENT_DIR, CONFIG_FILE);
+function writeAgvrc(stagingDir, mode, selectedStacks, deselected) {
+  const rcPath = path.join(stagingDir, CONFIG_FILE);
   const config = {
     version: require('../package.json').version,
     mode,
@@ -688,17 +1050,58 @@ function writeAgvrc(targetDir, mode, selectedStacks, deselected) {
     deselected_rules: deselected.rules ? [...deselected.rules].sort() : [],
     deselected_core_skills: deselected.coreSkills ? [...deselected.coreSkills].sort() : [],
     deselected_agents: deselected.agents ? [...deselected.agents].sort() : [],
-    deselected_workflows: deselected.workflows ? [...deselected.workflows].sort() : [],
     installed_at: new Date().toISOString(),
   };
   fs.writeFileSync(rcPath, JSON.stringify(config, null, 2) + '\n');
 }
 
-// ── Patch .gitignore ───────────────────────────────────────────────────────────
-const AGENTWORK_ENTRY = '.agentwork/';
+// ── Read existing .agvrc ───────────────────────────────────────────────────────
+const VALID_MODES = new Set(['default', 'curated', 'advanced']);
 
 /**
- * Ensures .agentwork/ is listed in .gitignore.
+ * Returns true when a parsed .agvrc has the fields the installer relies on.
+ * The file is user-editable, so its shape is untrusted input.
+ */
+function isValidAgvrc(rc) {
+  return (
+    rc !== null &&
+    typeof rc === 'object' &&
+    !Array.isArray(rc) &&
+    VALID_MODES.has(rc.mode) &&
+    Array.isArray(rc.stacks) &&
+    rc.stacks.every((s) => typeof s === 'string')
+  );
+}
+
+/**
+ * Reads .agents/.agvrc. Returns null when absent, unreadable, a symlink,
+ * or malformed — callers then fall back to a fresh install selection.
+ */
+function readAgvrc(targetDir) {
+  const rcPath = path.join(targetDir, AGENT_DIR, CONFIG_FILE);
+  let parsed;
+  try {
+    const stat = fs.lstatSync(rcPath);
+    if (stat.isSymbolicLink() || !stat.isFile()) return null;
+    parsed = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.error(`  ${icon.warn}  ${c.yellow}Could not parse ${CONFIG_FILE}:${c.reset} ${err.message}`);
+    }
+    return null;
+  }
+  if (!isValidAgvrc(parsed)) {
+    console.error(
+      `  ${icon.warn}  ${c.yellow}Ignoring malformed ${CONFIG_FILE}${c.reset} ${c.dim}(expected "mode" and a "stacks" string array)${c.reset}`
+    );
+    return null;
+  }
+  return parsed;
+}
+
+// ── Patch .gitignore ───────────────────────────────────────────────────────────
+/**
+ * Ensures .agentwork/ and .agv-backup/ are listed in .gitignore.
  * Creates .gitignore if it doesn't exist.
  * Returns: 'created' | 'patched' | 'already_present'
  */
@@ -706,52 +1109,42 @@ function patchGitignore(targetDir) {
   const gitignorePath = path.join(targetDir, '.gitignore');
 
   if (!fs.existsSync(gitignorePath)) {
-    fs.writeFileSync(gitignorePath, `${AGENTWORK_ENTRY}\n`, 'utf8');
+    fs.writeFileSync(gitignorePath, GITIGNORE_ENTRIES.join('\n') + '\n', 'utf8');
     return 'created';
   }
 
   const content = fs.readFileSync(gitignorePath, 'utf8');
   const lines = content.split('\n').map((l) => l.trim());
 
-  if (lines.includes(AGENTWORK_ENTRY)) {
+  const missing = GITIGNORE_ENTRIES.filter((entry) => !lines.includes(entry));
+  if (missing.length === 0) {
     return 'already_present';
   }
 
-  // Append with a preceding newline if the file doesn't end with one
   const separator = content.endsWith('\n') ? '' : '\n';
-  fs.appendFileSync(gitignorePath, `${separator}${AGENTWORK_ENTRY}\n`, 'utf8');
+  fs.appendFileSync(gitignorePath, `${separator}${missing.join('\n')}\n`, 'utf8');
   return 'patched';
 }
 
-// ── Read existing .agvrc ───────────────────────────────────────────────────────
-function readAgvrc(targetDir) {
-  const rcPath = path.join(targetDir, AGENT_DIR, CONFIG_FILE);
-  if (!fs.existsSync(rcPath)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(rcPath, 'utf8'));
-  } catch {
-    return null;
-  }
-}
-
-// ── Read manifest from extracted archive ───────────────────────────────────────
+// ── Read Manifest from Archive or Bundle (SEC-01, SEC-06) ──────────────────────
 function readManifest(tarballPath) {
-  const tmpExtractDir = path.join(os.tmpdir(), `awesome-agv-manifest-${Date.now()}`);
-  fs.mkdirSync(tmpExtractDir, { recursive: true });
+  const tmpExtractDir = fs.mkdtempSync(path.join(os.tmpdir(), 'awesome-agv-manifest-'));
+  fs.chmodSync(tmpExtractDir, 0o700);
 
   try {
     // Extract only the manifest file
     try {
-      execSync(
-        `tar -xzf "${tarballPath}" --strip-components=1 -C "${tmpExtractDir}" "${REPO_NAME}-${BRANCH}/agv.config.json"`,
+      execFileSync(
+        'tar',
+        ['-xzf', tarballPath, '--strip-components=1', '-C', tmpExtractDir, `${REPO_NAME}-${BRANCH}/agv.config.json`],
         { stdio: 'pipe' }
       );
-    } catch {
+    } catch (err) {
       // Fallback: extract everything and find it
       try {
-        execSync(`tar -xzf "${tarballPath}" -C "${tmpExtractDir}"`, { stdio: 'pipe' });
-      } catch {
-        // Ignore extraction failures — we'll fall back to bundled
+        execFileSync('tar', ['-xzf', tarballPath, '-C', tmpExtractDir], { stdio: 'pipe' });
+      } catch (innerErr) {
+        // Fall back to bundled manifest if extraction fails
       }
     }
 
@@ -762,8 +1155,8 @@ function readManifest(tarballPath) {
     }
 
     // Fallback: bundled copy shipped with the CLI package
+    // When installed via npm, layout is: cli/bin/awesome-agv.js + cli/agv.config.json
     if (!fs.existsSync(manifestPath)) {
-      // When installed via npm, layout is: cli/bin/awesome-agv.js + cli/agv.config.json
       const bundledPath = path.resolve(__dirname, '..', 'agv.config.json');
       if (fs.existsSync(bundledPath)) {
         manifestPath = bundledPath;
@@ -784,7 +1177,11 @@ function readManifest(tarballPath) {
 
     return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   } finally {
-    fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+    try {
+      fs.rmSync(tmpExtractDir, { recursive: true, force: true });
+    } catch (err) {
+      console.log(`  ${icon.warn}  ${c.yellow}Failed to remove temp manifest directory:${c.reset} ${err.message}`);
+    }
   }
 }
 
@@ -793,7 +1190,6 @@ function printSuccess(targetDir, mode, selectedStacks, gitignoreResult) {
   const agentDir = path.join(targetDir, AGENT_DIR);
   const rulesDir = path.join(agentDir, 'rules');
   const skillsDir = path.join(agentDir, 'skills');
-  const workflowsDir = path.join(agentDir, 'workflows');
   const agentsDir = path.join(agentDir, 'agents');
 
   const rulesCount = fs.existsSync(rulesDir)
@@ -801,9 +1197,6 @@ function printSuccess(targetDir, mode, selectedStacks, gitignoreResult) {
     : 0;
   const skillsCount = fs.existsSync(skillsDir)
     ? fs.readdirSync(skillsDir, { withFileTypes: true }).filter((d) => d.isDirectory()).length
-    : 0;
-  const workflowsCount = fs.existsSync(workflowsDir)
-    ? fs.readdirSync(workflowsDir).filter((f) => f.endsWith('.md')).length
     : 0;
   const agentsCount = fs.existsSync(agentsDir)
     ? fs.readdirSync(agentsDir).filter((f) => f.endsWith('.md')).length
@@ -817,14 +1210,13 @@ function printSuccess(targetDir, mode, selectedStacks, gitignoreResult) {
         ? `${icon.target} Curated`
         : `${icon.gear} Advanced`;
 
-  // Gitignore status message
   let gitignoreMsg;
   if (gitignoreResult === 'created') {
-    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} created with ${c.cyan}.agentwork/${c.reset} entry`;
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} created with ${c.cyan}.agentwork/${c.reset} and ${c.cyan}.agv-backup/${c.reset}`;
   } else if (gitignoreResult === 'patched') {
-    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} patched — added ${c.cyan}.agentwork/${c.reset}`;
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} patched — added ${c.cyan}.agentwork/${c.reset} and ${c.cyan}.agv-backup/${c.reset}`;
   } else {
-    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} already contains ${c.cyan}.agentwork/${c.reset}`;
+    gitignoreMsg = `${icon.check} ${c.bold}.gitignore${c.reset} already contains required entries`;
   }
 
   console.log(`
@@ -835,7 +1227,6 @@ ${c.green}${c.bold}  Installation complete! ${icon.rocket}${c.reset}
 
   ${icon.book}  ${c.bold}${rulesCount}${c.reset} Rules      ${c.dim}Security, architecture, testing standards${c.reset}
   ${icon.tool}  ${c.bold}${skillsCount}${c.reset} Skills     ${c.dim}Debugging, design, code review, language idioms${c.reset}
-  ${icon.cycle}  ${c.bold}${workflowsCount}${c.reset} Workflows  ${c.dim}End-to-end dev processes${c.reset}
   🤖  ${c.bold}${agentsCount}${c.reset} Agents     ${c.dim}Specialized multi-agent personas${c.reset}
 
   ${gitignoreMsg}
@@ -850,7 +1241,7 @@ ${c.green}${c.bold}  Installation complete! ${icon.rocket}${c.reset}
   ${icon.arrow} ${c.dim}Your AI agent will automatically pick up the${c.reset}
     ${c.dim}${AGENT_DIR}/ directory. No additional configuration needed.${c.reset}
 
-  💡 ${c.bold}Quick start${c.reset} — open a chat with your agent and try:
+  💡 ${c.bold}Quick start${c.reset} — open a chat with your agent and try these command skills:
      ${c.cyan}/workflow-solo${c.reset}  ${c.dim}Build a feature end-to-end (single agent)${c.reset}
      ${c.cyan}/workflow-team${c.reset}  ${c.dim}Build with multi-agent orchestration${c.reset}
      ${c.cyan}/audit${c.reset}          ${c.dim}Review code quality${c.reset}
@@ -860,24 +1251,28 @@ ${c.green}${c.bold}  Installation complete! ${icon.rocket}${c.reset}
 `);
 }
 
-// ── Open URL in default browser (cross-platform zero-dependency) ───────────────
+// ── Open URL in default browser (SEC-07) ───────────────────────────────────────
 function openUrl(url) {
+  if (typeof url !== 'string' || !url.startsWith('https://')) {
+    return false;
+  }
   const platform = os.platform();
   try {
     if (platform === 'darwin') {
-      execSync(`open "${url}"`, { stdio: 'ignore' });
+      execFileSync('open', [url], { stdio: 'ignore' });
     } else if (platform === 'win32') {
-      execSync(`start "" "${url}"`, { stdio: 'ignore' });
+      // Empty string is quoted by Node as "" — the window-title arg `start` expects.
+      execFileSync('cmd', ['/c', 'start', '', url], { stdio: 'ignore' });
     } else {
-      execSync(`xdg-open "${url}"`, { stdio: 'ignore' });
+      execFileSync('xdg-open', [url], { stdio: 'ignore' });
     }
     return true;
-  } catch {
+  } catch (err) {
     return false;
   }
 }
 
-// ── Offer to Star Repository ───────────────────────────────────────────────────
+// ── Offer to Star Repository (SEC-07) ──────────────────────────────────────────
 async function offerStarRepo() {
   // Only offer in interactive TTY sessions
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
@@ -894,9 +1289,9 @@ async function offerStarRepo() {
   if (answer === '' || answer === 'y' || answer === 'yes') {
     let starredViaGh = false;
     try {
-      execSync(`gh repo star ${repoSlug}`, { stdio: 'pipe' });
+      execFileSync('gh', ['repo', 'star', repoSlug], { stdio: 'pipe' });
       starredViaGh = true;
-    } catch {
+    } catch (err) {
       // gh CLI not present, not logged in, or failed
     }
 
@@ -941,14 +1336,14 @@ async function main() {
     options._additive = true;
   }
 
-  // ── Handle existing .agents directory ──
-  if (fs.existsSync(targetAgentDir)) {
+  // ── Handle overwrite confirmation for existing .agents directory (SEC-03) ──
+  const existingAgentsExists = inspectAgentDir(targetAgentDir);
+  if (existingAgentsExists) {
     if (!options.force && !options._additive) {
-      // Non-TTY environments can't prompt — auto-overwrite
       if (!process.stdin.isTTY) {
-        console.log(`  ${icon.arrow} ${c.dim}Existing ${AGENT_DIR}/ found — overwriting (non-interactive mode).${c.reset}`);
+        // Non-TTY environments can't prompt — auto-update (the old .agents/ is backed up first)
+        console.log(`  ${icon.arrow} ${c.dim}Existing ${AGENT_DIR}/ found — will safely update with backup (non-interactive mode).${c.reset}`);
       } else if (existingRc && !options.stacks && !options.all) {
-        // Offer to re-use existing config
         const stackList = existingRc.stacks.join(', ');
         console.log(
           `  ${icon.arrow} ${c.dim}Found existing config${c.reset} ${c.bold}(${existingRc.mode}: ${stackList})${c.reset}`
@@ -977,18 +1372,23 @@ async function main() {
         }
       }
     }
-
-    console.log(`  ${icon.arrow} Removing existing ${AGENT_DIR}/ directory...`);
-    fs.rmSync(targetAgentDir, { recursive: true, force: true });
   }
 
-  // ── Download ──
+  // ── Resolve Tarball (download or C-CLI-ENV local override) ──
   const tmpDir = os.tmpdir();
-  const tarballPath = path.join(tmpDir, `awesome-agv-${Date.now()}.tar.gz`);
+  let tarballSource = null;
+  let tarballPath = null;
+  let stagingDir = null;
 
   try {
-    console.log(`  ${icon.arrow} Fetching latest configuration from GitHub...`);
-    await downloadToFile(TARBALL_URL, tarballPath);
+    tarballSource = resolveTarballSource();
+    tarballPath = tarballSource.tarballPath;
+
+    if (!tarballSource.isLocal) {
+      tarballPath = path.join(tmpDir, `awesome-agv-${Date.now()}.tar.gz`);
+      console.log(`  ${icon.arrow} Fetching latest configuration from GitHub...`);
+      await downloadToFile(TARBALL_URL, tarballPath);
+    }
 
     // ── Read manifest ──
     console.log(`  ${icon.arrow} Reading manifest...`);
@@ -997,17 +1397,14 @@ async function main() {
     // ── Determine what to install ──
     let mode = options._mode || 'default';
     let selectedStackKeys;
-    let deselected = { rules: null, coreSkills: null, agents: null, workflows: null };
-    let extractConfig = { ...manifest, _deselectedRules: null, _deselectedAgents: null, _deselectedWorkflows: null };
+    let deselected = { rules: null, coreSkills: null, agents: null };
+    let extractConfig = { ...manifest, _deselectedRules: null, _deselectedAgents: null };
 
     if (options.all) {
-      // ── Default: install everything ──
       mode = 'default';
       selectedStackKeys = new Set(Object.keys(manifest.skills.stacks));
     } else if (options.stacks) {
-      // ── Non-interactive stacks ──
       mode = options._mode || 'curated';
-      // Validate stack names against manifest
       const validStackKeys = new Set(Object.keys(manifest.skills.stacks));
       const unknownStacks = options.stacks.filter((s) => !validStackKeys.has(s));
       if (unknownStacks.length > 0) {
@@ -1016,12 +1413,9 @@ async function main() {
         console.log('');
       }
       const validStacks = options.stacks.filter((s) => validStackKeys.has(s));
-      const resolvedStacks = resolveRequires(new Set(validStacks), manifest);
-      selectedStackKeys = resolvedStacks;
+      selectedStackKeys = resolveRequires(new Set(validStacks), manifest);
     } else {
-      // ── Interactive mode selection (requires TTY) ──
       if (!process.stdin.isTTY || !process.stdout.isTTY) {
-        // Non-interactive environment (CI, piped input) — default to full install
         console.log(`  ${icon.arrow} ${c.dim}Non-interactive environment detected — defaulting to full install.${c.reset}`);
         console.log(`  ${c.dim}  Use --stacks <list> or --all to control installation non-interactively.${c.reset}`);
         console.log('');
@@ -1037,7 +1431,6 @@ async function main() {
         if (mode === 'default') {
           selectedStackKeys = new Set(Object.keys(manifest.skills.stacks));
         } else {
-          // ── Auto-detect stacks ──
           const detected = detectStacks(options.targetDir, manifest);
           if (detected.size > 0) {
             console.log(`  ${c.dim}Auto-detected from project files:${c.reset}`);
@@ -1049,7 +1442,6 @@ async function main() {
             console.log('');
           }
 
-          // ── Build stack selection tree ──
           const treeItems = buildStackTree(manifest);
           const selectItems = treeItems.map((item) => {
             if (item.separator) return item;
@@ -1074,56 +1466,110 @@ async function main() {
           const rawKeys = new Set(selectedItems.map((i) => i.key));
           selectedStackKeys = resolveRequires(rawKeys, manifest);
 
-          // ── Advanced mode: granular selection (future) ──
           if (mode === 'advanced') {
-            console.log(`  ${c.dim}Advanced mode: all rules, agents, and workflows are included.${c.reset}`);
+            console.log(`  ${c.dim}Advanced mode: all rules and agents are included.${c.reset}`);
             console.log(`  ${c.dim}To customize further, edit ${AGENT_DIR}/ after installation.${c.reset}`);
             console.log('');
           }
         }
-      } // end TTY block
+      }
     }
-
 
     // ── Build final skill set ──
     const selectedSkills = buildSkillsSet(selectedStackKeys, manifest);
 
-    // Handle advanced mode deselected core skills
     if (deselected.coreSkills && deselected.coreSkills.size > 0) {
       for (const skill of deselected.coreSkills) {
         selectedSkills.delete(skill);
       }
     }
 
-    // ── Extract ──
-    console.log(`  ${icon.arrow} Extracting ${AGENT_DIR}/ directory...`);
-    const actualSkillsCopied = extractFiltered(tarballPath, options.targetDir, selectedSkills, extractConfig);
-    console.log(`  ${c.dim}  ${actualSkillsCopied} skills installed${c.reset}`);
+    // ── Create Staging Directory (same filesystem, SEC-06) ──
+    const stagingDirName = `.agents.staging-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    stagingDir = path.join(options.targetDir, stagingDirName);
 
-    // ── Write .agvrc ──
-    writeAgvrc(options.targetDir, mode, selectedStackKeys, deselected);
+    // ── Extract into Staging Directory & Carry Over ──
+    console.log(`  ${icon.arrow} Extracting configuration into staging area...`);
+    const { skillsCopied, carriedOver, legacyWorkflows, migratedWorkflowCount } = extractToStaging(
+      tarballPath,
+      stagingDir,
+      targetAgentDir,
+      selectedSkills,
+      extractConfig
+    );
+    console.log(`  ${c.dim}  ${skillsCopied} skills staged${c.reset}`);
+
+    // ── Write .agvrc inside Staging Directory ──
+    writeAgvrc(stagingDir, mode, selectedStackKeys, deselected);
+
+    // ── Perform Safe Swap ──
+    console.log(`  ${icon.arrow} Applying configuration to ${AGENT_DIR}/...`);
+    const backupPath = performSafeSwap(stagingDir, targetAgentDir, options.targetDir);
+    stagingDir = null;
 
     // ── Patch .gitignore ──
     const gitignoreResult = patchGitignore(options.targetDir);
 
-    // ── Success ──
+    // ── User Notices for Carried Over & Legacy Items ──
+    if (migratedWorkflowCount > 0) {
+      console.log(
+        `\n  ${icon.check} ${c.dim}${migratedWorkflowCount} built-in workflow(s) replaced by same-named command skills (v4.0.0) — slash commands unchanged.${c.reset}`
+      );
+    }
+
+    if (legacyWorkflows.length > 0) {
+      console.log(`\n  ${icon.warn}  ${c.yellow}Custom legacy workflows found (not carried over — kept in backup):${c.reset}`);
+      for (const wf of legacyWorkflows) {
+        console.log(`     - ${wf}`);
+      }
+      console.log(`     ${c.dim}Workflows were replaced by command skills in v4.0.0.${c.reset}`);
+      console.log(`     ${c.dim}To restore them, convert each into ${AGENT_DIR}/skills/<name>/SKILL.md${c.reset}`);
+    }
+
+    if (carriedOver.length > 0) {
+      console.log(`\n  ${icon.check} ${c.bold}Preserved ${carriedOver.length} custom item(s) from previous installation:${c.reset}`);
+      for (const item of carriedOver) {
+        console.log(`     ${icon.arrow} ${c.cyan}${item}${c.reset}`);
+      }
+    }
+
+    if (backupPath) {
+      const relBackup = path.relative(process.cwd(), backupPath) || backupPath;
+      console.log(`\n  ${icon.arrow} Previous ${AGENT_DIR}/ backed up to: ${c.cyan}${relBackup}/${c.reset}`);
+      console.log(`  ${c.dim}  (Note: Modified upstream files are not carried over, but are preserved in the backup)${c.reset}`);
+    }
+
+    // ── Success Summary ──
     printSuccess(options.targetDir, mode, selectedStackKeys, gitignoreResult);
 
     // ── Optional Star Repository Prompt ──
     await offerStarRepo();
   } catch (err) {
     console.error(`\n  ${icon.error} ${c.red}Installation failed:${c.reset} ${err.message}\n`);
-
-    if (fs.existsSync(targetAgentDir)) {
-      fs.rmSync(targetAgentDir, { recursive: true, force: true });
-    }
-
-    process.exit(1);
+    // Set exitCode rather than calling process.exit(): exit() terminates
+    // synchronously and would skip the finally-block cleanup below.
+    process.exitCode = 1;
   } finally {
-    if (fs.existsSync(tarballPath)) {
-      fs.unlinkSync(tarballPath);
+    if (stagingDir && fs.existsSync(stagingDir)) {
+      try {
+        fs.rmSync(stagingDir, { recursive: true, force: true });
+      } catch (cleanupErr) {
+        console.error(`  ${icon.warn}  ${c.yellow}Failed to remove staging directory:${c.reset} ${cleanupErr.message}`);
+      }
+    }
+    if (tarballSource && !tarballSource.isLocal && tarballPath && fs.existsSync(tarballPath)) {
+      try {
+        fs.unlinkSync(tarballPath);
+      } catch (cleanupErr) {
+        console.error(`  ${icon.warn}  ${c.yellow}Failed to remove downloaded tarball:${c.reset} ${cleanupErr.message}`);
+      }
     }
   }
 }
 
-main();
+// Errors thrown before the install try-block (e.g. refusing a symlinked .agents/)
+// land here, so they are reported cleanly instead of as an unhandled rejection.
+main().catch((err) => {
+  console.error(`\n  ${icon.error} ${c.red}Installation failed:${c.reset} ${err.message}\n`);
+  process.exitCode = 1;
+});

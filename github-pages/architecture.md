@@ -28,7 +28,7 @@ Awesome AGV solves this with a **three-tier loading system** inspired by how ope
 The three tiers are:
 1. **Mandates** — always-on, loaded every session
 2. **Principles** — contextual rules, agent-activated
-3. **Skills** — procedural capabilities, loaded by agent or workflow when needed
+3. **Skills** — procedural capabilities, loaded on demand or invoked as command skills (formerly workflows)
 
 ---
 
@@ -44,13 +44,11 @@ Mandates are **non-negotiable constraints** loaded in every session. They repres
 | ------------------------------- | ------------------------------------------------------- |
 | Rugged Software Constitution    | Core philosophy — defensible, responsible, maintainable |
 | Security Mandate                | Never trust input, deny by default, fail closed         |
-| Code Completion Mandate         | Always validate code before delivery                    |
 | Logging & Observability Mandate | All operations must be logged                           |
-| Concurrency & Threading Mandate | Don't over-use concurrency                              |
 | Core Design Principles          | SOLID, DRY, YAGNI, KISS                                 |
 | Architectural Pattern           | I/O isolation, pure business logic                      |
 | Code Organization Principles    | Feature-based organization                              |
-| Code Idioms & Conventions       | Idiomatic code for target language                      |
+| Code Idioms & Conventions       | Idiomatic code + Code Completion Workflow (validate before delivery) |
 | Project Structure               | Feature-based layout (single source of truth)           |
 | Rule Priority                   | Conflict resolution                                     |
 | Documentation Principles        | When and how to document code                           |
@@ -84,7 +82,6 @@ Principles are **detailed guidance** activated only when the agent determines th
 | Command Execution                  | Shell scripts, external processes          |
 | Testing Strategy                   | Writing tests, test organization           |
 | Dependency Management              | Package management, version pinning        |
-| Logging & Observability Principles | Implementation guide (via skill)           |
 | Accessibility Principles           | WCAG, semantic HTML, ARIA                  |
 | Git Workflow Principles            | Commits, branches, PRs                     |
 
@@ -115,7 +112,7 @@ When rules conflict, the priority system resolves them:
 ```
 1. Security Mandate          ← Always wins
 2. Rugged Software Constitution
-3. Code Completion Mandate
+3. Code Idioms (incl. completion mandate) + Logging Mandate
 4. Testability-First Design
 5. Feature-specific principles
 6. PRD-gated principles      ← Only when PRD requires it
@@ -137,38 +134,39 @@ When rules conflict, the priority system resolves them:
 ## Relationship Between Components
 
 ```
-┌───────────────────────────────────────────┐
-│  Workflows                                  │
-│  (Orchestrate the development lifecycle)    │
-│                                             │
-│  /workflow-solo → phases → ship            │
-│  /workflow-team → agents → primitives       │
-├───────────────────────────────────────────┤
-│  Tier 3: Skills (58)                        │
-│  (Procedural capabilities, on demand)       │
-│                                             │
-│  Language Idioms (27), parallel-dispatch,   │
-│  debugging-protocol, code-review, adr,      │
-│  ci-cd, feature-flags, perf-optimization... │
-├───────────────────────────────────────────┤
-│  Tier 2: Principles (15)                    │
-│  (Contextual rules, agent-activated)        │
-│                                             │
-│  Security Principles, Database Design,      │
-│  Testing Strategy, API Design...            │
-├───────────────────────────────────────────┤
-│  Tier 1: Mandates (10)                      │
-│  (Always-on, non-negotiable constraints)    │
-│                                             │
-│  Security Mandate, Code Completion Mandate, │
-│  Logging Mandate, Core Design Principles    │
-└───────────────────────────────────────────┘
+┌───────────────────────────────────────────────┐
+│  Command Skills                               │
+│  (User-invoked lifecycle entry points)        │
+│                                               │
+│  /workflow-solo → tracks → phases → ship      │
+│  /workflow-team → overseer → conductor        │
+│                   → Tier 1/2/3 agents         │
+├───────────────────────────────────────────────┤
+│  Tier 3: Skills (68 total, 11 command)        │
+│  (Procedural capabilities, on demand)         │
+│                                               │
+│  Language Idioms (27), parallel-dispatch,     │
+│  debugging-protocol, code-review, adr,        │
+│  ci-cd, feature-flags, perf-optimization...   │
+├───────────────────────────────────────────────┤
+│  Tier 2: Principles (15)                      │
+│  (Contextual rules, agent-activated)          │
+│                                               │
+│  Security Principles, Database Design,        │
+│  Testing Strategy, API Design...              │
+├───────────────────────────────────────────────┤
+│  Tier 1: Mandates (10)                        │
+│  (Always-on, non-negotiable constraints)      │
+│                                               │
+│  Security Mandate, Code Idioms & Conventions, │
+│  Logging Mandate, Core Design Principles      │
+└───────────────────────────────────────────────┘
 ```
 
 - **Mandates (Tier 1)** form the foundation — always active
 - **Principles (Tier 2)** sit above, activated by context
 - **Skills (Tier 3)** are procedural capabilities: language idioms, CI/CD patterns, parallel dispatch, debugging protocols, and more
-- **Workflows** orchestrate everything into structured development cycles
+- **Command Skills** orchestrate everything into structured development cycles
 
 ---
 
@@ -184,13 +182,33 @@ When rules conflict, the priority system resolves them:
 ### Adding a New Skill
 
 1. Create a directory in `.agents/skills/{skill-name}/`
-2. Create `SKILL.md` with YAML frontmatter (`name`, `description`)
+2. Create `SKILL.md` with YAML frontmatter (`name` matching the directory, and a third-person `description` saying what it does and when to use it)
 3. Add detailed instructions, templates, and examples
-4. Optionally add `scripts/`, `examples/`, or `resources/` directories
+4. Optionally add `scripts/`, `examples/`, `resources/`, or `references/` directories
+5. If contributing upstream, register the skill in `agv.config.json` (`skills.core`, or a stack's `skills` list for idiom skills), copy the change to `cli/agv.config.json` so both files stay byte-identical, and run `bash scripts/validate-skills.sh`
 
-### Adding a New Workflow
+### Adding a New Command Skill
 
-1. Create a markdown file in `.agents/workflows/`
-2. Add YAML frontmatter with a `description`
-3. Define phases with clear completion criteria
-4. Reference applicable rules and skills
+Command skills are user-invoked entry points (slash commands). The agent never triggers them on its own, and spawned subagents must refuse to run them.
+
+1. Create a directory in `.agents/skills/{skill-name}/`
+2. Create `SKILL.md` with YAML frontmatter:
+   ```yaml
+   ---
+   name: {skill-name}
+   description: >-
+     Third-person summary. User-invoked entry point via /{skill-name}; not for autonomous or subagent use.
+   disable-model-invocation: true
+   ---
+   ```
+3. Add the entry-point guard as a blockquote directly after the H1 title:
+   ```markdown
+   # {Skill Title}
+
+   > **Entry-point guard:** This is a user-invoked command skill (`/{skill-name}`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
+   ```
+4. Define phases with clear completion criteria and reference applicable rules and skills
+5. If contributing upstream:
+   - Add `{skill-name}` to `skills.core` in `agv.config.json` and make the same change in `cli/agv.config.json` (the two files must stay byte-identical)
+   - Add `{skill-name}` to the `COMMAND_SKILLS` set in `scripts/validate-skills.sh` (otherwise the validator warns about `disable-model-invocation: true` on a non-command skill)
+   - Run `bash scripts/validate-skills.sh` and fix any failures

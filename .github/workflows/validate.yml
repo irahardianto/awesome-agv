@@ -1,0 +1,34 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate rule references
+        run: bash scripts/validate-rule-refs.sh
+
+      - name: Validate skills and configuration
+        run: bash scripts/validate-skills.sh
+
+      - name: Check CLI syntax
+        run: node --check cli/bin/awesome-agv.js
+
+      - name: Run CLI smoke tests
+        run: bash scripts/smoke-test-cli.sh

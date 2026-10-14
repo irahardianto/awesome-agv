@@ -1,8 +1,13 @@
 ---
-description: Bug-fix workflow for all bug fixes — from hotfixes to complex debugging
+name: bugfix
+description: >-
+  Fixes bugs of any size from hotfixes to complex debugging sessions using root cause diagnosis and TDD. User-invoked entry point via /bugfix; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
-# Bug-Fix Workflow
+# Bug-Fix Skill
+
+> **Entry-point guard:** This is a user-invoked command skill (`/bugfix`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 ## Purpose
 Fix bugs of any size — from one-line hotfixes to multi-file debugging sessions — without the overhead of a full feature workflow.

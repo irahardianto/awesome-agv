@@ -1,8 +1,13 @@
 ---
-description: Unit test coverage improvement — analyze gaps, prioritize by risk, and systematically improve unit test coverage on existing code
+name: test-unit
+description: >-
+  Analyzes gaps, prioritizes by risk, and systematically improves unit test coverage on existing code. User-invoked entry point via /test-unit; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # Improve Unit Test Coverage
+
+> **Entry-point guard:** This is a user-invoked command skill (`/test-unit`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
 
 ## Purpose
 Retroactive unit test coverage improvement for existing codebases. For greenfield development, use `/workflow-solo` — TDD is built in.
@@ -15,9 +20,9 @@ Retroactive unit test coverage improvement for existing codebases. For greenfiel
 
 ## When NOT to Use
 - Greenfield development (use `/workflow-solo` — TDD is built in)
-- Integration test gaps (use `/test-integration`)
-- E2E test gaps (use `/test-e2e`)
-- Need test scenarios first (use `/test-scenarios`)
+- Integration test gaps (use `/test-integration` skill)
+- E2E test gaps (use `/test-e2e` skill)
+- Need test scenarios first (use `/test-scenarios` skill)
 
 ## Phases
 

@@ -1,15 +1,20 @@
 ---
-description: Single-agent feature workflow — lean sequential pipeline with adaptive complexity
+name: workflow-solo
+description: >-
+  Single-agent feature pipeline with adaptive complexity. User-invoked entry point via /workflow-solo; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # Workflow Solo — Lean Feature Pipeline
 
+> **Entry-point guard:** This is a user-invoked command skill (`/workflow-solo`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
+
 ## Purpose
 
-Single-agent workflow for feature development. Execute phases sequentially with complexity-appropriate depth.
+Single-agent skill for feature development. Execute phases sequentially with complexity-appropriate depth.
 
 - For multi-agent orchestration with parallel dispatch and review layers, use `/workflow-team`.
-- Subagent spawning is a native capability — use it when beneficial, but this workflow doesn't prescribe a multi-agent hierarchy.
+- Subagent spawning is a native capability — use it when beneficial, but this skill doesn't prescribe a multi-agent hierarchy.
 
 ## Complexity Assessment
 

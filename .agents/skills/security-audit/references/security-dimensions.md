@@ -1,6 +1,6 @@
 # Security Audit Dimensions
 
-This file defines the 6 MECE security dimensions and the subagent system prompt template used by the `/security-audit` workflow.
+This file defines the 6 MECE security dimensions and the subagent system prompt template used by the `/security-audit` skill.
 
 ## Subagent System Prompt Template
 
@@ -30,7 +30,7 @@ finding, classify severity using the Severity Taxonomy in your role file
 
 When complete:
 1. Write findings to .agentwork/findings-security-{dimension-key}.md
-2. Message @coordinator (the main agent running this /security-audit workflow): 'findings ready'
+2. Message @coordinator (the main agent running this /security-audit skill): 'findings ready'
 
 Do NOT fix issues. Do NOT review code quality outside your security
 dimension. Produce findings with evidence and remediation guidance only.

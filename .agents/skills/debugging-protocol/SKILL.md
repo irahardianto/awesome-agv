@@ -27,7 +27,7 @@ Create a new debugging document using the provided template. This serves as the 
 
 1. Create `docs/debugging/` if it doesn't exist
 2. Copy the template and fill in the issue details
-3. This makes the session accessible from other conversations and agents (e.g., when handing off to a `/bugfix` or `/workflow-solo` workflow)
+3. This makes the session accessible from other conversations and agents (e.g., when handing off to a `/bugfix` or `/workflow-solo` skill)
 
 ### 2. Define the Problem
 Clearly articulate the **System Context** and **Problem Statement**.

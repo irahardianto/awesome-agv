@@ -1,7 +1,7 @@
 {
   "name": "awesome-agv",
-  "version": "3.6.0",
-  "description": "Selective installer for Awesome AGV — a rugged, high-quality AI Agent configuration suite with 25 rules, 59 skills, 11 workflows, and 21 agent personas.",
+  "version": "4.0.0",
+  "description": "Selective installer for Awesome AGV — a rugged, high-quality AI Agent configuration suite with 25 rules, 68 skills (including 11 command skills), and 21 agent personas.",
   "bin": {
     "awesome-agv": "./bin/awesome-agv.js"
   },
@@ -16,7 +16,7 @@
     "configuration",
     "rules",
     "skills",
-    "workflows",
+    "command-skills",
     "awesome-agv",
     "cli"
   ],

@@ -1,11 +1,16 @@
 ---
-description: Integration test coverage — audit I/O adapters, set up test infrastructure, and systematically improve integration test coverage
+name: test-integration
+description: >-
+  Audits I/O adapters, sets up test infrastructure, and systematically improves integration test coverage. User-invoked entry point via /test-integration; not for autonomous or subagent use.
+disable-model-invocation: true
 ---
 
 # Improve Integration Test Coverage
 
+> **Entry-point guard:** This is a user-invoked command skill (`/test-integration`). If you are a spawned subagent, do NOT execute this skill — return to your assigned scope card.
+
 ## Purpose
-Audit and improve integration test coverage for I/O adapters. For unit test gaps, use `/test-unit`.
+Audit and improve integration test coverage for I/O adapters. For unit test gaps, use the `/test-unit` skill.
 
 ## When to Use
 - I/O adapters (database, HTTP clients, file system, message queues) lack integration tests
@@ -14,8 +19,8 @@ Audit and improve integration test coverage for I/O adapters. For unit test gaps
 - After discovering adapter bugs in production
 
 ## When NOT to Use
-- Unit test gaps (use `/test-unit`)
-- E2E test gaps (use `/test-e2e`)
+- Unit test gaps (use `/test-unit` skill)
+- E2E test gaps (use `/test-e2e` skill)
 - New feature development (use `/workflow-solo`)
 
 ## Phases

@@ -1,17 +1,19 @@
 {
-  "version": "3.6.0",
+  "version": "4.0.0",
   "core": {
-    "paths": ["rules/", "workflows/", "agents/"]
+    "paths": ["rules/", "agents/"]
   },
   "skills": {
     "core": [
       "adr",
+      "agent-protocols",
       "api-documentation",
+      "audit",
       "browser-automation",
+      "bugfix",
       "chaos-testing",
       "ci-cd",
       "cli-development",
-      "code-audit",
       "code-review",
       "data-engineering",
       "debugging-protocol",
@@ -28,15 +30,25 @@
       "parallel-dispatch",
       "payment-integration",
       "perf-optimization",
+      "perf-optimize",
+      "refactor",
       "refactoring-patterns",
       "research-methodology",
       "security-audit",
       "sequential-thinking",
       "structured-spec",
       "supply-chain-security",
+      "test-e2e",
+      "test-integration",
+      "test-scenarios",
+      "test-unit",
       "testability-patterns",
       "testing-strategy",
-      "agent-protocols"
+      "workflow-solo",
+      "workflow-team"
+    ],
+    "retired": [
+      "code-audit"
     ],
     "stacks": {
       "go": {

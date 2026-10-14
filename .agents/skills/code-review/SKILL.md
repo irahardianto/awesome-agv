@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Structured code review protocol for inspecting code quality against the full rule set. Use when auditing code written by yourself or another agent, during the /audit workflow, or when the user asks for a code review.
+description: Structured code review protocol for inspecting code quality against the full rule set. Use when auditing code written by yourself or another agent, during the /audit skill, or when the user asks for a code review.
 ---
 
 # Code Review Skill
@@ -9,7 +9,7 @@ description: Structured code review protocol for inspecting code quality against
 Systematically review code against the full antigravity rule set. Catches issues that linters miss: architectural violations, missing observability, business logic errors, pattern inconsistencies.
 
 ## When to Invoke
-- During the `/audit` workflow (as part of parallel subagent dispatch)
+- During the `/audit` skill (as part of parallel subagent dispatch)
 - When user asks for a code review outside any workflow
 - **Best practice:** Invoke in a fresh conversation (not the same one that authored the code) to avoid confirmation bias
 
@@ -81,7 +81,7 @@ List of rules referenced during this review.
 
 ### 5. Save the Report
 
-When invoked via the `/audit` workflow, you **MUST** persist the findings to the repo:
+When invoked via the `/audit` skill, you **MUST** persist the findings to the repo:
 
 **Path:** `docs/audits/review-findings-{feature}-{YYYY-MM-DD}-{HHmm}.md`
 
@@ -131,7 +131,7 @@ Load the anti-pattern checklist for the language(s) under review:
 
 ### 8. Cross-Boundary Checks
 
-For full audits, cross-boundary concerns (integration contracts, database schema, configuration hygiene, dependency health, test coverage gaps) are checked via the dedicated MECE dimension scope cards in the `/audit` workflow (Dimension F & G) — defined in `.agents/skills/code-audit/references/audit-dimensions.md`.
+For full audits, cross-boundary concerns (integration contracts, database schema, configuration hygiene, dependency health, test coverage gaps) are checked via the dedicated MECE dimension scope cards in the `/audit` skill (Dimension F & G) — defined in `.agents/skills/audit/references/audit-dimensions.md`.
 
 When invoking this skill standalone (outside `/audit`), apply the applicable dimensions from that checklist manually and tag findings with `[INT]`, `[DB]`, or `[CFG]` as appropriate.
 
