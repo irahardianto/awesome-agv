@@ -252,7 +252,7 @@ Write idiomatic code for the target language. Follow community conventions, use 
 
 {: .note }
 > **Language idioms are now Skills, not Rules.**
-> The Go, TypeScript, Vue, Flutter, Rust, and Python idiom files have been consolidated into dedicated skill directories under `.agents/skills/`. Load them via the `code-idioms-and-conventions.md` rule which delegates to the appropriate skill. See the [Skills Reference](/awesome-agv/skills#language--framework-idioms-24) for the full list.
+> The Go, TypeScript, Vue, Flutter, Rust, and Python idiom files have been consolidated into dedicated skill directories under `.agents/skills/`. Load them via the `code-idioms-and-conventions.md` rule which delegates to the appropriate skill. See the [Skills Reference](/awesome-agv/skills#language--framework-idioms-27) for the full list.
 
 ### Testing Strategy
 {: .d-inline-block }
@@ -325,7 +325,7 @@ Rules that ensure the development pipeline is reliable and automated.
 > - GitOps/Kubernetes: `.agents/skills/ci-cd/references/gitops-kubernetes.md`
 > - Feature Flags: `.agents/skills/feature-flags/SKILL.md`
 >
-> See the [Skills Reference](/awesome-agv/skills#architecture--infrastructure-skills-4) for details.
+> See the [Skills Reference](/awesome-agv/skills#architecture--infrastructure-skills-5) for details.
 
 
 ### Rule Priority
@@ -338,7 +338,7 @@ always_on
 Conflict resolution when rules contradict each other. Priority order:
 1. Security Mandate (always wins)
 2. Rugged Software Constitution
-3. Code Idioms and Conventions (including completion mandate)
+3. Code Idioms and Conventions (including completion mandate) and Logging & Observability Mandate
 4. Testability-First Design
 5. Feature-specific principles
 6. PRD-gated principles (feature flags, GitOps)

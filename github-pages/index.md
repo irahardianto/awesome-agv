@@ -27,8 +27,8 @@ The setup is built on the [Rugged Software Manifesto](https://ruggedsoftware.org
 | Component  | Count | Purpose                                                                                             |
 | ---------- | ----- | --------------------------------------------------------------------------------------------------- |
 | **Rules**  | 25    | Security, reliability, architecture, and maintainability                                            |
-| **Skills** | 68    | Specialized capabilities (including 11 command skills) for workflows, debugging, design, and idioms |
-| **Agents** | 21    | Specialized personas for multi-agent orchestration arranged in a 4-tier hierarchy                   |
+| **Skills** | 68    | Specialized capabilities (including 11 command skills, formerly workflows) for development lifecycles, debugging, design, and idioms |
+| **Agents** | 21    | Specialized personas for multi-agent orchestration arranged in a 4-level (L0–L3) hierarchy          |
 
 ## Core Philosophy
 
@@ -48,19 +48,19 @@ The setup uses a **three-tier loading system** to minimize noise while maximizin
 Non-negotiable constraints loaded in every session. These fire regardless of context:
 - Security Mandate
 - Rugged Software Constitution
-- Code Completion Mandate
+- Code Idioms & Conventions (includes the Code Completion Workflow)
 - Logging & Observability Mandate
-- Concurrency & Threading Mandate
+- Architectural Pattern (testability-first design)
 
 ### Tier 2: Principles (Contextual)
 Detailed guidance activated only when the agent is working on relevant areas:
 - Database rules activate when writing queries
-- CI/CD rules activate when editing pipelines
+- Error handling rules activate when designing error types and recovery
 - Accessibility rules activate when building UIs
 
 ### Tier 3: Skills (On-Demand)
 Procedural capabilities loaded on demand or invoked as command skills:
-- Language idioms (Go, TypeScript, Vue, Flutter, Rust, Python + 18 more)
+- Language idioms (Go, TypeScript, Vue, Flutter, Rust, Python + 21 more)
 - Debugging protocol, code review, guardrails
 - CI/CD patterns, feature flags, parallel dispatch
 
@@ -109,7 +109,7 @@ Explore each component in detail:
 
 - [**Rules Reference**](/awesome-agv/rules) — All 25 rules organized by category
 - [**Skills Reference**](/awesome-agv/skills) — All 68 specialized skills (including 11 command skills)
-- [**Command Skills Reference**](/awesome-agv/workflows) — All 11 command skills (formerly workflows)
+- [**Command Skills Reference**](/awesome-agv/workflows) — All 11 command skills
 - [**Agent Personas**](/awesome-agv/agents) — 21 specialized agent personas for multi-agent orchestration
 - [**Architecture**](/awesome-agv/architecture) — How the rule system is designed
 - [**Best Practices**](/awesome-agv/best-practices) — Tips for getting the most out of the setup

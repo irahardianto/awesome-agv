@@ -94,7 +94,7 @@ internal/
 
 **Adaptation steps:**
 1. Edit `project-structure.md` — remove `apps/backend/` prefix
-2. Update validation paths in `.agents/skills/workflow-solo/SKILL.md` if needed
+2. Update verification commands in `.agents/skills/go-idioms/SKILL.md` if needed — command skills such as `/workflow-solo` run whatever quality checks the loaded idiom skill defines
 3. Remove frontend-related rules if not needed
 
 ---
@@ -122,7 +122,7 @@ src/
 
 **Adaptation steps:**
 1. Edit `project-structure.md` — remove `apps/frontend/` prefix
-2. Update validation commands in `.agents/skills/workflow-solo/SKILL.md` if needed
+2. Update verification commands in `.agents/skills/typescript-idioms/SKILL.md` / `.agents/skills/vue-idioms/SKILL.md` if needed
 3. Remove backend-specific rules if not needed (database design, etc.)
 
 ---
@@ -288,7 +288,7 @@ tests/
 
 **Adaptation steps:**
 1. Edit `project-structure.md` — use Python Backend layout
-2. Update validation commands in `.agents/skills/workflow-solo/SKILL.md` to use Python commands
+2. Update verification commands in `.agents/skills/python-idioms/SKILL.md` if needed (command skills run the loaded idiom skill's quality checks)
 3. Remove frontend/Go-specific rules if not needed
 
 ---
@@ -314,7 +314,7 @@ The full setup works well for solo developers. Consider:
 - Each sub-team may customize rules for their domain
 - Use microservices layout with per-service rule overrides
 - Enforce `/audit` before all merges to main
-- Use CI/CD rules to automate verification in pipelines
+- Use the `ci-cd` skill to automate verification in pipelines
 
 ---
 
@@ -332,7 +332,7 @@ If a rule doesn't apply to your project, you can safely delete it:
 **Never remove:**
 - `rugged-software-constitution.md`
 - `security-mandate.md`
-- `code-completion-mandate.md`
+- `code-idioms-and-conventions.md` (contains the Code Completion Workflow)
 - `rule-priority.md`
 
 These form the foundation that makes the entire system work.
@@ -345,11 +345,11 @@ The idiom files are modular — you can swap or replace them to match your proje
 
 | If You Want To...                   | Files to Edit or Replace                                                                                           |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Swap Vue for React**              | Edit `.agents/skills/vue-idioms/SKILL.md` or add a React idiom skill, update references in agent profiles          |
+| **Swap Vue for React**              | Use the bundled `react-idioms` skill (with `typescript-idioms`) instead of `vue-idioms`, update references in agent profiles |
 | **Swap Riverpod for BLoC/Cubit**    | Edit `.agents/skills/flutter-idioms/SKILL.md` — replace Riverpod sections with BLoC patterns                       |
-| **Swap Go for Java/Node**           | Add a new idiom skill, update `.agents/rules/code-idioms-and-conventions.md` table to load it                      |
+| **Swap Go for Java/Node**           | Use the bundled `java-idioms` / `typescript-idioms` (or add a new `{lang}-idioms` skill) and update agent profiles  |
 | **Swap tokio for async-std (Rust)** | Edit `.agents/skills/rust-idioms/SKILL.md` — replace tokio patterns with async-std equivalents                     |
-| **Add a new language entirely**     | Create `.agents/skills/{lang}-idioms/SKILL.md`, add a row to the `code-idioms-and-conventions.md` skill table      |
+| **Add a new language entirely**     | Create `.agents/skills/{lang}-idioms/SKILL.md` — `code-idioms-and-conventions.md` loads it by naming convention    |
 
 **Key principle:** The idiom files only affect the agent's *coding style and tooling*. The universal rules (security, testability, architecture) remain unchanged regardless of your stack.
 
@@ -364,6 +364,5 @@ When adapting, these are the only files you typically need to change:
 | `project-structure.md`                   | Directory layout, app paths                 |
 | `.agents/skills/{lang}-idioms/SKILL.md`  | Language patterns, tooling, conventions     |
 | `.agents/skills/{lang}-idioms/references/project-structure.md` | Language-specific directory layout |
-| `.agents/skills/workflow-solo/SKILL.md`  | Validation phase/commands for your languages|
-| `code-idioms-and-conventions.md`         | Quality commands & workflows (delegates to idioms)|
+| `code-idioms-and-conventions.md`         | Code Completion Workflow (quality commands come from idiom skills)|
 | Add/remove rule files                    | Rules for your specific needs               |

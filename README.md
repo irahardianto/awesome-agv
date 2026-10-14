@@ -76,8 +76,10 @@ In **Curated** and **Advanced** modes, the installer auto-detects your project's
 | --- | --- |
 | `--stacks <list>` | Comma-separated stacks to include (**additive** with existing config) |
 | `--all` | Install everything (equivalent to Default mode) |
-| `--force, -f` | Replace existing `.agents/` — re-prompts from scratch |
+| `--force, -f` | Skip the overwrite prompt and ignore the saved `.agvrc` (fresh selection). The existing `.agents/` is still backed up and custom items carried over. |
 | `--help, -h` | Show help |
+
+To install from a local archive instead of GitHub (offline setups, testing a fork), set `AGV_LOCAL_TARBALL=/path/to/archive.tar.gz`. The archive needs the same layout as GitHub's branch download (`awesome-agv-main/.agents/` and `awesome-agv-main/agv.config.json`).
 
 ### Examples
 
@@ -106,21 +108,29 @@ npx awesome-agv --stacks typescript,vue --force
     ```
 2.  Ensure your AI agent is configured to read from the `.agents` directory (most well-known AI coding assistants adhere to the `.agents` convention by default, no action needed) or manually ingest the `.agents/rules/**` as part of its system prompt.
 
-### Upgrading to v4.0.0
+Manual copies don't get the installer's backups or custom-file carry-over, so prefer `npx awesome-agv` for updates.
 
-- **Why:** Antigravity has deprecated workflows, with complete platform retirement scheduled for November 1, 2026. In the `agy` CLI 1.2.16, workflow slash commands are already no longer registered (`"deprecate-workflows": true`).
-- **What changed:** All 11 development workflows are now **command skills** located at `.agents/skills/<name>/SKILL.md`. They are invoked exactly as before using the same slash commands (e.g., `/workflow-solo`, `/workflow-team`, `/audit`, `/bugfix`). To prevent autonomous agents and subagents from auto-triggering them inadvertently (which could cause infinite recursion loops or persona hijacking), command skills use the new `disable-model-invocation: true` YAML frontmatter field. This undocumented-but-verified platform field hides skills from the model's auto-discovery catalog while keeping user slash commands fully functional.
-- **How to upgrade:**
-  Re-run the installer:
-  ```sh
-  npx awesome-agv
-  ```
-  - **Automatic backup:** Your previous `.agents/` directory is automatically backed up to `.agv-backup/agents-<timestamp>/` before changes are applied.
-  - **Custom file carry-over:** User-created skills, rules, and agents that do not exist in the upstream manifest are carried over automatically.
-  - **Custom legacy workflows:** Any custom legacy workflows are listed and preserved in the backup directory — convert each to `.agents/skills/<name>/SKILL.md` with `disable-model-invocation: true` in the frontmatter.
+### Upgrading from v3.x
 
-> [!WARNING]
-> **Do NOT run Antigravity's built-in `/migrate-workflows` command** on an `awesome-agv` installation. The built-in migrator skips `security-audit` due to its overwrite protection (`.bak` collision), creates naive copies without subagent entry-point guards, and cannot preserve the clean architectural separation between command runbooks and reference knowledge skills. Always upgrade by re-running `npx awesome-agv`.
+v4.0.0 turns the 11 workflows into **command skills** (`.agents/skills/<name>/SKILL.md`), because Antigravity has deprecated workflows and retires them on November 1, 2026. You run them exactly as before: `/workflow-solo`, `/workflow-team`, `/audit`, `/bugfix`, and so on.
+
+```sh
+npx awesome-agv@latest
+```
+
+The installer:
+- backs up your current `.agents/` to `.agv-backup/agents-<timestamp>/` (the 5 most recent are kept);
+- replaces each built-in workflow with the command skill of the same name;
+- carries over your own skills, rules and agents (anything whose name isn't shipped upstream);
+- lists any custom workflows, which stay in the backup for you to convert;
+- adds `.agentwork/` and `.agv-backup/` to `.gitignore`.
+
+Edits you made to *shipped* files are not carried over; re-apply them from the backup. To roll back: `rm -rf .agents && mv .agv-backup/agents-<timestamp> .agents`.
+
+> [!NOTE]
+> You don't need Antigravity's built-in `/migrate-workflows`: the installer *is* the migration. A generic conversion omits the `disable-model-invocation` setting and entry-point guards that stop agents from starting commands on their own. If you already ran it, run `npx awesome-agv@latest` to replace those skills.
+
+Full guide, including how to convert custom workflows: [Upgrading from v3.x](https://irahardianto.github.io/awesome-agv/getting-started#upgrading-from-v3x).
 
 <!-- USAGE -->
 ## Usage
@@ -135,7 +145,7 @@ The setup uses a **three-tier loading system** to minimize noise while maximizin
 | --- | --- | --- | --- |
 | **1** | **Mandates** | `always_on` | Non-negotiable constraints loaded in every session (security, logging, code completion, architecture). |
 | **2** | **Principles** | `model_decision` | Contextual guidance activated only when working on relevant areas (e.g., database rules activate only when writing queries). |
-| **3** | **Skills** | `paths:` or rule reference | Deep expertise loaded on demand — language idioms when touching source files, CI/CD when editing pipelines, testability patterns when architectural rules reference them. |
+| **3** | **Skills** | `description` match, rule reference, or slash command | Deep expertise loaded on demand — language idioms when writing code in that language, CI/CD when editing pipelines, testability patterns when architectural rules reference them. Command skills run only when you type their slash command. |
 
 Conflicts between rules are resolved by [Rule Priority](.agents/rules/rule-priority.md) — security always wins.
 
@@ -145,11 +155,11 @@ Skills use one of three loading mechanisms, chosen by type:
 
 | Mechanism | When used | Examples |
 | --- | --- | --- |
-| **`paths:` triggers** | Language-specific idiom skills | `go-idioms` loads on `**/*.go`; `vue-idioms` loads on `**/*.vue`, `**/store/**/*.ts` |
-| **`name:` + `description:` only** | Cross-cutting skills loaded via rule reference | `testability-patterns` (referenced from `architectural-pattern.md`); `logging-implementation` (referenced from `logging-and-observability-mandate.md`) |
-| **Both `paths:` + `name:`/`description:`** | Infrastructure/domain skills | `ci-cd` (Dockerfiles, CI configs); `feature-flags` (feature flag files) |
+| **`description` match** | Knowledge skills: the agent loads one when its frontmatter `description` fits the task | `ci-cd` when editing pipelines; `debugging-protocol` when stuck on a bug |
+| **Rule reference** | Language idioms and cross-cutting skills that rules require | `code-idioms-and-conventions.md` requires loading `{language}-idioms` before writing code; `architectural-pattern.md` references `testability-patterns`; `logging-and-observability-mandate.md` references `logging-implementation` |
+| **Slash command only** | Command skills (`disable-model-invocation: true`) | `/workflow-solo`, `/audit`, `/bugfix`; never loaded by the agent on its own |
 
-> **Design invariant:** Cross-cutting skills that apply to all languages (testability, logging) are never loaded via language-specific `paths:` triggers. They are always referenced from always-on rules so they load regardless of language.
+> **Design invariant:** Cross-cutting skills that apply to all languages (testability, logging) are referenced from always-on rules, so they load regardless of language.
 
 ### Rule Dependencies
 
@@ -355,13 +365,13 @@ User-invoked entry points via slash commands, configured with `disable-model-inv
 *   **[Parallel Dispatch](.agents/skills/parallel-dispatch/SKILL.md)**: MECE task decomposition, scope sizing, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch.
 *   **[Agent Protocols](.agents/skills/agent-protocols/SKILL.md)**: Shared behavioral protocols for all agents: recursive nesting, pre-implementation restatement, agent definition cascade, parallel dispatch format, and completion reporting with reply-to address routing.
 
-#### 🌐 Language & Framework Idioms (26)
+#### 🌐 Language & Framework Idioms (27)
 
-Language-specific patterns, tooling, project layout, and quality commands. Each skill auto-loads via `paths:` triggers when the agent touches files in that language.
+Language-specific patterns, tooling, project layout, and quality commands. The `code-idioms-and-conventions` rule requires the agent to load the matching idiom skill before writing code in that language; the installer pre-selects stacks it detects from files like `go.mod`.
 
 **Core stacks (with bundled project structure references):**
 
-| Skill | Ecosystem | Auto-loads on |
+| Skill | Ecosystem | Typical files |
 |---|---|---|
 | [Go Idioms](.agents/skills/go-idioms/SKILL.md) + [layout](.agents/skills/go-idioms/references/project-structure.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `**/*.go`, `**/go.mod` |
 | [TypeScript Idioms](.agents/skills/typescript-idioms/SKILL.md) + [layout](.agents/skills/typescript-idioms/references/project-structure.md) | Strict mode, type narrowing, Zod, vitest | `**/*.ts`, `**/*.tsx` |
@@ -434,11 +444,11 @@ All code-writing agents are hardened with **always-on mandates** (`security-mand
 
 See the [workflow-team](.agents/skills/workflow-team/SKILL.md) command skill for the full dispatch protocol, including adaptive tier routing, recursive parallel dispatch with MECE file ownership, and DAG-based execution ordering.
 
-### Command Skills (formerly Workflows) (11)
+### Command Skills (11)
 
-The setup includes opinionated, end-to-end command skills that chain rules and skills into structured development processes. Each command skill is user-invoked via slash command and configured with `disable-model-invocation: true` to prevent unintended auto-triggering by agents.
+Command skills (formerly workflows) are opinionated, end-to-end processes that chain rules and skills into structured development cycles. You start one with its slash command. Each sets `disable-model-invocation: true` and opens with an entry-point guard, so agents and subagents never start one on their own. Full details: [Command Skills Reference](https://irahardianto.github.io/awesome-agv/workflows).
 
-#### 🏭 Feature Workflow — Single Agent (`/workflow-solo`)
+#### 🏭 Feature Pipeline — Single Agent (`/workflow-solo`)
 
 A lean, single-agent pipeline with adaptive complexity routing. The agent assesses task scope, risk, and knowledge to route into one of three tracks:
 
@@ -448,19 +458,19 @@ A lean, single-agent pipeline with adaptive complexity routing. The agent assess
 | **Standard** | Any dimension Medium/High | RESEARCH → IMPLEMENT → VERIFY → COMMIT |
 | **Thorough** | Multiple dimensions High | RESEARCH → IMPLEMENT → VERIFY (full) → COMMIT |
 
-Each phase references existing rules and skills rather than restating content — the workflow is 133 lines total. Subagent spawning is allowed but not prescribed.
+Each phase references existing rules and skills rather than restating them. Subagent spawning is allowed but not prescribed.
 
 #### 🤖 Multi-Agent Orchestration (`/workflow-team`)
 
-The multi-agent pipeline boots an `@overseer` supervisor that spawns a `@conductor` for build orchestration. The conductor assesses task complexity using a 3-signal check (scope, risk, knowledge) and routes into adaptive tiers:
+For work spanning more than 10 files or 3+ modules, or carrying security or data risk. Your agent becomes an `@overseer` supervisor that spawns a `@conductor` for build orchestration. The conductor routes the task to a tier using three signals (files, scope, risk):
 
 | Tier | When | Pipeline |
 |------|------|----------|
-| **Tier 1** | Single-domain, low risk | Builder → Reviewer |
-| **Tier 2** | Multi-domain or medium risk | Scout → Design → Tech-Lead + Builders → Reviewer → Red Team |
-| **Tier 3** | Cross-cutting, high risk | Scout → Design → Multiple Tech-Leads (parallel) → Reviewer → Red Team |
+| **Tier 1** | ≤5 files, single module, no auth/migration/API changes | Conductor → Builder (self-review + tests) |
+| **Tier 2** | 6+ files or cross-module, internal API | Conductor → Tech-Leads/Builders → Reviewer → Red Team |
+| **Tier 3** | Security-critical, public API, or data migration | Tier 2 + enhanced security focus (Red Team with `@security-engineer`) |
 
-Includes system prompt templates for all agent roles, MECE file ownership for parallel execution, and resilience protocols (conductor succession, overseer role identity lock, cleanup fallback).
+The overseer, not the conductor, spawns the Red Team, so validation runs against your original requirements without development context. Includes system prompt templates for all agent roles, MECE file ownership for parallel execution, and resilience protocols (watchdog timers, conductor succession, cleanup fallback).
 
 #### 🧪 Testing Command Skills
 
@@ -471,7 +481,7 @@ Specialized command skills for retroactive testing improvements on existing code
 | [`/test-unit`](.agents/skills/test-unit/SKILL.md) | ANALYZE → PRIORITIZE → REFACTOR → TEST → VERIFY | Coverage-gap-first unit test improvement — analyze gaps, prioritize by business risk and git churn, refactor for testability if needed |
 | [`/test-integration`](.agents/skills/test-integration/SKILL.md) | AUDIT → INFRASTRUCTURE → TEST → VERIFY | Adapter audit — scan for I/O boundaries, set up Testcontainers/mocks, write contract-compliance tests |
 | [`/test-e2e`](.agents/skills/test-e2e/SKILL.md) | PLAN → SETUP → AUTHOR → EXECUTE → REPORT | Platform-adaptive E2E — web (Playwright) + mobile (Flutter/Patrol/Maestro), journey-based with evidence capture |
-| [`/test-scenarios`](.agents/skills/test-scenarios/SKILL.md) | INPUT → INVENTORY → ANALYZE → DERIVE → EXPAND → ORGANIZE → OUTPUT → HUMAN REVIEW | Hybrid structured derivation + mutation-informed expansion — generates prioritized test scenarios that feed into the above workflows |
+| [`/test-scenarios`](.agents/skills/test-scenarios/SKILL.md) | INPUT → INVENTORY → ANALYZE → DERIVE → EXPAND → ORGANIZE → OUTPUT → HUMAN REVIEW | Hybrid structured derivation + mutation-informed expansion — generates prioritized test scenarios that feed into the three testing command skills above |
 
 #### 🔧 Specialized Command Skills
 
@@ -517,19 +527,19 @@ Specialized command skills for retroactive testing improvements on existing code
     ├── test-unit/               # Command skill: unit test coverage (/test-unit)
     ├── workflow-solo/           # Command skill: single-agent pipeline (/workflow-solo)
     ├── workflow-team/           # Command skill: multi-agent orchestration (/workflow-team)
-    ├── go-idioms/               # paths: **/*.go — includes references/project-structure.md
-    ├── typescript-idioms/       # paths: **/*.ts, **/*.tsx
-    ├── vue-idioms/              # paths: **/*.vue, **/store/**/*.ts, **/*.store.ts
-    ├── flutter-idioms/          # paths: **/*.dart, **/analysis_options.yaml
-    ├── rust-idioms/             # paths: **/*.rs, **/Cargo.toml
-    ├── python-idioms/           # paths: **/*.py, **/pyproject.toml
+    ├── go-idioms/               # Go — includes references/project-structure.md
+    ├── typescript-idioms/       # TypeScript
+    ├── vue-idioms/              # Vue 3 + Pinia
+    ├── flutter-idioms/          # Flutter + Riverpod
+    ├── rust-idioms/             # Rust
+    ├── python-idioms/           # Python
     ├── testability-patterns/    # reference-loaded from architectural-pattern.md
     ├── logging-implementation/  # reference-loaded from logging-and-observability-mandate.md
     ├── testing-strategy/        # test doubles, naming, infrastructure patterns
     ├── mobile-testing/          # Flutter integration_test, Patrol, Maestro, golden testing
     │   └── references/          # flutter.md, maestro.md — framework-specific details
-    ├── ci-cd/                   # paths: Dockerfile, .github/workflows/*, Jenkinsfile, ...
-    ├── feature-flags/           # paths: feature*flag*, feature*toggle* (PRD-gated)
+    ├── ci-cd/                   # Pipelines, Dockerfiles, deployment promotion
+    ├── feature-flags/           # Feature flag lifecycle (PRD-gated)
     ├── debugging-protocol/      # Core engineering (reference-loaded)
     ├── code-review/
     ├── guardrails/
@@ -558,7 +568,7 @@ Specialized command skills for retroactive testing improvements on existing code
 
 ## Opinionated Technology Choices
 
-Awesome AGV ships with **opinionated defaults** for specific technology stacks. Each stack has a dedicated idiom skill that auto-loads when touching files in that language, providing patterns, tooling, project layout, and quality commands.
+Awesome AGV ships with **opinionated defaults** for specific technology stacks. Each stack has a dedicated idiom skill that the agent loads before writing code in that language, providing patterns, tooling, project layout, and quality commands.
 
 | Stack            | Default Choice                                      | Idiom Skill                                                       |
 | ---------------- | --------------------------------------------------- | ----------------------------------------------------------------- |
@@ -577,8 +587,8 @@ This setup supports different project structures:
 | Project Type            | Adaptation                                                       |
 | ----------------------- | ---------------------------------------------------------------- |
 | **Monorepo** (default)  | Use as-is                                                        |
-| **Single backend**      | Remove frontend command skills, keep backend idiom skill         |
-| **Single frontend**     | Remove backend command skills, keep frontend idiom skills        |
+| **Single backend**      | Remove frontend idiom skills, keep backend idiom skill           |
+| **Single frontend**     | Remove backend idiom skills, keep frontend idiom skills          |
 | **Microservices**       | Adapt `project-structure.md` per service, add service mesh rules |
 | **Mobile (Flutter/RN)** | Use flutter-idioms or react-idioms skill                        |
 
@@ -592,8 +602,18 @@ Contributions are what make the open source community such an amazing place to l
 1.  Fork the Project
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+4.  Run the checks that CI enforces ([`validate.yml`](.github/workflows/validate.yml)):
+    ```sh
+    bash scripts/validate-rule-refs.sh   # @-references in rules resolve
+    bash scripts/validate-skills.sh      # skill frontmatter, manifest parity, command-skill flags
+    node --check cli/bin/awesome-agv.js
+    bash scripts/smoke-test-cli.sh       # end-to-end installer scenarios
+    ```
+    Adding or renaming a skill? Register it in `agv.config.json` and keep `cli/agv.config.json` byte-identical.
+5.  Push to the Branch (`git push origin feature/AmazingFeature`)
+6.  Open a Pull Request
+
+Significant design decisions are recorded as ADRs in [`docs/decisions/`](docs/decisions/), e.g. [0001: Migrate workflows to command skills](docs/decisions/0001-migrate-workflows-to-skills.md).
 
 <!-- LICENSE -->
 ## License

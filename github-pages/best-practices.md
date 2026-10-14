@@ -36,7 +36,7 @@ Each conversation should have a single, focused purpose:
 
 ### Reference Persisted Artifacts
 
-When starting a fix workflow from audit findings, reference the persisted report:
+When starting a fix (`/bugfix` or `/refactor`) from audit findings, reference the persisted report:
 
 > "Fix the critical issues in `docs/audits/review-findings-auth-2026-02-15-1430.md`"
 
@@ -44,26 +44,32 @@ The agent can read the file directly — no need to copy-paste findings.
 
 ---
 
-## Workflow Selection
+## Choosing a Command Skill
+
+Command skills (formerly workflows) are the slash-command entry points listed in the [Command Skills Reference](/awesome-agv/workflows).
 
 ### Decision Tree
 
 ```
 Is this a new feature?
-├── Yes → /workflow-solo
+├── Yes
+│   ├── >10 files, 3+ modules, security/data risk, or needs adversarial review? → /workflow-team
+│   └── Otherwise → /workflow-solo
 └── No
-    ├── Is it a bug fix?
-    │   ├── Bug fix? → /bugfix
-    │   └── Complex or unknown root cause? → /workflow-solo (with debugging)
+    ├── Is it a bug fix (any size, incl. unknown root cause)? → /bugfix
     ├── Is it restructuring?
     │   ├── Specific goal? → /refactor
     │   └── "Find what to improve"? → /audit first, then /refactor
-    └── Is it a review? → /audit
+    ├── Is it a review?
+    │   ├── General quality review → /audit
+    │   └── Security-only deep dive → /security-audit
+    ├── Is it a performance problem? → /perf-optimize
+    └── Is it test coverage on existing code? → /test-unit, /test-integration, /test-e2e, /test-scenarios
 ```
 
 ### Don't Skip the Research Phase
 
-The Research phase (inside `workflow-solo`) exists because:
+The RESEARCH phase (inside `/workflow-solo`) runs on the Standard and Thorough tracks — only the Light track (small, low-risk, familiar work) skips it. It exists because:
 - AI agents produce better code when they understand the full context
 - Documentation search prevents relying on stale training data
 - Research logs create institutional knowledge for future conversations
@@ -100,12 +106,12 @@ Choose the right trigger for custom rules:
 
 ### Customizing Language-Specific Rules
 
-Awesome AGV already includes dedicated idiom skills for Go, TypeScript, Vue, Flutter, Rust, and Python. To customize:
+Awesome AGV already includes dedicated idiom skills for Go, TypeScript, Vue, Flutter, Rust, and Python, plus 21 community language and framework skills. To customize:
 
 1. **Edit the existing idiom skill** — e.g., `.agents/skills/go-idioms/SKILL.md` to add team-specific conventions
-2. **Replace an idiom skill** — add a React skill directory if you use React instead of Vue
+2. **Swap an idiom skill** — e.g., use the bundled `react-idioms` instead of `vue-idioms` if you use React
 3. **Add a new language** — create `.agents/skills/{lang}-idioms/SKILL.md` with appropriate sections
-4. **Register in** `code-idioms-and-conventions.md` — add a row to the language table so the agent knows when to activate it
+4. **Follow the naming convention** — `code-idioms-and-conventions.md` loads `.agents/skills/{language}-idioms/SKILL.md` by convention, so no registration table is needed; give the skill a clear `description` so the agent knows when to load it
 
 See [Adapting — Changing the Default Framework](/awesome-agv/adapting#changing-the-default-framework) for a full guide.
 
@@ -115,7 +121,7 @@ See [Adapting — Changing the Default Framework](/awesome-agv/adapting#changing
 
 ### When to Invoke Skills
 
-Skills are not auto-activated — they're procedural guides that the agent follows when certain conditions are met:
+Knowledge skills are loaded on demand — the agent reads one when its `description` matches the task. Command skills are different: they set `disable-model-invocation: true` and only run when you type their slash command. Typical matches:
 
 | Situation                          | Skill                     |
 | ---------------------------------- | ------------------------- |
@@ -126,15 +132,16 @@ Skills are not auto-activated — they're procedural guides that the agent follo
 | Building web UIs                   | Frontend Design           |
 | Building mobile UIs                | Mobile Design             |
 
-### Combining Skills with Workflows
+### Combining Skills with Command Skills
 
-Some workflows automatically suggest skills:
+Command skills point to knowledge skills at specific phases:
 
-- `/workflow-solo` Phase 1 → **Sequential Thinking** for complex decisions
-- `/workflow-solo` Phase 2 → **Guardrails** (pre-flight + self-review)
-- `/workflow-solo` Phase 2 → **Debugging Protocol** if tests fail unexpectedly
-- `/audit` Phase 1 → **Code Review** (always)
-- `/refactor` Phase 1 → **Sequential Thinking** for multi-step refactoring
+- `/workflow-solo` RESEARCH → **Research Methodology**, **Sequential Thinking**, **ADR**
+- `/workflow-solo` IMPLEMENT → **Guardrails** (pre-flight + self-review), **Sequential Thinking**, **Debugging Protocol** if tests fail unexpectedly
+- `/workflow-solo` VERIFY (Thorough track) → **Testing Strategy** for integration infrastructure, **Browser Automation** for E2E
+- `/bugfix` Diagnose → **Debugging Protocol** for non-obvious root causes
+- `/audit` Multi-Dimensional Audit Scan → dimension subagents load **Code Review** language modules for anti-patterns
+- `/refactor` Impact Analysis → **Sequential Thinking** for multi-step refactoring
 
 ---
 
@@ -217,11 +224,11 @@ services/
 Don't override `always_on` rules without understanding the consequences. Security and logging mandates exist for critical reasons.
 
 ### 2. Skipping Phases for Speed
-The `/workflow-solo` workflow forbids phase-skipping. If a phase feels unnecessary, use a specialized workflow instead:
+`/workflow-solo` already right-sizes the process: it routes each task to a Light, Standard, or Thorough track (only Light skips RESEARCH), and every phase has a gate that must pass before the next one starts. Don't skip phases beyond what the track allows. If the process still feels too heavy, use a leaner command skill instead:
 - Bug fix, not a new feature? Use `/bugfix` (lean 3-phase flow without research overhead)
 
 ### 3. Mixing Concerns in Conversations
-One conversation = one workflow = one purpose. Don't audit and fix in the same conversation.
+One conversation = one command skill = one purpose. Don't audit and fix in the same conversation.
 
 ### 4. Ignoring Research Logs
 Research logs in `docs/research_logs/` serve as institutional memory. Future conversations can reference them instead of re-researching the same topics.
@@ -243,24 +250,23 @@ Always run full verification before shipping.
 
 | Situation | Recommendation |
 | --- | --- |
-| Single-domain feature (backend only, frontend only) | `/workflow-solo` |
-| Cross-domain feature (backend + frontend + database) | `/workflow-team` |
-| Feature needing specialized review (security, UX) | `/workflow-team` |
+| Work spans >10 files or touches 3+ modules | `/workflow-team` |
+| Involves security or data risk (auth, migrations, public API) | `/workflow-team` |
+| Needs adversarial review (independent `@reviewer` + Red Team) | `/workflow-team` |
+| Smaller feature (single module, familiar patterns) | `/workflow-solo` |
 | Bug fix (any complexity) | `/bugfix` |
-| Solo developer, quick iteration | `/workflow-solo` |
-| Team project, parallel work streams | `/workflow-team` |
 
 ### Parallel Dispatch Tips
 
-- **Start small:** Use 2-3 parallel agents before scaling to 5+
-- **MECE is non-negotiable:** Every file must be assigned to exactly one write-agent. Overlap = merge conflicts
-- **Integration tasks are separate:** After parallel agents complete, dispatch a dedicated `[integration]` agent to wire modules together
-- **Review in parallel too:** Dispatch `@reviewer[auth]` + `@reviewer[tasks]` to review parallel branches simultaneously
+- **Stagger dispatch:** The pipeline dispatches at most 3 agents at once; 4+ go out in batches of 3
+- **MECE is non-negotiable:** Every file must be assigned to exactly one write-agent. All agents share one workspace (`inherit`), so overlapping write scopes clobber each other
+- **Integration belongs to the tech-lead:** Builders implement domain logic; the card's `@tech-lead` writes the wiring (DI, routes, module config)
+- **Partition large reviews:** `@reviewer` runs a single pass, but can be dispatched as `@reviewer[auth]` + `@reviewer[tasks]` over MECE partitions of the codebase
 
 ### Agent Composition
 
-- **Always SCOUT first** — research agents provide context that makes build agents more effective
-- **DESIGN before BUILD** — architect produces contracts, builders consume them. Skipping DESIGN leads to integration failures
-- **PRE-MORTEM for high-risk features** — `@incident-responder` identifies failure modes before code is written, saving expensive rework
-- **Cross-layer experts in DESIGN** — pull `@database-expert` or `@security-engineer` into the design phase for data-heavy or security-sensitive features
+- **SCOUT when the domain is unclear** — EXPLORE is optional; scouts give build agents context they would otherwise lack
+- **DESIGN before BUILD** (Tier 2+) — `@architect`, `@database-expert`, and `@ux-craftsman` produce contracts that are frozen before builders start. Skipping DESIGN leads to integration failures
+- **PRE-MORTEM for high-risk features** — `@incident-responder` identifies failure modes in proposed designs before code is written, saving expensive rework
+- **Security validation at Tier 3** — for security-critical work, the Red Team includes `@security-engineer`
 

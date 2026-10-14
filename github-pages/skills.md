@@ -318,7 +318,7 @@ These skills power the `/workflow-team` multi-agent orchestration, providing rou
 
 **File:** `.agents/skills/agent-protocols/SKILL.md`
 
-Shared behavioral protocols for all agents in the multi-agent pipeline: recursive nesting, pre-implementation restatement, parallel dispatch format, and agent definition cascade.
+Shared behavioral protocols for all agents in the multi-agent pipeline: recursive nesting, pre-implementation restatement, agent spawn protocol, parallel dispatch format, completion reporting, and sovereign subagent awareness.
 
 **When to Use:**
 - When coordinating task delegation across named sub-agents
@@ -334,7 +334,7 @@ Shared behavioral protocols for all agents in the multi-agent pipeline: recursiv
 MECE task decomposition, file ownership enforcement, DAG-based execution, and safe merge protocol for intra-domain parallel dispatch. The safety invariants that prevent merge chaos when multiple agents write in parallel. Applies recursively at every nesting depth.
 
 **When to Use:**
-- Before dispatching multiple instances of the same agent type within a primitive
+- Before dispatching multiple instances of the same agent type within a scope card
 - When any agent (at any depth) needs to parallelize its own workload across sub-subagents
 - When re-planning after a sub-task failure
 
@@ -389,7 +389,7 @@ Structured logging patterns, log levels, mandatory context fields (correlationId
 
 Pipeline design, multi-stage Docker builds, image scanning, SBOM attestation (Cosign keyless), and environment promotion. Layered by complexity — Level 0 (all projects), Level 1 (containerized), Level 2 (Kubernetes). GitOps and Kubernetes patterns in `references/gitops-kubernetes.md`.
 
-*Auto-loads on Dockerfile, `.github/workflows/*`, Jenkinsfile, `*.gitlab-ci.yml`.*
+*Use when designing, creating, or debugging pipelines (e.g. `.github/workflows/*`, Jenkinsfile, `.gitlab-ci.yml`), container builds, or release workflows.*
 
 ---
 
@@ -400,8 +400,6 @@ Pipeline design, multi-stage Docker builds, image scanning, SBOM attestation (Co
 Release flags, ops kill switches, experiment flags, and permission gating. Includes lifecycle rules (90-day max for release flags), flag evaluation patterns, and CI/CD checklist.
 
 **PRD-gated** — load only when PRD or technical architecture explicitly requires gradual rollout, A/B testing, or kill switches.
-
-*Auto-loads on `feature*flag*`, `feature*toggle*` file patterns.*
 
 ---
 
@@ -436,16 +434,16 @@ Mobile E2E testing patterns: Screen Object Model, test data seeding, state reset
 
 Language-specific patterns, tooling, and conventions. Each skill follows the same structure: idioms, error handling, testing, anti-patterns, and formatting/linting commands.
 
-**Core stacks (auto-load via `paths:` triggers):**
+**Core stacks (loaded via the `code-idioms-and-conventions` rule; the CLI pre-selects them when it detects the listed files):**
 
-| Skill | Ecosystem | Auto-loads on |
+| Skill | Ecosystem | CLI detects |
 | --- | --- | --- |
-| [Go Idioms](.agents/skills/go-idioms/SKILL.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `**/*.go`, `**/go.mod` |
-| [TypeScript Idioms](.agents/skills/typescript-idioms/SKILL.md) | Strict mode, type narrowing, Zod, vitest | `**/*.ts`, `**/*.tsx` |
-| [Vue Idioms](.agents/skills/vue-idioms/SKILL.md) | Vue 3 Composition API, Pinia (Setup Store), composables | `**/*.vue`, `**/store/**/*.ts` |
-| [Flutter Idioms](.agents/skills/flutter-idioms/SKILL.md) | Riverpod 3, freezed, go_router, const widgets | `**/*.dart`, `**/pubspec.yaml` |
-| [Rust Idioms](.agents/skills/rust-idioms/SKILL.md) | Ownership, tokio, thiserror/anyhow, clippy pedantic | `**/*.rs`, `**/Cargo.toml` |
-| [Python Idioms](.agents/skills/python-idioms/SKILL.md) | Type hints, Protocols, ruff, mypy strict, pytest | `**/*.py`, `**/pyproject.toml` |
+| [Go Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/go-idioms/SKILL.md) | Go stdlib, error wrapping, table-driven tests, gofumpt | `go.mod`, `go.sum` |
+| [TypeScript Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/typescript-idioms/SKILL.md) | Strict mode, type narrowing, Zod, vitest | `tsconfig.json` |
+| [Vue Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/vue-idioms/SKILL.md) | Vue 3 Composition API, Pinia (Setup Store), composables | `*.vue` |
+| [Flutter Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/flutter-idioms/SKILL.md) | Riverpod 3, freezed, go_router, const widgets | `pubspec.yaml` |
+| [Rust Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/rust-idioms/SKILL.md) | Ownership, tokio, thiserror/anyhow, clippy pedantic | `Cargo.toml` |
+| [Python Idioms](https://github.com/irahardianto/awesome-agv/blob/main/.agents/skills/python-idioms/SKILL.md) | Type hints, Protocols, ruff, mypy strict, pytest | `pyproject.toml`, `requirements.txt`, `setup.py` |
 
 **Community language skills (21 additional ecosystems):**
 
@@ -466,6 +464,7 @@ Language-specific patterns, tooling, and conventions. Each skill follows the sam
 | **Next.js** (`.agents/skills/nextjs-idioms/SKILL.md`) | App Router, RSC, ISR |
 | **PHP** (`.agents/skills/php-idioms/SKILL.md`) | PHP 8+, type declarations, Composer |
 | **PostgreSQL** (`.agents/skills/postgres-idioms/SKILL.md`) | PostgreSQL best practices — schema design, query performance, indexing, connection management, RLS, concurrency, monitoring, and migrations |
+| **Rails** (`.agents/skills/rails-idioms/SKILL.md`) | ActiveRecord scopes, N+1 prevention, validations, RESTful routing, RSpec/Minitest |
 | **React** (`.agents/skills/react-idioms/SKILL.md`) | Hooks, Suspense, Server Components |
 | **Ruby** (`.agents/skills/ruby-idioms/SKILL.md`) | Blocks, modules, RSpec |
 | **Spring Boot** (`.agents/skills/spring-boot-idioms/SKILL.md`) | Spring DI, JPA, WebFlux |
@@ -473,7 +472,7 @@ Language-specific patterns, tooling, and conventions. Each skill follows the sam
 | **Swift** (`.agents/skills/swift-idioms/SKILL.md`) | SwiftUI, Combine, async/await |
 
 {: .note }
-> These 21 community skills extend coverage beyond the 6 core language stacks (Go, TypeScript, Vue 3, Flutter/Dart, Rust, Python) which auto-load via the rule system.
+> These 21 community skills extend coverage beyond the 6 core language stacks (Go, TypeScript, Vue 3, Flutter/Dart, Rust, Python) that ship as the opinionated defaults.
 
 ---
 
@@ -567,10 +566,10 @@ See the [Command Skills Reference](/awesome-agv/workflows) for full details on e
 
 ### Feature & Team Orchestration
 - **workflow-solo** (`/workflow-solo`): Single-agent feature pipeline with adaptive complexity routing (Light / Standard / Thorough).
-- **workflow-team** (`/workflow-team`): Multi-agent hierarchical orchestration across 4 pipeline layers (Supervisor, Conductor, Leads, Builders, Reviewers).
+- **workflow-team** (`/workflow-team`): Multi-agent pipeline: `@overseer` (L0) spawns `@conductor` (L1), which routes the work to Tier 1/2/3 and dispatches tech-leads, specialized builders, scouts, and a single-pass `@reviewer` (L2). For Tier 2+, the overseer also spawns `@red-team-lead` for independent delivery validation.
 
 ### Quality & Maintenance
-- **audit** (`/audit`): Code review and quality inspection. Reference scope cards and report templates live in `.agents/skills/audit/references/`.
+- **audit** (`/audit`): Multi-dimensional code quality, security, and integrity review with parallel subagents. Dimension scope cards, the subagent prompt template, and the report template live in `.agents/skills/audit/references/`.
 - **security-audit** (`/security-audit`): Structured security review using parallel subagents across vulnerability dimensions.
 - **perf-optimize** (`/perf-optimize`): Profile-driven performance optimization (prerequisite: `perf-optimization` knowledge skill).
 - **bugfix** (`/bugfix`): Lean 3-phase bug fix lifecycle (Diagnose → Fix + Test → Verify + Ship).
