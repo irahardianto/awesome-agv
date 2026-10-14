@@ -18,6 +18,11 @@
 #   7. .agv-backup is a symlink: refuse and fail closed, target untouched
 #   8. .agents is a dangling symlink: refuse with clear message, fail closed
 #   9. AGV_LOCAL_TARBALL with spaces & shell metacharacters: safe execution, no injection
+#  10. Upgrade from v3 layout: built-in workflows not reported as custom,
+#      custom workflows reported
+#  11. Malformed .agvrc: ignored with a warning, install succeeds, no crash
+#
+#   Failure scenarios (3, 7, 8) also assert no .agents.staging-* dir is left behind.
 #
 # Exit codes:
 #   0 — all scenarios passed
@@ -65,6 +70,19 @@ run_cli() {
     cd "$target_dir"
     AGV_LOCAL_TARBALL="$tarball" node "$CLI_BIN" "$target_dir" "${flags[@]}" </dev/null
   )
+}
+
+# Fails (non-zero) if a run left a .agents.staging-* directory in the target.
+# Failed installs must clean up after themselves, not just leave .agents/ intact.
+check_no_staging_leftovers() {
+  local dir="$1"
+  local leftovers
+  leftovers=$(find "$dir" -mindepth 1 -maxdepth 1 -name '.agents.staging-*' 2>/dev/null | wc -l)
+  if [[ "$leftovers" -ne 0 ]]; then
+    echo -e "  ${RED}✗ FAIL${NC} $leftovers .agents.staging-* director(ies) left behind"
+    return 1
+  fi
+  echo -e "  ${GREEN}✓${NC} No .agents.staging-* directories left behind"
 }
 
 # -----------------------------------------------------------------------------
@@ -291,6 +309,8 @@ else
   echo -e "  ${RED}✗ FAIL${NC} Existing .agents/ was modified or deleted during failed install"
   ((S3_ERRORS++)) || true
 fi
+
+check_no_staging_leftovers "$S3_DIR" || ((S3_ERRORS++)) || true
 
 if [[ $S3_ERRORS -eq 0 ]]; then
   echo -e "  ${GREEN}PASS: Scenario 3 passed${NC}"
@@ -531,6 +551,8 @@ else
   ((S7_ERRORS++)) || true
 fi
 
+check_no_staging_leftovers "$S7_DIR" || ((S7_ERRORS++)) || true
+
 if [[ $S7_ERRORS -eq 0 ]]; then
   echo -e "  ${GREEN}PASS: Scenario 7 passed${NC}"
 else
@@ -578,6 +600,17 @@ else
   echo -e "  ${RED}✗ FAIL${NC} Dangling symlink was deleted or overwritten"
   ((S8_ERRORS++)) || true
 fi
+
+# The refusal happens before the install try-block; it must still be a clean
+# "Installation failed" message, not an unhandled-rejection stack trace.
+if grep -q "Installation failed" "$S8_LOG" && ! grep -qE "^\s+at .+\(.+:[0-9]+:[0-9]+\)" "$S8_LOG"; then
+  echo -e "  ${GREEN}✓${NC} Clean error reported (no stack trace)"
+else
+  echo -e "  ${RED}✗ FAIL${NC} Error surfaced as a raw stack trace instead of a clean message"
+  ((S8_ERRORS++)) || true
+fi
+
+check_no_staging_leftovers "$S8_DIR" || ((S8_ERRORS++)) || true
 
 if [[ $S8_ERRORS -eq 0 ]]; then
   echo -e "  ${GREEN}PASS: Scenario 8 passed${NC}"
@@ -638,6 +671,108 @@ else
   echo -e "  ${RED}FAIL: Scenario 9 failed ($S9_ERRORS error(s))${NC}"
   echo -e "  ${YELLOW}Log excerpt:${NC}"
   tail -n 15 "$S9_LOG" | sed 's/^/    /'
+  ((SCENARIOS_FAILED++)) || true
+fi
+
+# =============================================================================
+# Scenario 10: Upgrade from v3 layout — only custom workflows are reported
+# =============================================================================
+echo -e "\n${BLUE}▸ [Scenario 10] v3 upgrade reports only custom workflows${NC}"
+((SCENARIOS_RUN++)) || true
+S10_DIR="$WORK_DIR/scenario10"
+mkdir -p "$S10_DIR"
+S10_LOG="$WORK_DIR/s10.log"
+
+run_cli "$S10_DIR" "$VALID_TARBALL" --all > /dev/null 2>&1
+
+# Simulate a v3 install: built-in workflows (now command skills) + one custom one
+mkdir -p "$S10_DIR/.agents/work""flows"
+echo "# built-in" > "$S10_DIR/.agents/work""flows/audit.md"
+echo "# built-in" > "$S10_DIR/.agents/work""flows/workflow-solo.md"
+echo "# custom" > "$S10_DIR/.agents/work""flows/my-flow.md"
+
+set +e
+run_cli "$S10_DIR" "$VALID_TARBALL" --all > "$S10_LOG" 2>&1
+S10_EXIT=$?
+set -e
+
+S10_ERRORS=0
+if [[ $S10_EXIT -ne 0 ]]; then
+  echo -e "  ${RED}✗ FAIL${NC} Upgrade exited with code $S10_EXIT"
+  ((S10_ERRORS++)) || true
+fi
+
+if grep -q -- "- my-flow.md" "$S10_LOG"; then
+  echo -e "  ${GREEN}✓${NC} Custom workflow my-flow.md reported"
+else
+  echo -e "  ${RED}✗ FAIL${NC} Custom workflow my-flow.md not reported"
+  ((S10_ERRORS++)) || true
+fi
+
+if grep -qE -- "- (audit|workflow-solo)\.md" "$S10_LOG"; then
+  echo -e "  ${RED}✗ FAIL${NC} Built-in workflows wrongly reported as custom"
+  ((S10_ERRORS++)) || true
+else
+  echo -e "  ${GREEN}✓${NC} Built-in workflows not reported as custom"
+fi
+
+if grep -q "2 built-in workflow(s) replaced" "$S10_LOG"; then
+  echo -e "  ${GREEN}✓${NC} Built-in workflow replacement summarised"
+else
+  echo -e "  ${RED}✗ FAIL${NC} Built-in workflow replacement summary missing"
+  ((S10_ERRORS++)) || true
+fi
+
+if [[ $S10_ERRORS -eq 0 ]]; then
+  echo -e "  ${GREEN}PASS: Scenario 10 passed${NC}"
+else
+  echo -e "  ${RED}FAIL: Scenario 10 failed ($S10_ERRORS error(s))${NC}"
+  echo -e "  ${YELLOW}Log excerpt:${NC}"
+  tail -n 25 "$S10_LOG" | sed 's/^/    /'
+  ((SCENARIOS_FAILED++)) || true
+fi
+
+# =============================================================================
+# Scenario 11: Malformed .agvrc is ignored with a warning, no crash
+# =============================================================================
+echo -e "\n${BLUE}▸ [Scenario 11] Malformed .agvrc handling${NC}"
+((SCENARIOS_RUN++)) || true
+S11_DIR="$WORK_DIR/scenario11"
+mkdir -p "$S11_DIR"
+
+run_cli "$S11_DIR" "$VALID_TARBALL" --stacks python > /dev/null 2>&1
+
+S11_ERRORS=0
+S11_CASE=0
+for bad_rc in '{}' '{"mode":"curated","stacks":"python"}' '{"mode":"bogus","stacks":["python"]}' '[]'; do
+  ((S11_CASE++)) || true
+  printf '%s\n' "$bad_rc" > "$S11_DIR/.agents/.agvrc"
+  set +e
+  run_cli "$S11_DIR" "$VALID_TARBALL" --stacks go > "$WORK_DIR/s11_$S11_CASE.log" 2>&1
+  case_exit=$?
+  set -e
+  if [[ $case_exit -ne 0 ]] || ! grep -q "Ignoring malformed .agvrc" "$WORK_DIR/s11_$S11_CASE.log"; then
+    echo -e "  ${RED}✗ FAIL${NC} .agvrc '$bad_rc' not handled (exit $case_exit)"
+    tail -n 10 "$WORK_DIR/s11_$S11_CASE.log" | sed 's/^/    /'
+    ((S11_ERRORS++)) || true
+  else
+    echo -e "  ${GREEN}✓${NC} .agvrc '$bad_rc' ignored with warning, install succeeded"
+  fi
+done
+
+if [[ -f "$S11_DIR/.agents/skills/go-idioms/SKILL.md" ]] && \
+   node -e "const rc=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')); process.exit(Array.isArray(rc.stacks) && rc.stacks.includes('go') ? 0 : 1)" \
+     "$S11_DIR/.agents/.agvrc"; then
+  echo -e "  ${GREEN}✓${NC} Valid .agvrc rewritten after recovery"
+else
+  echo -e "  ${RED}✗ FAIL${NC} .agvrc not rewritten correctly after malformed input"
+  ((S11_ERRORS++)) || true
+fi
+
+if [[ $S11_ERRORS -eq 0 ]]; then
+  echo -e "  ${GREEN}PASS: Scenario 11 passed${NC}"
+else
+  echo -e "  ${RED}FAIL: Scenario 11 failed ($S11_ERRORS error(s))${NC}"
   ((SCENARIOS_FAILED++)) || true
 fi
 

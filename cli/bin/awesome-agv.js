@@ -706,7 +706,7 @@ function carryOverCustomEntries({ targetAgentDir, stagingDir, extractedAgents, m
   const legacyWorkflows = [];
 
   if (!fs.existsSync(targetAgentDir)) {
-    return { carriedOver, legacyWorkflows };
+    return { carriedOver, legacyWorkflows, migratedWorkflowCount: 0 };
   }
 
   // (i) Skill directories under skills/ whose names are NOT in upstream universe
@@ -786,12 +786,18 @@ function carryOverCustomEntries({ targetAgentDir, stagingDir, extractedAgents, m
     }
   }
 
-  // (iii) Legacy workflows/ dir is NOT carried into .agents/
+  // (iii) Legacy workflows/ dir is NOT carried into .agents/ (it stays in the backup).
+  // Workflows shipped upstream now exist as same-named command skills, so only
+  // custom workflows are reported — those are the ones the user must convert.
+  let migratedWorkflowCount = 0;
   const existingWorkflowsDir = path.join(targetAgentDir, 'workflows');
   if (fs.existsSync(existingWorkflowsDir)) {
     try {
       for (const ent of fs.readdirSync(existingWorkflowsDir, { withFileTypes: true })) {
-        if (ent.name.endsWith('.md')) {
+        if (!ent.isFile() || !ent.name.endsWith('.md')) continue;
+        if (upstreamSkillNames.has(ent.name.slice(0, -'.md'.length))) {
+          migratedWorkflowCount++;
+        } else {
           legacyWorkflows.push(ent.name);
         }
       }
@@ -800,7 +806,7 @@ function carryOverCustomEntries({ targetAgentDir, stagingDir, extractedAgents, m
     }
   }
 
-  return { carriedOver, legacyWorkflows };
+  return { carriedOver, legacyWorkflows, migratedWorkflowCount };
 }
 
 // ── Extract into Staging Directory with Carry-Over (SEC-01, SEC-06) ───────────
@@ -854,14 +860,14 @@ function extractToStaging(tarballPath, stagingDir, targetAgentDir, selectedSkill
     }
 
     // Carry over custom entries from existing .agents/ into staging
-    const { carriedOver, legacyWorkflows } = carryOverCustomEntries({
+    const { carriedOver, legacyWorkflows, migratedWorkflowCount } = carryOverCustomEntries({
       targetAgentDir,
       stagingDir,
       extractedAgents,
       manifest: config,
     });
 
-    return { skillsCopied, carriedOver, legacyWorkflows };
+    return { skillsCopied, carriedOver, legacyWorkflows, migratedWorkflowCount };
   } finally {
     try {
       fs.rmSync(tmpExtractDir, { recursive: true, force: true });
@@ -1039,18 +1045,47 @@ function writeAgvrc(stagingDir, mode, selectedStacks, deselected) {
 }
 
 // ── Read existing .agvrc ───────────────────────────────────────────────────────
+const VALID_MODES = new Set(['default', 'curated', 'advanced']);
+
+/**
+ * Returns true when a parsed .agvrc has the fields the installer relies on.
+ * The file is user-editable, so its shape is untrusted input.
+ */
+function isValidAgvrc(rc) {
+  return (
+    rc !== null &&
+    typeof rc === 'object' &&
+    !Array.isArray(rc) &&
+    VALID_MODES.has(rc.mode) &&
+    Array.isArray(rc.stacks) &&
+    rc.stacks.every((s) => typeof s === 'string')
+  );
+}
+
+/**
+ * Reads .agents/.agvrc. Returns null when absent, unreadable, a symlink,
+ * or malformed — callers then fall back to a fresh install selection.
+ */
 function readAgvrc(targetDir) {
   const rcPath = path.join(targetDir, AGENT_DIR, CONFIG_FILE);
+  let parsed;
   try {
     const stat = fs.lstatSync(rcPath);
     if (stat.isSymbolicLink() || !stat.isFile()) return null;
-    return JSON.parse(fs.readFileSync(rcPath, 'utf8'));
+    parsed = JSON.parse(fs.readFileSync(rcPath, 'utf8'));
   } catch (err) {
     if (err.code !== 'ENOENT') {
       console.error(`  ${icon.warn}  ${c.yellow}Could not parse ${CONFIG_FILE}:${c.reset} ${err.message}`);
     }
     return null;
   }
+  if (!isValidAgvrc(parsed)) {
+    console.error(
+      `  ${icon.warn}  ${c.yellow}Ignoring malformed ${CONFIG_FILE}${c.reset} ${c.dim}(expected "mode" and a "stacks" string array)${c.reset}`
+    );
+    return null;
+  }
+  return parsed;
 }
 
 // ── Patch .gitignore ───────────────────────────────────────────────────────────
@@ -1086,6 +1121,7 @@ function readManifest(tarballPath) {
   fs.chmodSync(tmpExtractDir, 0o700);
 
   try {
+    // Extract only the manifest file
     try {
       execFileSync(
         'tar',
@@ -1093,6 +1129,7 @@ function readManifest(tarballPath) {
         { stdio: 'pipe' }
       );
     } catch (err) {
+      // Fallback: extract everything and find it
       try {
         execFileSync('tar', ['-xzf', tarballPath, '-C', tmpExtractDir], { stdio: 'pipe' });
       } catch (innerErr) {
@@ -1100,11 +1137,14 @@ function readManifest(tarballPath) {
       }
     }
 
+    // Try both locations in the extracted archive
     let manifestPath = path.join(tmpExtractDir, 'agv.config.json');
     if (!fs.existsSync(manifestPath)) {
       manifestPath = path.join(tmpExtractDir, `${REPO_NAME}-${BRANCH}`, 'agv.config.json');
     }
 
+    // Fallback: bundled copy shipped with the CLI package
+    // When installed via npm, layout is: cli/bin/awesome-agv.js + cli/agv.config.json
     if (!fs.existsSync(manifestPath)) {
       const bundledPath = path.resolve(__dirname, '..', 'agv.config.json');
       if (fs.existsSync(bundledPath)) {
@@ -1112,6 +1152,7 @@ function readManifest(tarballPath) {
       }
     }
 
+    // Fallback: repo root (when running from source checkout)
     if (!fs.existsSync(manifestPath)) {
       const repoRootPath = path.resolve(__dirname, '..', '..', 'agv.config.json');
       if (fs.existsSync(repoRootPath)) {
@@ -1222,6 +1263,7 @@ function openUrl(url) {
 
 // ── Offer to Star Repository (SEC-07) ──────────────────────────────────────────
 async function offerStarRepo() {
+  // Only offer in interactive TTY sessions
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     return;
   }
@@ -1288,6 +1330,7 @@ async function main() {
   if (existingAgentsExists) {
     if (!options.force && !options._additive) {
       if (!process.stdin.isTTY) {
+        // Non-TTY environments can't prompt — auto-update (the old .agents/ is backed up first)
         console.log(`  ${icon.arrow} ${c.dim}Existing ${AGENT_DIR}/ found — will safely update with backup (non-interactive mode).${c.reset}`);
       } else if (existingRc && !options.stacks && !options.all) {
         const stackList = existingRc.stacks.join(', ');
@@ -1436,7 +1479,7 @@ async function main() {
 
     // ── Extract into Staging Directory & Carry Over ──
     console.log(`  ${icon.arrow} Extracting configuration into staging area...`);
-    const { skillsCopied, carriedOver, legacyWorkflows } = extractToStaging(
+    const { skillsCopied, carriedOver, legacyWorkflows, migratedWorkflowCount } = extractToStaging(
       tarballPath,
       stagingDir,
       targetAgentDir,
@@ -1457,13 +1500,19 @@ async function main() {
     const gitignoreResult = patchGitignore(options.targetDir);
 
     // ── User Notices for Carried Over & Legacy Items ──
+    if (migratedWorkflowCount > 0) {
+      console.log(
+        `\n  ${icon.check} ${c.dim}${migratedWorkflowCount} built-in workflow(s) replaced by same-named command skills (v4.0.0) — slash commands unchanged.${c.reset}`
+      );
+    }
+
     if (legacyWorkflows.length > 0) {
-      console.log(`\n  ${icon.warn}  ${c.yellow}Legacy workflows found in existing installation (not carried over):${c.reset}`);
+      console.log(`\n  ${icon.warn}  ${c.yellow}Custom legacy workflows found (not carried over — kept in backup):${c.reset}`);
       for (const wf of legacyWorkflows) {
         console.log(`     - ${wf}`);
       }
-      console.log(`     ${c.dim}Workflows migrated to command skills in v4.0.0.${c.reset}`);
-      console.log(`     ${c.dim}To restore custom workflows, convert each into ${AGENT_DIR}/skills/<name>/SKILL.md${c.reset}`);
+      console.log(`     ${c.dim}Workflows were replaced by command skills in v4.0.0.${c.reset}`);
+      console.log(`     ${c.dim}To restore them, convert each into ${AGENT_DIR}/skills/<name>/SKILL.md${c.reset}`);
     }
 
     if (carriedOver.length > 0) {
@@ -1486,7 +1535,9 @@ async function main() {
     await offerStarRepo();
   } catch (err) {
     console.error(`\n  ${icon.error} ${c.red}Installation failed:${c.reset} ${err.message}\n`);
-    process.exit(1);
+    // Set exitCode rather than calling process.exit(): exit() terminates
+    // synchronously and would skip the finally-block cleanup below.
+    process.exitCode = 1;
   } finally {
     if (stagingDir && fs.existsSync(stagingDir)) {
       try {
@@ -1505,4 +1556,9 @@ async function main() {
   }
 }
 
-main();
+// Errors thrown before the install try-block (e.g. refusing a symlinked .agents/)
+// land here, so they are reported cleanly instead of as an unhandled rejection.
+main().catch((err) => {
+  console.error(`\n  ${icon.error} ${c.red}Installation failed:${c.reset} ${err.message}\n`);
+  process.exitCode = 1;
+});
