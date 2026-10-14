@@ -128,8 +128,19 @@ ${c.bold}ARGUMENTS${c.reset}
 ${c.bold}OPTIONS${c.reset}
   --stacks <list>     Comma-separated stacks to include (additive with existing .agvrc)
   --all               Install everything (all stacks, same as Default mode)
-  -f, --force         Replace existing .agents/ — re-prompts from scratch
+  -f, --force         Skip the overwrite prompt and ignore the saved .agvrc (fresh selection).
+                      The existing .agents/ is still backed up and custom items carried over.
   -h, --help          Show this help message
+
+${c.bold}ENVIRONMENT${c.reset}
+  AGV_LOCAL_TARBALL   Install from a local .tar.gz instead of downloading from GitHub.
+                      The archive must contain awesome-agv-main/.agents/ and agv.config.json.
+
+${c.bold}UPGRADES${c.reset}
+  Re-running the installer updates .agents/ in place. The previous copy is moved to
+  .agv-backup/agents-<timestamp>/ (5 most recent kept), and your own skills, rules and
+  agents (names not shipped upstream) are carried over. Edits to shipped files are not
+  carried over — recover them from the backup.
 
 ${c.bold}INSTALL MODES${c.reset}
   ${icon.rocket}  ${c.bold}Default${c.reset}    Install everything. The full arsenal.
